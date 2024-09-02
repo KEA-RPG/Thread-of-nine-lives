@@ -1,0 +1,53 @@
+erDiagram
+    USER {
+        int id PK
+        string username
+        string password_hash
+        datetime created_at
+    }
+
+    CHARACTER {
+        int id PK
+        int user_id FK
+        string name
+        int level
+        int current_health
+        int max_health
+        datetime created_at
+        int health
+        int attack
+        int defense
+    }    
+    PLAYER {
+        int id PK
+        int character_id FK
+    }
+
+    ENEMY {
+        int id PK
+        int character_id FK
+    }
+
+    COMBAT {
+        int id PK
+        int character_id FK
+        int enemy_id FK
+        datetime combat_date
+        string outcome
+    }
+
+    COMBAT_LOG {
+        int id PK
+        int combat_id FK
+        int attacker_id FK "character_id"
+        int reciever_id FK "character_id"
+        string action
+        datetime timestamp
+    }
+
+    USER ||--o{ CHARACTER : owns
+    CHARACTER ||--o{ COMBAT : fights_in
+    PLAYER ||--o{ CHARACTER : is_a
+    ENEMY ||--o{ CHARACTER : is_a
+    COMBAT ||--o{ COMBAT_LOG : records
+    CHARACTER ||--o{ COMBAT_LOG : records
