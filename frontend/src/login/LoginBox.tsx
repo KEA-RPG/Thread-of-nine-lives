@@ -1,9 +1,11 @@
-import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, FormControl, FormLabel, Input, Link } from '@chakra-ui/react'
+import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, Link } from '@chakra-ui/react'
+import UsernameInput from '../components/UsernameInput'
+import PasswordInput from '../components/UsernameInput'
 const LoginBox = () => {
   return <Card
     direction={{ base: 'column', sm: 'row' }}
     overflow='hidden'
-    variant='outline'>
+    variant='elevated'>
 
     <Image
       objectFit='cover'
@@ -16,14 +18,8 @@ const LoginBox = () => {
         <Heading size='md'>Log in</Heading>
       </CardBody>
       <CardBody>
-        <FormControl>
-          <FormLabel>Username</FormLabel>
-          <Input type="email"></Input>
-        </FormControl>
-        <FormControl>
-          <FormLabel>Password</FormLabel>
-          <Input type="password"></Input>
-        </FormControl>
+        <UsernameInput/>
+        <PasswordInput/>
         <Button variant='solid' colorScheme='blue' mt={3}>
           Sign in
         </Button>
