@@ -3,10 +3,10 @@ import NavigationItem from "./NavigationItem";
 
 const CenterNavigation = () => {
     const data = [
-        { link: "/combat", children: "Fight!" },
-        { link: "/deck/create", children: "Create deck" },
-        { link: "/deck", children: "Select deck" },
-        { link: "/signout", children: "Log out" }
+        { link: "/combat", text: "Fight!" },
+        { link: "/deck/create", text: "Create deck" },
+        { link: "/deck", text: "Select deck" },
+        { link: "/signout", text: "Log out" }
     ];
 
 
@@ -16,7 +16,7 @@ const CenterNavigation = () => {
                 {data.map((item, index) => (
                     <>
                         <NavigationItem key={index} link={item.link}>
-                            {item.children}
+                            {item.text}
                         </NavigationItem>
                         {index < data.length - 1 && <Divider />}
                     </>
