@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Enitities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Infrastructure.Persistance.Relational
     public class RelationalContext : DbContext
     {
         public RelationalContext(DbContextOptions options):base (options) { }
+        public DbSet<Card> Cards { get; set; }
     }
 }
