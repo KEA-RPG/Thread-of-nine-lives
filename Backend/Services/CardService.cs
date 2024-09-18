@@ -1,32 +1,47 @@
-﻿using Domain.Enitities;
+﻿
+using Backend.Repositories;
+using Domain.Entities;
 
 namespace Backend.Services
 {
     public class CardService : ICardService
     {
+
+        private readonly ICardRepository _cardRepository;
+
+        public CardService(ICardRepository cardRepository)
+        {
+            _cardRepository = cardRepository;
+        }
+
         public Card CreateCard(Card card)
         {
-            throw new NotImplementedException();
+            _cardRepository.AddCard(card);
+
+            return card;
         }
 
         public void DeleteCard(int id)
         {
-            throw new NotImplementedException();
+            var card = _cardRepository.GetCardById(id);
+
+            _cardRepository.DeleteCard(card);
         }
 
         public List<Card> GetAllCards()
         {
-            throw new NotImplementedException();
+            return _cardRepository.GetAllCards();
         }
 
         public Card GetCardById(int id)
         {
-            throw new NotImplementedException();
+            return _cardRepository.GetCardById(id);
         }
 
         public Card UpdateCard(Card card)
         {
-            throw new NotImplementedException();
+            _cardRepository.UpdateCard(card);
+            return _cardRepository.GetCardById(card.Id);
         }
     }
 }

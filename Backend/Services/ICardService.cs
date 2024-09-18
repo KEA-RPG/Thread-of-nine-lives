@@ -1,4 +1,4 @@
-﻿using Domain.Enitities;
+﻿using Domain.Entities;
 
 namespace Backend.Services
 {

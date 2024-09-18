@@ -1,4 +1,5 @@
-﻿using Domain.Enitities;
+﻿
+using Domain.Entities;
 using Infrastructure.Persistance.Relational;
 
 namespace Backend.Repositories
