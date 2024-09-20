@@ -1,44 +1,89 @@
-import { Box, Heading, HStack, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Card, Heading, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import CardCard, { CardProp } from "./CardCard";
+import SelectedCardListItem from "./SelectedCardListItem";
+import { useState } from "react";
 
+interface CardNumber {
+    card: CardProp;
+    count: number;
+}
 const DeckManager = () => {
-    let selectedDeck: { name: string; cards: CardProp[] } = {
-        name: "Deck 1",
-        cards: [
-            { title: "Card 1", image_path: "/images/card1.png", content: "This is card 1", attack: 10, defense: 5 },
-            { title: "Card 2", image_path: "/images/card2.png", content: "This is card 2", attack: 8, defense: 6 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-        ]
+    const [cardDeck, setCardDeck] = useState<CardProp[]>([]);
+
+    const condensedDeck: { [key: number]: CardNumber } = {};
+    const getGroupedDeck = () => {
+        for (let index = 0; index < cardDeck.length; index++) {
+            const element = cardDeck[index];
+            if (condensedDeck[element.id] === undefined) {
+                condensedDeck[element.id] = { card: element, count: 1 };
+            }
+            else {
+                condensedDeck[element.id].count++;
+            }
+        }
+        return (
+            <>
+                {Object.keys(condensedDeck).length === 0 ? (
+                    <>
+                        <Heading>No cards added</Heading>
+                    </>
+                ) : (
+                    <SimpleGrid gap="10px" templateRows="repeat(auto-fill, 20px)" w="100%" p="10px" >
+                        {Object.entries(condensedDeck).map(([key, value]) => (
+                            <VStack key={key} onClick={() => removeCard(value.card)} w="100%" cursor="pointer" h="25px" >
+
+                                <SelectedCardListItem count={value.count} title={value.card.title} />
+                            </VStack>
+                        ))}
+                    </SimpleGrid>
+
+                )}
+            </>
+        );
+
     };
-    let deck: { name: string; cards: CardProp[] } = {
-        name: "Deck 1",
-        cards: [
-            { title: "Card 1", image_path: "/images/card1.png", content: "This is card 1", attack: 10, defense: 5 },
-            { title: "Card 2", image_path: "/images/card2.png", content: "This is card 2", attack: 8, defense: 6 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-            { title: "Card 3", image_path: "/images/card3.png", content: "This is card 3", attack: 7, defense: 7 },
-        ]
-    };
+    let cards: CardProp[] = [
+        { id: 1, title: "Card 1", image_path: "/images/card1.png", content: "This is card 1", defence: 5 },
+        { id: 2, title: "Card 2", image_path: "/images/card2.png", content: "This is card 2", attack: 8, },
+        { id: 3, title: "Card 3", image_path: "/images/card3.png", content: "This is card 3"},
+        { id: 4, title: "Card 4", image_path: "/images/card4.png", content: "This is card 4", attack: 6, defence: 8 },
+        { id: 5, title: "Card 5", image_path: "/images/card5.png", content: "This is card 5", attack: 9, defence: 5 },
+        { id: 6, title: "Card 6", image_path: "/images/card6.png", content: "This is card 6", attack: 5, defence: 9 },
+        { id: 7, title: "Card 7", image_path: "/images/card7.png", content: "This is card 7", attack: 10, defence: 4 },
+        { id: 8, title: "Card 8", image_path: "/images/card8.png", content: "This is card 8", attack: 3, defence: 7 },
+        { id: 9, title: "Card 9", image_path: "/images/card9.png", content: "This is card 9", attack: 4, defence: 6 },
+        { id: 10, title: "Card 10", image_path: "/images/card10.png", content: "This is card 10", attack: 6, defence: 5 },
+        { id: 11, title: "Card 11", image_path: "/images/card11.png", content: "This is card 11", attack: 8, defence: 3 },
+        { id: 12, title: "Card 12", image_path: "/images/card12.png", content: "This is card 12", attack: 5, defence: 10 },
+        { id: 13, title: "Card 13", image_path: "/images/card13.png", content: "This is card 13", attack: 7, defence: 4 },
+        { id: 14, title: "Card 14", image_path: "/images/card14.png", content: "This is card 14", attack: 9, defence: 3 },
+        { id: 15, title: "Card 15", image_path: "/images/card15.png", content: "This is card 15", attack: 6, defence: 7 },
+        { id: 16, title: "Card 16", image_path: "/images/card16.png", content: "This is card 16", attack: 4, defence: 9 },
+        { id: 17, title: "Card 17", image_path: "/images/card17.png", content: "This is card 17", attack: 8, defence: 5 },
+        { id: 18, title: "Card 18", image_path: "/images/card18.png", content: "This is card 18", attack: 6, defence: 4 },
+        { id: 19, title: "Card 19", image_path: "/images/card19.png", content: "This is card 19", attack: 9, defence: 7 },
+        { id: 20, title: "Card 20", image_path: "/images/card20.png", content: "This is card 20", attack: 7, defence: 6 }
+    ];
+
     const addCard = (card: CardProp) => {
-        
+        setCardDeck(prevDeck => [...prevDeck, card]);
     };
+
+    const removeCard = (card: CardProp) => {
+        setCardDeck(prevDeck => {
+            const cardIndex = prevDeck.indexOf(card);
+            if (cardIndex === -1) {
+                return prevDeck;
+            }
+            else {
+                let newdeck = [...prevDeck];
+                newdeck.splice(cardIndex, 1)
+
+                return newdeck
+
+            }
+        })
+    }
     return (
         <Box backgroundColor="rgba(0, 0, 0, 0.3);" color="lightgray" py="20px" px="25px" rounded="10px" mt="20px" textAlign="center">
             <Heading>Deck Manager</Heading>
@@ -62,8 +107,10 @@ const DeckManager = () => {
                             xl: 4
                         }}
                         spacing={10}>
-                        {deck.cards.map(card => (
-                            <CardCard key={card.title} {...card} />
+                        {cards.map(card => (
+                            <Box onClick={() => addCard(card)} key={card.id}>
+                                <CardCard {...card} />
+                            </Box>
                         ))}
                     </SimpleGrid>
                 </Box>
@@ -75,20 +122,20 @@ const DeckManager = () => {
                     columns={1}
                     spacing={5}
                     backgroundColor="rgba(0, 0, 0, 0.3);"
-                    h={"100%"}
-                    overflowY="auto"
-                    overflowX="hidden"
-                    height="60vh">
+                    height="80vh"
+                    overflowY="scroll"
+                    overflowX="hidden">
 
-                    {selectedDeck.cards.length === 0 ? (
+                    {cardDeck.length === 0 ? (
                         <>
                             <Heading>No cards added</Heading>
                         </>
                     ) : (
-                        selectedDeck.cards.map(card => (
-                            <Text>ASDF x 2</Text>
-                        ))
-                    )}
+                        <>
+                            {getGroupedDeck()}
+                        </>
+                    )
+                    }
                 </SimpleGrid>
             </HStack>
         </Box>

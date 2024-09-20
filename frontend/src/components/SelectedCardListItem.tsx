@@ -1,21 +1,18 @@
-import { Box, HStack, Image, Text } from "@chakra-ui/react";
-import { CardProp } from "./CardCard";
+import { Box, HStack, Text } from "@chakra-ui/react";
 
 interface SelectedCardListItemProps {
     count: number;
-    card: CardProp;
+    title: string;
 }
-const SelectedCardListItem = (props: SelectedCardListItemProps) => {
-    const { card: { title, image_path } } = props;
+const SelectedCardListItem = ({ title, count }: SelectedCardListItemProps) => {
 
     return (
-        <Box>
-            <HStack>
-                <Image src={image_path} alt={title} height={20} />
+        <Box w="100%" h="25px" mb="10px">
+            <HStack justifyContent="space-between" h="25px" p="2"  boxShadow="1px 1px 2px black" rounded="10px" userSelect="none">
                 <Text>{title}</Text>
-                {props.count > 1 && (
+                {count > 1 && (
                     <Box>
-                        <Text>{props.count}</Text>
+                        <Text>({count})</Text>
                     </Box>
                 )}
 
