@@ -18,7 +18,7 @@ function App() {
     <GridItem pl='2' area={'main'} display="flex" justifyContent="center" alignItems="center">
       <Outlet />
     </GridItem>
-    <GridItem pl='2' bg='green.300' area={'footer'} display="flex" justifyContent="center" alignItems="center">
+    <GridItem pl='2' bg='green.300' area={'footer'}>
       <ListLayout />
     </GridItem>
   </Grid>
