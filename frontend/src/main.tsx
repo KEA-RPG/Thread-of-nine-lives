@@ -6,6 +6,8 @@ import App from './App.tsx'
 import LoginBox from './login/LoginBox.tsx';
 import SignUpBox from './login/SignUpBox.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
+import DeckManager from './components/DeckManager.tsx';
+
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -15,8 +17,14 @@ const router = createBrowserRouter([
         element: <LoginBox />,
       },
       {
+
         path: "/main-navigation",
         element: <CenterNavigation />,
+      },
+      {
+        path: "/deck-manager",
+        element: <DeckManager />,
+
       },
       {
         path: "/signup",
@@ -25,6 +33,7 @@ const router = createBrowserRouter([
     ],
   },
 ])
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ChakraProvider>

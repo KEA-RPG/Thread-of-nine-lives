@@ -1,0 +1,3 @@
+syntax til at lave migrations:
+
+dotnet ef migrations add "MIGRATIONNAME" --project ../Infrastructure --context RelationalContext
