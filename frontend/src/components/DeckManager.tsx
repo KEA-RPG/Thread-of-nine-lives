@@ -1,4 +1,4 @@
-import { Box, Card, Heading, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, Heading, HStack, SimpleGrid, VStack } from "@chakra-ui/react";
 import CardCard, { CardProp } from "./CardCard";
 import SelectedCardListItem from "./SelectedCardListItem";
 import { useState } from "react";
