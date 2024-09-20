@@ -1,6 +1,11 @@
 import { Button, VStack, HStack, Box } from "@chakra-ui/react";
+import { useState} from "react";
 
-const ListItems = () => {
+type Item = {
+    id: number;
+};
+
+const ListItems = ({ id }: { id:number }) => {
     return (
         <HStack
             justifyContent="space-between"
@@ -10,7 +15,7 @@ const ListItems = () => {
             borderRadius="md"
         >
             <Box flex="1" color="white">
-                Name
+                Name {id}
             </Box>
             <HStack spacing={4}>
                 <Button colorScheme="blue">Select</Button>
@@ -22,13 +27,23 @@ const ListItems = () => {
 };
 
 const ListLayout = () => {
+    const [items, setItems] = useState<Item[]>([]);
+
+    const handleAddItem = () => {
+        setItems((prevItems) => [
+            ...prevItems,
+            { id: prevItems.length + 1 },
+        ]);
+    };
+
     return (
         <VStack spacing={4} p={6} bg="gray.300" align="stretch">
-            <ListItems />
-            <ListItems />
-            <ListItems />
+            {items.map((item) => (
+                <ListItems key={item.id} id={item.id} />
+            ))}
+
             <Box display="flex" justifyContent="flex-end" p={4}>
-                <Button colorScheme="green">New</Button>
+                <Button colorScheme="green" onClick={handleAddItem}>New</Button>
             </Box>
         </VStack>
     );
