@@ -43,9 +43,9 @@ const DeckManager = () => {
 
     };
     let cards: CardProp[] = [
-        { id: 1, title: "Card 1", image_path: "https://loremflickr.com/320/240", content: "This is card 1", defence: 5 },
-        { id: 2, title: "Card 2", image_path: "https://loremflickr.com/320/241", content: "This is card 2", attack: 8, },
-        { id: 3, title: "Card 3", image_path: "https://loremflickr.com/320/242", content: "This is card 3"},
+        { id: 1, title: "no attack", image_path: "https://loremflickr.com/320/240", content: "This is card 1", defence: 5 },
+        { id: 2, title: "no defence", image_path: "https://loremflickr.com/320/241", content: "This is card 2", attack: 8, },
+        { id: 3, title: "no nothing", image_path: "https://loremflickr.com/320/242", content: "This is card 3"},
         { id: 4, title: "Card 4", image_path: "https://loremflickr.com/320/243", content: "This is card 4", attack: 6, defence: 8 },
         { id: 5, title: "Card 5", image_path: "https://loremflickr.com/320/244", content: "This is card 5", attack: 9, defence: 5 },
         { id: 6, title: "Card 6", image_path: "https://loremflickr.com/320/245", content: "This is card 6", attack: 5, defence: 9 },
@@ -53,16 +53,6 @@ const DeckManager = () => {
         { id: 8, title: "Card 8", image_path: "https://loremflickr.com/320/247", content: "This is card 8", attack: 3, defence: 7 },
         { id: 9, title: "Card 9", image_path: "https://loremflickr.com/320/248", content: "This is card 9", attack: 4, defence: 6 },
         { id: 10, title: "Card 10", image_path: "https://loremflickr.com/320/249", content: "This is card 10", attack: 6, defence: 5 },
-        { id: 11, title: "Card 11", image_path: "https://loremflickr.com/322/241", content: "This is card 11", attack: 8, defence: 3 },
-        { id: 12, title: "Card 12", image_path: "https://loremflickr.com/323/242", content: "This is card 12", attack: 5, defence: 10 },
-        { id: 13, title: "Card 13", image_path: "https://loremflickr.com/324/243", content: "This is card 13", attack: 7, defence: 4 },
-        { id: 14, title: "Card 14", image_path: "https://loremflickr.com/325/244", content: "This is card 14", attack: 9, defence: 3 },
-        { id: 15, title: "Card 15", image_path: "https://loremflickr.com/326/245", content: "This is card 15", attack: 6, defence: 7 },
-        { id: 16, title: "Card 16", image_path: "https://loremflickr.com/327/246", content: "This is card 16", attack: 4, defence: 9 },
-        { id: 17, title: "Card 17", image_path: "https://loremflickr.com/328/247", content: "This is card 17", attack: 8, defence: 5 },
-        { id: 18, title: "Card 18", image_path: "https://loremflickr.com/329/248", content: "This is card 18", attack: 6, defence: 4 },
-        { id: 19, title: "Card 19", image_path: "https://loremflickr.com/321/249", content: "This is card 19", attack: 9, defence: 7 },
-        { id: 20, title: "Card 20", image_path: "https://loremflickr.com/320/240", content: "This is card 20", attack: 7, defence: 6 }
     ];
 
     const addCard = (card: CardProp) => {
