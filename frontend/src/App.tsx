@@ -1,5 +1,6 @@
 import { Grid, GridItem } from "@chakra-ui/react"
 import NavBar from "./components/NavBar"
+import Header from "./components/Header"
 import { Outlet } from "react-router-dom"
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     fontWeight='bold'
   >
     <GridItem pl='2' bg='orange.300' area={'header'}>
+      <Header />
       <NavBar />
     </GridItem>
     <GridItem pl='2' area={'main'} display="flex" justifyContent="center" alignItems="center">
