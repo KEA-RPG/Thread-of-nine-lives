@@ -5,7 +5,9 @@ import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import App from './App.tsx'
 import LoginBox from './login/LoginBox.tsx';
 import SignUpBox from './login/SignUpBox.tsx';
+import CenterNavigation from './components/CenterNavigation.tsx';
 import DeckManager from './components/DeckManager.tsx';
+
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -15,8 +17,14 @@ const router = createBrowserRouter([
         element: <LoginBox />,
       },
       {
+
+        path: "/main-navigation",
+        element: <CenterNavigation />,
+      },
+      {
         path: "/deck-manager",
         element: <DeckManager />,
+
       },
       {
         path: "/signup",
