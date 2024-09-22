@@ -1,12 +1,11 @@
 import { Grid, GridItem } from "@chakra-ui/react"
 import NavBar from "./components/NavBar"
 import { Outlet } from "react-router-dom"
-import  ListLayout from "./components/ListLayout"
 
 function App() {
   return <Grid
     templateAreas={`"header"
-                    "main" "footer"`}
+                    "main"`}
     h='200px'
     gap='1'
     color='blackAlpha.700'
@@ -17,9 +16,6 @@ function App() {
     </GridItem>
     <GridItem pl='2' area={'main'} display="flex" justifyContent="center" alignItems="center">
       <Outlet />
-    </GridItem>
-    <GridItem pl='2' bg='green.300' area={'footer'}>
-      <ListLayout />
     </GridItem>
   </Grid>
 }
