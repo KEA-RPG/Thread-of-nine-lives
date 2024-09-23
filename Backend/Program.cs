@@ -28,7 +28,6 @@ CardController.MapCardEndpoint(app);
 
 app.MapGet("/", () => "Hello World!");
 EnemyController.MapEnemyEndpoint(app);
-app.MapGet("/burger", () => "Bing chilling");
 app.UseSwagger();
 app.UseSwaggerUI();
 app.Run();
