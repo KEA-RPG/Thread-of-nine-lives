@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, HStack, Text } from '@chakra-ui/react';
 import { MoonIcon } from '@chakra-ui/icons';
 import NavBar from "./NavBar"
-import { useUser } from './UserContext';
+import useUser from '../hooks/useUser';
 
 
 const Header: React.FC = () => {
