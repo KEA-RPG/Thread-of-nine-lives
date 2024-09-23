@@ -3,6 +3,7 @@ using Domain.Entities; //TODO: Change to correct namespace(DTO)
 
 namespace Backend.Controllers
 {
+
     public static class CardController
     {
         public static void MapCardEndpoint(this WebApplication app)
