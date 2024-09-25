@@ -1,11 +1,11 @@
 import { FormControl, FormLabel, Input } from '@chakra-ui/react'
 
-const PasswordInput = () =>
+const UsernameInput = () =>
     <FormControl>
-        <FormLabel>Password</FormLabel>
-        <Input type="password"></Input>
+        <FormLabel>Username</FormLabel>
+        <Input type="text" placeholder="Username" />
     </FormControl>
 
 
 
-export default PasswordInput;
+export default UsernameInput;
