@@ -6,6 +6,4 @@ const UsernameInput = () =>
         <Input type="text" placeholder="Username" />
     </FormControl>
 
-
-
 export default UsernameInput;

@@ -1,4 +1,4 @@
-import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, FormControl, FormLabel, Input, Link } from '@chakra-ui/react'
+import { Image, Button, Card, CardBody, Heading, Stack, FormControl, FormLabel, Input } from '@chakra-ui/react'
 const SignUpBox = () => {
   return <Card
     direction={{ base: 'column', sm: 'row' }}

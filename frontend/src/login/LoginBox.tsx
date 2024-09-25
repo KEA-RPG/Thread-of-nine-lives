@@ -1,6 +1,6 @@
 import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, Link } from '@chakra-ui/react'
 import UsernameInput from '../components/UsernameInput'
-import PasswordInput from '../components/UsernameInput'
+import PasswordInput from '../components/PasswordInput'
 const LoginBox = () => {
   return <Card
     direction={{ base: 'column', sm: 'row' }}
