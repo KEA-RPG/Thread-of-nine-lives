@@ -11,6 +11,7 @@ namespace Backend.Controllers
             //Get all cards
             app.MapGet("/cards", (ICardService cardService) =>
             {
+                Console.WriteLine("Hello World!");
                 return cardService.GetAllCards();
             });
 

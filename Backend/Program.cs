@@ -1,3 +1,12 @@
+using Backend.Controllers;
+using Backend.Repositories;
+using Backend.Services;
+using Infrastructure.Persistance.Relational;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // JWT Authentication configuration
@@ -21,6 +30,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Add services to the container
+builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICardService, CardService>();
@@ -44,15 +54,11 @@ AuthController.MapAuthEndpoints(app);
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configure Swagger with endpoint
+// Swagger
 app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-    c.RoutePrefix = string.Empty; // Optional: Set Swagger UI as the root page
-});
+app.UseSwaggerUI();
 
-// Default Hello World Endpoint
+
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
