@@ -17,6 +17,9 @@ builder.Services.AddDbContext<RelationalContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("Infrastructure")));
 
+builder.Services.AddScoped<IEnemyService, EnemyService>();
+builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
+
 //PersistanceConfiguration.ConfigureServices(builder.Services, builder.Configuration, "relational");
 var app = builder.Build();
 
@@ -24,6 +27,7 @@ CardController.MapCardEndpoint(app);
 
 
 app.MapGet("/", () => "Hello World!");
+EnemyController.MapEnemyEndpoint(app);
 app.UseSwagger();
 app.UseSwaggerUI();
 app.Run();
