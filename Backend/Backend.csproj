@@ -25,7 +25,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.0" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
-		<!-- Disse ovenstående er packages til at håndtere login og signup med JWT, samt hashing af password. -->
 	</ItemGroup>
 
 </Project>
