@@ -23,8 +23,15 @@ namespace Backend.Controllers
             //Delete enemy
             app.MapDelete("/enemies/{id}", (IEnemyService enemyService, int id) =>
             {
+                var enemy = new Enemy();
+                enemy.Id = id;
+                var dbEnemy = enemyService.GetEnemyById(enemy.Id);
+                if (dbEnemy == null)
+                {
+                    return Results.NotFound();
+                }
                 enemyService.DeleteEnemy(id);
-                return Results.NoContent();
+                return Results.Ok();
             });
 
             //Create enemy
