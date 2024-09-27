@@ -43,22 +43,22 @@ builder.Services.AddDbContext<RelationalContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("Infrastructure")));
 
-// Build the app
+builder.Services.AddScoped<IEnemyService, EnemyService>();
+builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
+
+//PersistanceConfiguration.ConfigureServices(builder.Services, builder.Configuration, "relational");
 var app = builder.Build();
 
 // Map controllers
 CardController.MapCardEndpoint(app);
 AuthController.MapAuthEndpoints(app);
+EnemyController.MapEnemyEndpoint(app);
 
 // Enable authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Swagger
+app.MapGet("/", () => "Hello World!");
 app.UseSwagger();
 app.UseSwaggerUI();
-
-
-app.MapGet("/", () => "Hello World!");
-
 app.Run();
