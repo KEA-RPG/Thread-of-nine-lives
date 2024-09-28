@@ -60,10 +60,10 @@ const SignUpBox = () => {
         <Button variant='solid' colorScheme='blue' mt={3} onClick={handleSubmit}>
           Sign up
         </Button>
-        <CardFooter>
+      </CardBody>
+      <CardFooter>
         <Text>Or sign in <Link href='/'>here</Link></Text>
       </CardFooter>
-      </CardBody>
     </Stack>
   </Card>
 }
