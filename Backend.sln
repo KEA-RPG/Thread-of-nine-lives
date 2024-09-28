@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{F8BF7492-AA0B-428C-84DA-2FCF61DFAFA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{27042954-8803-42B9-AA6B-C49E865756AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{27042954-8803-42B9-AA6B-C49E865756AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseSeeder", "..\DatabaseSeeder\DatabaseSeeder.csproj", "{519CD9CC-A8B4-430A-B6D5-00A665A39258}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{27042954-8803-42B9-AA6B-C49E865756AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27042954-8803-42B9-AA6B-C49E865756AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27042954-8803-42B9-AA6B-C49E865756AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519CD9CC-A8B4-430A-B6D5-00A665A39258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519CD9CC-A8B4-430A-B6D5-00A665A39258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519CD9CC-A8B4-430A-B6D5-00A665A39258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519CD9CC-A8B4-430A-B6D5-00A665A39258}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
