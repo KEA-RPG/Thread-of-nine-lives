@@ -45,7 +45,6 @@ const SignUpBox = () => {
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
         </FormControl>
-
         <Button variant='solid' colorScheme='blue' mt={3} onClick={handleSubmit}>
           Sign up
         </Button>

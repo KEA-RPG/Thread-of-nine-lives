@@ -1,5 +1,4 @@
 import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-
 import { ChangeEvent } from 'react';
 
 interface PasswordInputProps {
