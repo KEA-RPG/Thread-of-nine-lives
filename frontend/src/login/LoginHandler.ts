@@ -16,7 +16,7 @@ interface LoginCredentials {
     if (user.username === username && user.password === password) {
         alert('Login successful!');
         localStorage.setItem('token', 'fake-jwt-token');
-        window.location.href = '/dashboard';
+        window.location.href = '/main-navigation';
       } else {
         alert('Invalid credentials. Please try again.');
       }
