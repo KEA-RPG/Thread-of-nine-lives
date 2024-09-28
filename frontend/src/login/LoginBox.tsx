@@ -1,7 +1,17 @@
 import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, Link } from '@chakra-ui/react'
 import UsernameInput from '../components/UsernameInput'
 import PasswordInput from '../components/PasswordInput'
+import { useState } from 'react'
+import LoginHandler from './LoginHandler';
+
 const LoginBox = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = () => {
+    LoginHandler({ username, password })
+  };
+
   return <Card
     direction={{ base: 'column', sm: 'row' }}
     overflow='hidden'
@@ -18,9 +28,9 @@ const LoginBox = () => {
         <Heading size='md'>Log in</Heading>
       </CardBody>
       <CardBody>
-        <UsernameInput/>
-        <PasswordInput/>
-        <Button variant='solid' colorScheme='blue' mt={3}>
+        <UsernameInput value={username} onChange={(e) => setUsername(e.target.value)} />
+        <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button variant='solid' colorScheme='blue' mt={3} onClick={handleLogin}>
           Sign in
         </Button>
       </CardBody>
