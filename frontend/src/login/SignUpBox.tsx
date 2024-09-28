@@ -17,7 +17,7 @@ const SignUpBox = () => {
 
     SignUpHandler({ username, password });
   };
-  
+
   return <Card
     direction={{ base: 'column', sm: 'row' }}
     overflow='hidden'
@@ -38,14 +38,14 @@ const SignUpBox = () => {
         <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
         <FormControl>
           <FormLabel>Repeat password</FormLabel>
-          <Input 
+          <Input
             type="password"
             placeholder="Repeat password"
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
         </FormControl>
-        
+
         <Button variant='solid' colorScheme='blue' mt={3} onClick={handleSubmit}>
           Sign up
         </Button>

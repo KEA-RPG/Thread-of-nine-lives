@@ -11,7 +11,7 @@ const SignUpHandler = ({ username, password }: SignUpCredentials) => {
         return;
     }
 
-    alert (`User ${username} signed up successfully`);
+    alert(`User ${username} signed up successfully`);
     localStorage.setItem('user', JSON.stringify({ username, password }));
 };
 
