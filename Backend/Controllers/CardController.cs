@@ -1,74 +1,58 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Backend.Services;
-using Domain.Entities;
-using Microsoft.Extensions.Logging;
+﻿using Backend.Services;
+using Domain.Entities; //TODO: Change to correct namespace(DTO)
 
 namespace Backend.Controllers
 {
-    [ApiController]
-    [Route("cards")]
-    [Authorize] // Require authentication for all actions in this controller
-    public class CardController
+
+    public static class CardController
     {
-        private readonly ICardService _cardService;
-        private readonly ILogger<CardController> _logger;
-
-        public CardController(ICardService cardService, ILogger<CardController> logger)
+        public static void MapCardEndpoint(this WebApplication app)
         {
-            _cardService = cardService;
-            _logger = logger;
-        }
-
-        // Get all cards
-        [HttpGet]
-        public object GetAllCards()
-        {
-            _logger.LogInformation("Fetching all cards");
-            var cards = _cardService.GetAllCards();
-            return Results.Json(cards, statusCode: 200); // Return 200 OK
-        }
-
-        // Get card by id
-        [HttpGet("{id}")]
-        public object GetCardById(int id)
-        {
-            var card = _cardService.GetCardById(id);
-            if (card == null)
+            //Get all cards
+            app.MapGet("/cards", (ICardService cardService) =>
             {
-                return Results.Json(new { message = "Card not found" }, statusCode: 404); // Return 404 Not Found
-            }
-            return Results.Json(card, statusCode: 200); // Return 200 OK
-        }
+                Console.WriteLine("Hello World!");
+                return cardService.GetAllCards();
+            });
 
-        // Delete card
-        [HttpDelete("{id}")]
-        public object DeleteCard(int id)
-        {
-            _cardService.DeleteCard(id);
-            return Results.Json(new { message = "Card deleted successfully" }, statusCode: 204); // Return 204 No Content
-        }
-
-        // Create card
-        [HttpPost]
-        public object CreateCard([FromBody] Card card)
-        {
-            _cardService.CreateCard(card);
-            return Results.Json(card, statusCode: 201); // Return 201 Created
-        }
-
-        // Update card
-        [HttpPut]
-        public object UpdateCard([FromBody] Card card)
-        {
-            var existingCard = _cardService.GetCardById(card.Id);
-            if (existingCard == null)
+            //Get card by id
+            app.MapGet("/cards/{id}", (ICardService cardService, int id) =>
             {
-                return Results.Json(new { message = "Card not found" }, statusCode: 404); // Return 404 Not Found
-            }
+                return cardService.GetCardById(id);
+            });
 
-            _cardService.UpdateCard(card);
-            return Results.Json(card, statusCode: 200); // Return 200 OK
+            //Delete card
+            app.MapDelete("/cards/{id}", (ICardService cardService, int id) =>
+            {
+                cardService.DeleteCard(id);
+                return Results.NoContent();
+            });
+
+            //Create card
+            app.MapPost("/cards", (ICardService cardService, Card card) =>
+            {
+                cardService.CreateCard(card);
+                return Results.Created($"/cards/{card.Id}", card);
+            });
+
+            //Update card
+            app.MapPut("/cards", (ICardService cardService, Card card) => {
+
+                var dbCard = cardService.GetCardById(card.Id);
+
+                if (dbCard == null)
+                {
+                    return Results.NotFound();
+                }
+
+                cardService.UpdateCard(card);
+                return Results.Ok(card);
+            });
+
+
+
+
+
         }
     }
 }
