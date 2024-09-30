@@ -17,27 +17,22 @@ namespace Backend.Controllers
                 // Check if user exists and password is correct
                 if (userService.ValidateUserCredentials(user.Username, user.PasswordHash))
                 {
-                    // Create claims (you can add roles or other claims here)
                     var claims = new[]
                     {
-                        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                    };
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        };
 
-                    // Generate the JWT token
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("A7c$7DFG9!fQ2@Vbn#4gTxlpT67^n8#QhE"));
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
                     var token = new JwtSecurityToken(
                         issuer: "threadgame",
                         audience: "threadgame",
                         claims: claims,
-                        expires: DateTime.Now.AddMinutes(30),
+                        expires: DateTime.Now.AddHours(1),
                         signingCredentials: creds);
 
-                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-                    // Return the token
-                    return Results.Ok(new { token = tokenString });
+                    return Results.Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token) });
                 }
 
                 // If user is not valid
