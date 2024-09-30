@@ -22,8 +22,19 @@ namespace Backend.Controllers
             //Delete card
             app.MapDelete("/cards/{id}", (ICardService cardService, int id) =>
             {
-                cardService.DeleteCard(id);
-                return Results.NoContent();
+                try
+                {
+                    cardService.DeleteCard(id);
+                    return Results.NoContent();
+                }
+                catch(KeyNotFoundException)
+                {
+                    return Results.NotFound();
+                }
+                catch 
+                {
+                    return Results.StatusCode(500);
+                }
             });
 
             //Create card
