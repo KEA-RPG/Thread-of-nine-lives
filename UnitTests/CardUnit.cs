@@ -119,6 +119,7 @@ namespace UnitTests
                 ImagePath = "Image 1",
                 Cost = 1,
                 Attack = 1
+
             };
             mockCardRepository.Setup(repo => repo.AddCard(card));
             mockCardRepository.Setup(repo => repo.GetCardById(1)).Returns(card);
