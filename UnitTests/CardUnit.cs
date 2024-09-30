@@ -109,6 +109,7 @@ namespace UnitTests
         public void slemmeTest()
         {
             Assert.Equal(1, 2);
+            Assert.Equal(1, 2);
         }
 
         [Fact]
