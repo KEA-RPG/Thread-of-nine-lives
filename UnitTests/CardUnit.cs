@@ -105,12 +105,6 @@ namespace UnitTests
             //Assert
             Assert.Equal(card, result);
         }
-        [Fact]
-        public void slemmeTest()
-        {
-            Assert.Equal(1, 2);
-            Assert.Equal(1, 2);
-        }
 
         [Fact]
         public void DeleteCard_Should_Delete_A_Card()
