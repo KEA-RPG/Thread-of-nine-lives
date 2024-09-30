@@ -1,10 +1,9 @@
-import { AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon, SpinnerIcon } from "@chakra-ui/icons"
-import { HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react"
+import { AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons"
+import { HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 
 const NavBar = () => {
     return <HStack justifyContent="space-between">
-        <SpinnerIcon/>
-        <Text>Giga RPG</Text>
+        
         <Menu>
             <MenuButton
                 as={IconButton}
