@@ -24,8 +24,14 @@ namespace Backend.Services
         public void DeleteCard(int id)
         {
             var card = _cardRepository.GetCardById(id);
-
-            _cardRepository.DeleteCard(card);
+            if(card == null)
+            {
+                throw new KeyNotFoundException();
+            }
+            else
+            {
+                _cardRepository.DeleteCard(card);
+            }
         }
 
         public List<Card> GetAllCards()
