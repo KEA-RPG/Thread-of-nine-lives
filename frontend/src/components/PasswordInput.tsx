@@ -1,12 +1,12 @@
 import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { ChangeEvent } from 'react';
 
-interface PasswordInputProps {
+interface Props {
     value: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const PasswordInput = ({ value, onChange }: PasswordInputProps) => (
+const PasswordInput = ({ value, onChange }: Props) => (
     <FormControl>
         <FormLabel>Password</FormLabel>
         <Input type="password" placeholder="Password" value={value} onChange={onChange} />
