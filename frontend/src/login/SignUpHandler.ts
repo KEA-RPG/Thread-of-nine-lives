@@ -4,7 +4,6 @@ interface SignUpCredentials {
 }
 
 const SignUpHandler = ({ username, password }: SignUpCredentials) => {
-    console.log(`Signing up with username: ${username} and password: ${password}`);
 
     if (!username || !password) {
         alert('Username and password are required');
