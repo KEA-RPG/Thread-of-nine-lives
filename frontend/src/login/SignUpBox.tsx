@@ -34,7 +34,7 @@ const SignUpBox = () => {
         <Heading size='md'>Sign up</Heading>
       </CardBody>
       <CardBody>
-        <UsernameInput value={username} onChange={(e) => setUsername(e.target.value)} />
+        <UsernameInput type="text" placeholder='username' value={username} onChange={(e) => setUsername(e)} />
         <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
         <FormControl>
           <FormLabel>Repeat password</FormLabel>
