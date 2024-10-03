@@ -2,7 +2,11 @@ import { Box, Card, CardBody, CardFooter, CardHeader, Heading, Image, VStack } f
 import { motion } from "framer-motion"
 import CardEffectBadge from './CardEffectBadge';
 
-export interface CardProp {
+interface Props {
+    card: Card;
+}
+
+export interface Card {
     id: number;
     title: string;
     image_path: string;
@@ -11,8 +15,9 @@ export interface CardProp {
     defence?: number;
 }
 
-const CardCard = (props: CardProp) => {
-    const { title, image_path, content, attack, defence } = props;
+const CardCard = (props: Props) => {
+    const { card } = props;
+    const { title, image_path, content, attack, defence } = card;
 
     return (
         <motion.div
@@ -24,13 +29,13 @@ const CardCard = (props: CardProp) => {
                 </CardHeader>
                 <CardBody>
                     <VStack>
-                        <Image src={image_path} alt={title} border="1px solid black" w="160px" h="160px"/>
+                        <Image src={image_path} alt={title} border="1px solid black" w="160px" h="160px" />
                         <Box>{content}</Box>
                     </VStack>
 
                 </CardBody>
                 <CardFooter>
-                   <CardEffectBadge defence={defence} attack={attack}/>
+                    <CardEffectBadge defence={defence} attack={attack} />
                 </CardFooter>
             </Card>
         </motion.div>
