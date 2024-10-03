@@ -28,8 +28,8 @@ const LoginBox = () => {
         <Heading size='md'>Log in</Heading>
       </CardBody>
       <CardBody>
-        <UsernameInput value={username} onChange={(e) => setUsername(e.target.value)} />
-        <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
+        <UsernameInput type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e)} />
+        <PasswordInput type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e)} />
         <Button variant='solid' colorScheme='blue' mt={3} onClick={handleLogin}>
           Sign in
         </Button>
