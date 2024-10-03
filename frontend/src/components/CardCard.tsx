@@ -16,8 +16,7 @@ export interface Card {
 }
 
 const CardCard = (props: Props) => {
-    const { card } = props;
-    const { title, image_path, content, attack, defence } = card;
+    const { title, image_path, content, attack, defence } = props.card;
 
     return (
         <motion.div
