@@ -15,7 +15,7 @@ export interface Card {
     defence?: number;
 }
 
-const CardCard = (props: Props) => {
+const GameCard = (props: Props) => {
     const { title, image_path, content, attack, defence } = props.card;
 
     return (
@@ -41,4 +41,4 @@ const CardCard = (props: Props) => {
     );
 };
 
-export default CardCard;
+export default GameCard;
