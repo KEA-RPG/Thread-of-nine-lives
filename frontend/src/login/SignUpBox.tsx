@@ -8,14 +8,17 @@ const SignUpBox = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    if (password !== repeatPassword) {
-      alert('Passwords do not match');
-      return;
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError(null);
+
+    try {
+      await SignUpHandler({ username, password });
+    } catch (error) {
+      setError('Signup failed. Please try again.');
     }
-
-    SignUpHandler({ username, password });
   };
 
   return <Card

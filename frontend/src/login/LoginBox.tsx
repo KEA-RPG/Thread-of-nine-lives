@@ -7,9 +7,16 @@ import LoginHandler from './LoginHandler';
 const LoginBox = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null); 
 
-  const handleLogin = () => {
-    LoginHandler({ username, password })
+  const handleLogin = async () => {
+      setError(null); 
+      try {
+          await LoginHandler({ username, password });
+
+      } catch (err) {
+          setError('failed to login');
+      }
   };
 
   return <Card
