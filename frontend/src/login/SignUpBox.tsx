@@ -8,7 +8,7 @@ const SignUpBox = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -16,7 +16,7 @@ const SignUpBox = () => {
 
     try {
       await SignUpHandler({ username, password });
-    } catch (error) {
+    } catch {
       setError('Signup failed. Please try again.');
     }
   };

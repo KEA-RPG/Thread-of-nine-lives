@@ -7,14 +7,14 @@ import LoginHandler from './LoginHandler';
 const LoginBox = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null); 
+  const [, setError] = useState<string | null>(null); 
 
   const handleLogin = async () => {
       setError(null); 
       try {
           await LoginHandler({ username, password });
 
-      } catch (err) {
+      } catch {
           setError('failed to login');
       }
   };
