@@ -7,6 +7,7 @@ using Domain.Entities;
 
 namespace Backend.Controllers
 {
+
     public static class AuthController
     {
         public static void MapAuthEndpoints(this WebApplication app)
@@ -17,9 +18,11 @@ namespace Backend.Controllers
                 // Check if user exists and password is correct
                 if (userService.ValidateUserCredentials(user.Username, user.PasswordHash))
                 {
+                    var loggedInUser = userService.GetUserByUsername(user.Username);
                     var claims = new[]
                     {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                    new Claim(ClaimTypes.Role, loggedInUser.Role)
         };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));

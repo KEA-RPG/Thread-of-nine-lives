@@ -19,6 +19,7 @@ namespace Backend.Services
 
         public void CreateUser(User user)
         {
+            user.Role = "Player"; // Sætter det automatisk til player. Admin roller tildeles i databasen.
             // Hash the user's password before saving
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
             _userRepository.CreateUser(user);
