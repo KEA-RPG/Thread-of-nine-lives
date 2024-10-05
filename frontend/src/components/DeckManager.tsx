@@ -1,14 +1,14 @@
 import { Box, Heading, HStack, SimpleGrid, VStack } from "@chakra-ui/react";
-import CardCard, { CardProp } from "./CardCard";
+import CardCard, { Card } from "./GameCard";
 import SelectedCardListItem from "./SelectedCardListItem";
 import { useState } from "react";
 
 interface CardNumber {
-    card: CardProp;
+    card: Card;
     count: number;
 }
 const DeckManager = () => {
-    const [cardDeck, setCardDeck] = useState<CardProp[]>([]);
+    const [cardDeck, setCardDeck] = useState<Card[]>([]);
 
     const condensedDeck: { [key: number]: CardNumber } = {};
     const getGroupedDeck = () => {
@@ -42,7 +42,7 @@ const DeckManager = () => {
         );
 
     };
-    let cards: CardProp[] = [
+    let cards: Card[] = [
         { id: 1, title: "no attack", image_path: "https://loremflickr.com/320/240", content: "This is card 1", defence: 5 },
         { id: 2, title: "no defence", image_path: "https://loremflickr.com/320/241", content: "This is card 2", attack: 8, },
         { id: 3, title: "no nothing", image_path: "https://loremflickr.com/320/242", content: "This is card 3"},
@@ -55,11 +55,11 @@ const DeckManager = () => {
         { id: 10, title: "Card 10", image_path: "https://loremflickr.com/320/249", content: "This is card 10", attack: 6, defence: 5 },
     ];
 
-    const addCard = (card: CardProp) => {
+    const addCard = (card: Card) => {
         setCardDeck(prevDeck => [...prevDeck, card]);
     };
 
-    const removeCard = (card: CardProp) => {
+    const removeCard = (card: Card) => {
         setCardDeck(prevDeck => {
             const cardIndex = prevDeck.indexOf(card);
             if (cardIndex === -1) {
@@ -99,7 +99,7 @@ const DeckManager = () => {
                         spacing={10}>
                         {cards.map(card => (
                             <Box onClick={() => addCard(card)} key={card.id}>
-                                <CardCard {...card} />
+                                <CardCard card={card} />
                             </Box>
                         ))}
                     </SimpleGrid>
