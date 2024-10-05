@@ -23,7 +23,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void CreateUser_Should_Hash_Password_And_Set_Player_Role()
+        public void CreateUser_Should_Set_Player_Role()
         {
             // Arrange
             var newUser = new User { Username = "testuser", PasswordHash = "testpassword" };
@@ -33,8 +33,20 @@ namespace UnitTests
 
             // Assert
             _userRepositoryMock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Once);
-            Assert.Equal("Player", newUser.Role);
-            Assert.NotEqual("testpassword", newUser.PasswordHash); 
+            Assert.Equal("Player", newUser.Role); // Test only the role
+        }
+
+        [Fact]
+        public void CreateUser_Should_Hash_Password()
+        {
+            // Arrange
+            var newUser = new User { Username = "testuser", PasswordHash = "testpassword" };
+
+            // Act
+            _userService.CreateUser(newUser);
+
+            // Assert
+            Assert.NotEqual("testpassword", newUser.PasswordHash); // Test only the password hash
         }
 
         [Fact]

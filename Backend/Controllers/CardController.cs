@@ -14,7 +14,7 @@ namespace Backend.Controllers
                 System.Diagnostics.Debug.WriteLine("This is a debug message.");
                 Console.WriteLine("Hello World!");
                 return cardService.GetAllCards();
-            }).RequireAuthorization(policy => policy.RequireRole("Player"));
+            });
 
             //Get card by id
             app.MapGet("/cards/{id}", (ICardService cardService, int id) =>
