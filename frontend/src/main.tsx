@@ -1,38 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ChakraProvider } from '@chakra-ui/react'
-import { createBrowserRouter, RouterProvider, } from "react-router-dom";
-import App from './App.tsx'
-import LoginBox from './login/LoginBox.tsx';
-import SignUpBox from './login/SignUpBox.tsx';
-import CenterNavigation from './components/CenterNavigation.tsx';
-import DeckManager from './components/DeckManager.tsx';
+import { RouterProvider, } from "react-router-dom";
+import router from './routes.tsx';  // Import the router configuration
 
-const router = createBrowserRouter([
-  {
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <LoginBox />,
-      },
-      {
-
-        path: "/main-navigation",
-        element: <CenterNavigation />,
-      },
-      {
-        path: "/deck-manager",
-        element: <DeckManager />,
-
-      },
-      {
-        path: "/signup",
-        element: <SignUpBox />,
-      }
-    ],
-  },
-])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
