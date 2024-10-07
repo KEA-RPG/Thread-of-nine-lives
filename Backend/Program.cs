@@ -19,7 +19,8 @@ builder.Services.AddDbContext<RelationalContext>(options =>
 
 builder.Services.AddScoped<IEnemyService, EnemyService>();
 builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
-
+builder.Services.AddCors(p => p.AddPolicy("*", b =>
+b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 //PersistanceConfiguration.ConfigureServices(builder.Services, builder.Configuration, "relational");
 var app = builder.Build();
 
@@ -30,4 +31,5 @@ app.MapGet("/", () => "Hello World!");
 EnemyController.MapEnemyEndpoint(app);
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors("*");
 app.Run();
