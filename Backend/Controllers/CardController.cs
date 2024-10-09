@@ -3,6 +3,7 @@ using Domain.Entities; //TODO: Change to correct namespace(DTO)
 
 namespace Backend.Controllers
 {
+
     public static class CardController
     {
         public static void MapCardEndpoint(this WebApplication app)
@@ -10,6 +11,8 @@ namespace Backend.Controllers
             //Get all cards
             app.MapGet("/cards", (ICardService cardService) =>
             {
+                System.Diagnostics.Debug.WriteLine("This is a debug message.");
+                Console.WriteLine("Hello World!");
                 return cardService.GetAllCards();
             });
 

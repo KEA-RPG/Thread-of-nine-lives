@@ -22,5 +22,6 @@ namespace Infrastructure.Persistance.Relational
         {
             new DeckCardConfiguration().Configure(modelBuilder.Entity<DeckCard>());
         }
+        public DbSet<User> Users { get; set; }
     }
 }
