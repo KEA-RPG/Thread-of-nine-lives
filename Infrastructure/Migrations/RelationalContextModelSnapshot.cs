@@ -52,39 +52,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Deck", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Decks");
-                });
-
-            modelBuilder.Entity("Domain.Entities.DeckCard", b =>
-                {
-                    b.Property<int>("DeckId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DeckId", "CardId");
-
-                    b.HasIndex("CardId");
-
-                    b.ToTable("DeckCards");
+                    b.ToTable("Cards", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Enemy", b =>
@@ -109,32 +77,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Enemies");
-                });
-
-            modelBuilder.Entity("Domain.Entities.DeckCard", b =>
-                {
-                    b.HasOne("Domain.Entities.Card", null)
-                        .WithMany("DeckCards")
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Deck", null)
-                        .WithMany("DeckCards")
-                        .HasForeignKey("DeckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Card", b =>
-                {
-                    b.Navigation("DeckCards");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Deck", b =>
-                {
-                    b.Navigation("DeckCards");
+                    b.ToTable("Enemies", (string)null);
                 });
 #pragma warning restore 612, 618
         }
