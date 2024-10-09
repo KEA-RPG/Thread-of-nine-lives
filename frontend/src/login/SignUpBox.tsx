@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Image, Button, Card, CardBody, Heading, Stack, CardFooter, Text, Link } from '@chakra-ui/react'
 import SignUpHandler from './SignUpHandler';
-import UsernameInput from '../components/UsernameInput'
-import PasswordInput from '../components/PasswordInput'
+import InputFieldElement from '../components/InputFieldElement';
+
 
 const SignUpBox = () => {
   const [username, setUsername] = useState('');
@@ -37,9 +37,9 @@ const SignUpBox = () => {
         <Heading size='md'>Sign up</Heading>
       </CardBody>
       <CardBody>
-        <UsernameInput type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e)} />
-        <PasswordInput type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e)} />
-        <PasswordInput type="password" placeholder="Repeat password" value={repeatPassword} onChange={(e) => setRepeatPassword(e)} />
+        <InputFieldElement type="text" name="Username" placeholder="Username" value={username} onChange={(e) => setUsername(e)} />
+        <InputFieldElement type="password" name="Password" placeholder="Password" value={password} onChange={(e) => setPassword(e)} />
+        <InputFieldElement type="password" name="Repeat Password" placeholder="Repeat Password" value={repeatPassword} onChange={(e) => setRepeatPassword(e)} />
         <Button variant='solid' colorScheme='blue' mt={3} onClick={handleSubmit}>
           Sign up
         </Button>
