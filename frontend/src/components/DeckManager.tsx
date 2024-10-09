@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, SimpleGrid, VStack } from "@chakra-ui/react";
 import CardCard, { Card } from "./GameCard";
 import SelectedCardListItem from "./SelectedCardListItem";
 import { useState } from "react";
@@ -45,7 +45,7 @@ const DeckManager = () => {
     let cards: Card[] = [
         { id: 1, title: "no attack", image_path: "https://loremflickr.com/320/240", content: "This is card 1", defence: 5 },
         { id: 2, title: "no defence", image_path: "https://loremflickr.com/320/241", content: "This is card 2", attack: 8, },
-        { id: 3, title: "no nothing", image_path: "https://loremflickr.com/320/242", content: "This is card 3"},
+        { id: 3, title: "no nothing", image_path: "https://loremflickr.com/320/242", content: "This is card 3" },
         { id: 4, title: "Card 4", image_path: "https://loremflickr.com/320/243", content: "This is card 4", attack: 6, defence: 8 },
         { id: 5, title: "Card 5", image_path: "https://loremflickr.com/320/244", content: "This is card 5", attack: 9, defence: 5 },
         { id: 6, title: "Card 6", image_path: "https://loremflickr.com/320/245", content: "This is card 6", attack: 5, defence: 9 },
@@ -75,60 +75,58 @@ const DeckManager = () => {
         })
     }
     return (
-        <Box backgroundColor="rgba(0, 0, 0, 0.3);" color="lightgray" py="20px" px="25px" rounded="10px" mt="20px" textAlign="center">
-            <Heading>Deck Manager</Heading>
-            <HStack spacing={10} mt={10} alignItems="flex-start">
-                <Box w={{
-                    md: "450px",
-                    lg: "660px",
-                    xl: "870px"
-                }}
-                    overflowY="scroll"
-                    overflowX="hidden">
-                    <SimpleGrid height="80vh"
-                        w={{
-                            md: "410px",
-                            lg: "620px",
-                            xl: "830px"
-                        }}
-                        columns={{
-                            md: 2,
-                            lg: 3,
-                            xl: 4
-                        }}
-                        spacing={10}>
-                        {cards.map(card => (
-                            <Box onClick={() => addCard(card)} key={card.id}>
-                                <CardCard card={card} />
-                            </Box>
-                        ))}
-                    </SimpleGrid>
-                </Box>
-                <SimpleGrid
-                    w={{
-                        base: "200px",
-                        xl: "300px"
-                    }}
-                    columns={1}
-                    spacing={5}
-                    backgroundColor="rgba(0, 0, 0, 0.3);"
-                    height="80vh"
-                    overflowY="scroll"
-                    overflowX="hidden">
 
-                    {cardDeck.length === 0 ? (
-                        <>
-                            <Heading>No cards added</Heading>
-                        </>
-                    ) : (
-                        <>
-                            {getGroupedDeck()}
-                        </>
-                    )
-                    }
+        <HStack spacing={25} mt={10} alignItems="flex-start">
+            <Box w={{
+                md: "450px",
+                lg: "660px",
+                xl: "870px"
+            }}
+                overflowY="scroll"
+                overflowX="hidden">
+                <SimpleGrid height="70vh"
+                    w={{
+                        md: "410px",
+                        lg: "620px",
+                        xl: "830px"
+                    }}
+                    columns={{
+                        md: 2,
+                        lg: 3,
+                        xl: 4
+                    }}
+                    spacing={10}
+                    p={1}>
+                    {cards.map(card => (
+                        <Box onClick={() => addCard(card)} key={card.id}>
+                            <CardCard card={card} />
+                        </Box>
+                    ))}
                 </SimpleGrid>
-            </HStack>
-        </Box>
+            </Box>
+            <SimpleGrid
+                w={{
+                    base: "200px",
+                    xl: "300px"
+                }}
+                columns={1}
+                spacing={5}
+                backgroundColor="rgba(0, 0, 0, 0.3);"
+                height="70vh"
+                overflowY="scroll"
+                overflowX="hidden"
+                p={1}>
+
+                <VStack align="stretch">
+                    <Button onClick={() => setCardDeck([]) } colorScheme='red'>Clear Deck</Button>
+                    {cardDeck.length === 0 ? (
+                        <Heading>No cards added</Heading>
+                    ) : (
+                        getGroupedDeck()
+                    )}
+                </VStack>
+            </SimpleGrid>
+        </HStack>
     );
 };
 
