@@ -1,32 +1,43 @@
 ﻿using Domain.Entities;
+using Infrastructure.Persistance.Relational;
 
 namespace Backend.Repositories
 {
     public class DeckRepository : IDeckRepository
     {
+        private readonly RelationalContext _context;
+
+        public DeckRepository(RelationalContext context)
+        {
+            _context = context;
+        }
+
         public void AddDeck(Deck deck)
         {
-            throw new NotImplementedException();
+            _context.Decks.Add(deck);
+            _context.SaveChanges();
         }
 
         public void DeleteDeck(Deck deck)
         {
-            throw new NotImplementedException();
+            _context.Decks.Remove(deck);
+            _context.SaveChanges();
         }
 
         public Deck GetDeckById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Decks.Find(id);   
         }
 
         public void UpdateDeck(Deck deck)
         {
-            throw new NotImplementedException();
+            _context.Decks.Update(deck);
+            _context.SaveChanges();
         }
 
         public List<Deck> GetUserDecks()
         {
-            throw new NotImplementedException();
+            return _context.Decks.ToList();
         }
     }
 }

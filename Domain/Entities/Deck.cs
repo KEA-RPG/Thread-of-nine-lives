@@ -10,6 +10,6 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DeckCard deckCard { get; set; }
+        public List<DeckCard> DeckCards { get; set; }
     }
 }

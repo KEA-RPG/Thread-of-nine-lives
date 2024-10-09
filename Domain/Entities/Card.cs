@@ -23,6 +23,9 @@ namespace Domain.Entities
 
         public string ImagePath { get; set; }
 
+        public List<DeckCard> DeckCards { get; set; }
+
+
         public Card()
         {
         }

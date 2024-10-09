@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class DeckCard
     {
-        public int DeckÍd { get; set; }
+        public int DeckId { get; set; }
         public int CardId { get; set; }
     }
 }
