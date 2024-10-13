@@ -3,15 +3,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Domain.Entities;
 using Infrastructure.Persistance.Relational;
-using System;
-using System.Collections.Generic;
+using Backend.Services;
+using Microsoft.Extensions.Configuration;
+
 
 namespace DataSeeder
 {
 
     class Program
     {
-        public static string ConnectionString; //TODO: Set the connection string
+        public static string ConnectionString = "Server=localhost,1433;Database=KeaRpg;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;"; //TODO: Set the connection string
+        //Set from a builder scope
 
         public static void Main(string[] args)
         {
@@ -41,7 +43,7 @@ namespace DataSeeder
                 if (!context.Cards.Any())
                 {
                     var cards = GenerateCards();
-                    context.Cards.AddRange(cards);
+                    context.Cards.AddRange(cards); //TODO: Make sure it gets added to the correct table
                     context.SaveChanges();
                 }
 
@@ -61,7 +63,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 1,
                 Name = "Rat",
                 Health = "10",
                 ImagePath = "rat.jpg"
@@ -69,7 +70,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 2,
                 Name = "Goblin",
                 Health = "15",
                 ImagePath = "goblin.jpg"
@@ -77,7 +77,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 3,
                 Name = "Orc",
                 Health = "20",
                 ImagePath = "orc.jpg"
@@ -85,7 +84,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 4,
                 Name = "Troll",
                 Health = "25",
                 ImagePath = "troll.jpg"
@@ -93,7 +91,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 5,
                 Name = "Dragon",
                 Health = "30",
                 ImagePath = "dragon.jpg"
@@ -101,7 +98,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 6,
                 Name = "Wraith",
                 Health = "18",
                 ImagePath = "wraith.jpg"
@@ -109,7 +105,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 7,
                 Name = "Minotaur",
                 Health = "28",
                 ImagePath = "minotaur.jpg"
@@ -117,7 +112,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 8,
                 Name = "Harpy",
                 Health = "22",
                 ImagePath = "harpy.jpg"
@@ -125,7 +119,6 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 9,
                 Name = "Skeleton",
                 Health = "15",
                 ImagePath = "skeleton.jpg"
@@ -133,10 +126,16 @@ namespace DataSeeder
 
             enemies.Add(new Enemy
             {
-                Id = 10,
                 Name = "Vampire",
                 Health = "35",
                 ImagePath = "vampire.jpg"
+            });
+
+            enemies.Add(new Enemy
+            {
+                Name = "Bjørggle",
+                Health = "10000000",
+                ImagePath = "sigmaChad.jpg"
             });
 
             return enemies;
@@ -149,7 +148,6 @@ namespace DataSeeder
             // Generate cards here
             cards.Add(new Card
             {
-                Id = 1,
                 Name = "First battle!",
                 Description = "It's this little fellas first battle! He can aid in hitting, but have not yet learned to defend himself",
                 Attack = 3,
@@ -160,7 +158,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 2,
                 Name = "Guidance",
                 Description = "With the guidence of his mentor, he is now a little bit more sturdy",
                 Attack = 3,
@@ -172,7 +169,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 3,
                 Name = "Surprise attack!",
                 Description = "They never saw it comming",
                 Attack = 5,
@@ -184,7 +180,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 4,
                 Name = "Inner power!",
                 Description = "Dispenses the power from within",
                 Attack = 10,
@@ -196,7 +191,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 5,
                 Name = "Darkness within",
                 Description = "Sacrafices defend for high power",
                 Attack = 12,
@@ -208,7 +202,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 6,
                 Name = "Power of Purr-ship",
                 Description = "Power of friendship!",
                 Attack = 12,
@@ -220,7 +213,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 7,
                 Name = "Apprentice",
                 Description = "The apprentice rises",
                 Attack = 4,
@@ -232,7 +224,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 8,
                 Name = "The guard",
                 Description = "The Cat army guard",
                 Attack = 2,
@@ -244,7 +235,6 @@ namespace DataSeeder
 
             cards.Add(new Card
             {
-                Id = 9,
                 Name = "The Magistar",
                 Description = "The wandering Magistar",
                 Attack = 6,
