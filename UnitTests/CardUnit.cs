@@ -8,8 +8,6 @@ namespace UnitTests
 {
     public class CardUnit
     {
-        //Outer Region for positive tests
-        #region Positive Tests 
 
         //CreateCards for testing
         private IEnumerable<Card> GetTestCards(int count)
@@ -30,21 +28,6 @@ namespace UnitTests
             return cards;
         }
 
-
-
-        #region Entity
-
-
-
-
-
-        #endregion
-
-        #region Repository
-
-        #endregion
-
-        #region Service
 
         [Fact]
         public void GetCardById_Should_Return_A_Single_Card()
@@ -112,7 +95,7 @@ namespace UnitTests
                 Attack = 1
             };
 
-            mockCardRepository.Setup(repo => repo.AddCard(card)).Returns(card);
+            mockCardRepository.Setup(repo => repo.AddCard(card));
 
             var cardService = new CardService(mockCardRepository.Object);
 
@@ -123,17 +106,32 @@ namespace UnitTests
             Assert.Equal(card, result);
         }
 
+        [Fact]
+        public void DeleteCard_Should_Delete_A_Card()
+        {
+            //Arrange
+            var mockCardRepository = new Mock<ICardRepository>();
+            var card = new Card
+            {
+                Id = 1,
+                Name = "Card 1",
+                Description = "Description 1",
+                ImagePath = "Image 1",
+                Cost = 1,
+                Attack = 1
 
+            };
+            mockCardRepository.Setup(repo => repo.AddCard(card));
+            mockCardRepository.Setup(repo => repo.GetCardById(1)).Returns(card);
 
+            var cardService = new CardService(mockCardRepository.Object);
 
+            //Act
+            cardService.DeleteCard(1);
 
-        #endregion
-
-        #region Controller
-
-        #endregion
-
-        #endregion
+            //Assert
+            mockCardRepository.Verify(repo => repo.DeleteCard(card), Times.Once);
+        }
 
 
     }
