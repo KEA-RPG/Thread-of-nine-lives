@@ -12,15 +12,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{2C5914FC-AFAD-4CDF-86FD-66F27D6AC55E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{C4C03685-95CF-48C0-B590-14BB873C8E68}"
+	ProjectSection(SolutionItems) = preProject
+		Backend\appsettings.Development.json = Backend\appsettings.Development.json
+		Backend\appsettings.json = Backend\appsettings.json
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{F8BF7492-AA0B-428C-84DA-2FCF61DFAFA0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{27042954-8803-42B9-AA6B-C49E865756AB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F7A6262-ED52-4609-829F-B6D1838805AD}"
-	ProjectSection(SolutionItems) = preProject
-		loginbackendREADME.txt = loginbackendREADME.txt
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseSeeder", "DatabaseSeeder\DatabaseSeeder.csproj", "{1C63C8B2-3655-4740-BB24-42AD1C1186A1}"
 EndProject

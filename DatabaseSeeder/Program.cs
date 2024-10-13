@@ -5,6 +5,7 @@ using Domain.Entities;
 using Infrastructure.Persistance.Relational;
 using Backend.Services;
 using Microsoft.Extensions.Configuration;
+using Infrastructure.Persistance;
 
 
 namespace DataSeeder
@@ -12,22 +13,24 @@ namespace DataSeeder
 
     class Program
     {
-        public static string ConnectionString = "Server=localhost,1433;Database=KeaRpg;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;"; //TODO: Set the connection string
-        //Set from a builder scope
-
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
             SeedDatabase(host);
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((context, services) =>
-                {
-                    services.AddDbContext<RelationalContext>(options =>
-                        options.UseSqlServer(ConnectionString));
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+
+            var builder = Host.CreateDefaultBuilder(args)
+            .ConfigureServices(services =>
+            {
+                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
+            });
+
+
+            return builder;
+        }
 
         private static void SeedDatabase(IHost host)
         {
