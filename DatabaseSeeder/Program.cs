@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Domain.Entities;
 using Infrastructure.Persistance.Relational;
-using Backend.Services;
 using Microsoft.Extensions.Configuration;
 using Infrastructure.Persistance;
+using Microsoft.Extensions.Hosting;
 
 
 namespace DataSeeder
 {
 
-    class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
