@@ -5,13 +5,13 @@ namespace Backend.Controllers
 {
     public static class DeckController
     {
-
         public static void MapDeckEndpoint(this WebApplication app)
         {
             //Get all decks
-            app.MapGet("/decks", (IDeckService deckService) =>
+            app.MapGet("/decks", (IDeckService deckService) => //TODO: Get user id from token
             {
-                return deckService.GetUserDecks();
+                int userId = 1;
+                return deckService.GetUserDecks(userId);
             });
 
             //Get deck by id

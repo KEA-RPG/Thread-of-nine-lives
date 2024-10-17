@@ -35,9 +35,9 @@ namespace Backend.Repositories
             _context.SaveChanges();
         }
 
-        public List<Deck> GetUserDecks()
+        public List<Deck> GetUserDecks(int id)
         {
-            return _context.Decks.ToList();
+            return _context.Decks.Where(d => d.UserId == id).ToList();
         }
     }
 }

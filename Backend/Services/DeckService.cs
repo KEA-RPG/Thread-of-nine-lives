@@ -32,9 +32,9 @@ namespace Backend.Services
             }
         }
 
-        public List<Deck> GetUserDecks()//TODO: parse user id
+        public List<Deck> GetUserDecks(int id)//TODO: parse user id
         {
-            throw new NotImplementedException();
+            return _deckRepository.GetUserDecks(id);
         }
 
         public Deck GetDeckById(int id)
