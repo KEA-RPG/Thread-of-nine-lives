@@ -1,6 +1,7 @@
 ﻿using Backend.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using System.Diagnostics;
 
 namespace Backend.Controllers
 {
@@ -9,10 +10,24 @@ namespace Backend.Controllers
         public static void MapEnemyEndpoint(this WebApplication app)
         {
             //Get all enemies
-            app.MapGet("/enemies", (IEnemyService enemyService) =>
+            app.MapGet("/enemies", (IEnemyService enemyService, HttpContext context) =>
             {
-                return enemyService.GetAllEnemies();
-            });
+                // Log all claims available in the current context
+                Debug.WriteLine("Claims available for the current user:");
+                var claims = context.User.Claims;
+                foreach (var claim in claims)
+                {
+                    Debug.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+                }
+
+                if (!context.User.IsInRole("Admin"))
+                {
+                    Debug.WriteLine("User does not have Admin role.");
+                    return Results.Forbid();
+                }
+
+                return Results.Ok(enemyService.GetAllEnemies());
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Get enemy by id
             app.MapGet("/enemies/{id}", (IEnemyService enemyService, int id) =>

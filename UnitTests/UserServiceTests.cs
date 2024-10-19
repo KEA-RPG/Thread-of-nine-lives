@@ -33,7 +33,7 @@ namespace UnitTests
 
             // Assert
             _userRepositoryMock.Verify(repo => repo.CreateUser(It.IsAny<User>()), Times.Once);
-            Assert.Equal("Player", newUser.Role); // Test only the role
+            Assert.Equal("Player", newUser.Role);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace UnitTests
             _userService.CreateUser(newUser);
 
             // Assert
-            Assert.NotEqual("testpassword", newUser.PasswordHash); // Test only the password hash
+            Assert.NotEqual("testpassword", newUser.PasswordHash);
         }
 
         [Fact]
