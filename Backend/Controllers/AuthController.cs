@@ -28,7 +28,7 @@ namespace Backend.Controllers
                         new Claim(JwtClaimNames.Sub, user.Username),
                         new Claim(ClaimTypes.Role, loggedInUser.Role),
                         new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
-                    };
+        };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
