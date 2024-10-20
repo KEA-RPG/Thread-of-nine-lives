@@ -86,9 +86,6 @@ namespace Backend.Controllers
 
                 var token = authorizationHeader.Replace("Bearer ", "");
 
-                // Log the raw token to verify if it matches what is expected
-                Debug.WriteLine($"Received token for logout: {token}");
-
                 var jwtHandler = new JsonWebTokenHandler();
                 JsonWebToken jwtToken = null;
 
@@ -106,8 +103,11 @@ namespace Backend.Controllers
 
                 if (jti != null && expiration != null)
                 {
-                    // Adding logging to confirm values
-                    Debug.WriteLine($"Caching jti: {jti}, Expiration: {expiration}");
+                    // Check if the token is already in the cache
+                    if (memoryCache.TryGetValue(jti, out _))
+                    {
+                        return Results.BadRequest("Token is already logged out.");
+                    }
 
                     // Cache the jti with the expiration time matching the token's expiration
                     memoryCache.Set(jti, true, new MemoryCacheEntryOptions
@@ -115,8 +115,6 @@ namespace Backend.Controllers
                         AbsoluteExpiration = expiration
                     });
 
-                    bool found = memoryCache.TryGetValue(jti, out _);
-                    Debug.WriteLine($"Cache check immediately after logout: {found}");
                     return Results.Ok("Logged out successfully.");
                 }
 

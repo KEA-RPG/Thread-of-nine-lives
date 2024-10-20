@@ -43,23 +43,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
                 if (jti != null && memoryCache.TryGetValue(jti, out _))
                 {
-                    Debug.WriteLine($"Token with jti: {jti} has been revoked, failing validation.");
                     context.Fail("This token has been revoked.");
                 }
-                else
-                {
-                    Debug.WriteLine($"Token with jti: {jti} was not found in the cache, proceeding with validation.");
-                }
-
-                // Log all claims to verify their presence
-                Debug.WriteLine("Claims in the token during validation (using context.Principal):");
-                if (context.Principal != null)
-                {
-                    foreach (var claim in context.Principal.Claims)
-                    {
-                        Debug.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-                    }
-                }
+               
 
                 return Task.CompletedTask;
             }
