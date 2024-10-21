@@ -79,6 +79,7 @@ var app = builder.Build();
 CardController.MapCardEndpoint(app);
 AuthController.MapAuthEndpoints(app);
 EnemyController.MapEnemyEndpoint(app);
+StateController.MapStateEndpoints(app);
 
 app.UseAuthentication();
 app.UseAuthorization();
