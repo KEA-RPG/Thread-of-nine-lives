@@ -7,6 +7,7 @@ import DeckManager from './components/DeckManager.tsx';
 import ListLayout from './components/ListLayout.tsx';
 import EnemyUpsert from './components/EnemyUpsert.tsx';
 import MainLayout from './layouts/MainLayout.tsx'; // Import your MainLayout
+import CombatPage from "./pages/Combat.tsx";
 
 const router = createBrowserRouter([
   {
@@ -100,7 +101,14 @@ const router = createBrowserRouter([
           </MainLayout>
         ),
       },
-
+      {
+        path: "/combat",
+        element: (
+          <MainLayout header="Combat">
+            <CombatPage />
+          </MainLayout>
+        ),
+      },
     ],
   },
 ]);
