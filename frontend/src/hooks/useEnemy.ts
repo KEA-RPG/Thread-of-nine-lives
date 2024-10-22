@@ -9,8 +9,8 @@ export interface Enemy {
 }
 
 const useEnemy = () => useGet<Enemy[]>(`/enemies`)
-const useEnemies = (id: Number) => useGet<Enemy>(`/enemies/${id}`)
-const usePostEnemy = (enemy: Enemy) => usePost<Enemy, Enemy>(`/enemies`, enemy);
-const usePutEnemy = (id: number, enemy: Enemy) => usePut<Enemy, Enemy>(`/enemies/${id}`, enemy); 
+const useEnemies = (id: number) => useGet<Enemy>(`/enemies/${id}`)
+const usePostEnemy = () => usePost<Enemy, Enemy>(`/enemies`);
+const usePutEnemy = (id: number) => usePut<Enemy, Enemy>(`/enemies/${id}`); 
 
 export { useEnemy, useEnemies, usePostEnemy,usePutEnemy };

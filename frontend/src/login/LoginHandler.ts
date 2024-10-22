@@ -14,17 +14,8 @@ const LoginHandler = async (credentials: LoginCredentials) => {
         alert('Please enter your username and password.');
         return;
     }
-    useEffect(() => {
-        const result = usePost<string, LoginCredentials>("auth/login", credentials);
-        if (result.data) {
-            const test = jwtDecode(result.data);
-            console.log(result.data)
-            console.log(test);
-        } else {
-            console.error('No data received');
-        }
-        console.log()
-    })
+
+    console.log()
 
     try {
         const response = await fetch('', {
