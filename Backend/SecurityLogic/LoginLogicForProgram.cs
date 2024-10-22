@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,8 +12,12 @@ namespace Backend;
 
 public static class LoginLogicForProgram
 {
-    public static void AddJwtAuthentication(this IServiceCollection services, string issuer, string audience, string signingKey)
+    public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
+        var issuer = configuration["Jwt:Issuer"];
+        var audience = configuration["Jwt:Audience"];
+        var signingKey = configuration["Jwt:SigningKey"];
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -35,8 +41,6 @@ public static class LoginLogicForProgram
 
                         // Access the claims directly from context.Principal
                         var jti = context.Principal?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-
-                        Debug.WriteLine($"Checking cache for jti during validation: {jti}");
 
                         if (jti != null && memoryCache.TryGetValue(jti, out _))
                         {

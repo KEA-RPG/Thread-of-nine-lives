@@ -5,16 +5,12 @@ using Backend.Services;
 using Infrastructure.Persistance.Relational;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Backend; 
+using Backend;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddJwtAuthentication(
-    issuer: "threadgame",
-    audience: "threadgame",
-    signingKey: "UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="
-);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // Add services to the container
 builder.Services.AddEndpointsApiExplorer();
