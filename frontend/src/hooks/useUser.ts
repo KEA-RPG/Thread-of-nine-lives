@@ -1,10 +1,12 @@
-import { useContext } from 'react';
-import { UserContext } from '../components/UserContext';
+import { LoginCredentials } from "../login/LoginBox";
+import { usePost } from "./useData";
 
-const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) throw new Error("useUser must be used within a UserProvider");
-  return context;
+const useLogin = () => {
+    const { data, error, isLoading, triggerPost } = usePost<string, LoginCredentials>(`/auth/login`);
+
+    // Return the triggerPost function, data, error, and isLoading state
+    return { login: triggerPost, data, error, isLoading };
 };
+const useLogin = () => usePost<Enemy, Enemy>(`/enemies`);
 
-export default useUser;
+export default useLogin;

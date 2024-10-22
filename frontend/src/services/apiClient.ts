@@ -5,7 +5,7 @@ import { UserContext } from "../components/UserContext";
 // Create an Axios instance
 const apiClient = axios.create({
   baseURL: "https://localhost:7195/",
-  timeout: 1000,
+  timeout: 10000,
 });
 
 const useApiClient = () => {

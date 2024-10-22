@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode } from 'react';
 
-interface User {
+export interface User {
   loggedIn: boolean;
   isAdmin: boolean;
   token: string;

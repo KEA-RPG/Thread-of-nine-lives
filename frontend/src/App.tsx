@@ -1,11 +1,11 @@
 import { Grid, GridItem } from "@chakra-ui/react"
 import Header from "./components/Header"
 import { Outlet } from "react-router-dom"
-import { userProvider } from "./components/UserContext"
+import { UserProvider } from "./components/UserContext"
 
 function App() {
   return (
-    <userProvider>
+    <UserProvider>
       <Grid
         templateAreas={`"header" "main"`}
         h='200px'
@@ -20,7 +20,7 @@ function App() {
           <Outlet />
         </GridItem>
       </Grid>
-    </userProvider>
+    </UserProvider>
   )
 }
 
