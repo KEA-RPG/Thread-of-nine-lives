@@ -1,17 +1,34 @@
+import { useEffect } from "react";
+import { usePost } from "../hooks/useData";
+import { UserContext } from "../components/UserContext";
+import { jwtDecode } from "jwt-decode";
+
 interface LoginCredentials {
     username: string;
     password: string;
 }
 
-const LoginHandler = async ({ username, password }: LoginCredentials) => {
+const LoginHandler = async (credentials: LoginCredentials) => {
+    const { username, password } = credentials;
     if (!username || !password) {
         alert('Please enter your username and password.');
         return;
     }
+    useEffect(() => {
+        const result = usePost<string, LoginCredentials>("auth/login", credentials);
+        if (result.data) {
+            const test = jwtDecode(result.data);
+            console.log(result.data)
+            console.log(test);
+        } else {
+            console.error('No data received');
+        }
+        console.log()
+    })
 
     try {
         const response = await fetch('', {
-        method: 'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
