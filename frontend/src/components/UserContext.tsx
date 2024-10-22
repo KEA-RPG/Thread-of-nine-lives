@@ -3,6 +3,7 @@ import React, { createContext, useState, ReactNode } from 'react';
 interface User {
   loggedIn: boolean;
   isAdmin: boolean;
+  token: string;
 }
 
 interface UserContextType {
@@ -17,8 +18,8 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const loginAsUser = () => setUser({ loggedIn: true, isAdmin: false });
-  const loginAsAdmin = () => setUser({ loggedIn: true, isAdmin: true });
+  const loginAsUser = () => setUser({ loggedIn: true, isAdmin: false, token: "asdf" });
+  const loginAsAdmin = () => setUser({ loggedIn: true, isAdmin: true, token: "asdf" });
   const logout = () => setUser(null);
 
   return (

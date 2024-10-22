@@ -4,20 +4,22 @@ import { Enemy, useEnemies, usePostEnemy, usePutEnemy } from "../hooks/useEnemy"
 import { useState, useEffect } from "react";
 import InputFieldElement from "./InputFieldElement";
 import { usePost, usePut } from "../hooks/useData";
-import apiClient from "../services/apiClient";
+import useApiClient from "../services/apiClient";
 
 const EnemyUpsert = () => {
+    const apiClient = useApiClient(); 
+
     const param = useParams().enemyid;
     const [enemy, setEnemy] = useState<Enemy>({} as Enemy);
     const value = param !== undefined && !isNaN(Number(param)) ? Number(param) : null;
 
     const { data: enemyData } = value !== null ? useEnemies(value) : { data: undefined };
 
-    useEffect(() => {
-        if (enemyData !== undefined) {
-            setEnemy(enemyData);
-        }
-    }, [enemyData]);
+        useEffect(() => {
+            if (enemyData !== undefined) {
+                setEnemy(enemyData);
+            }
+        }, [enemyData]);
 
 
 
