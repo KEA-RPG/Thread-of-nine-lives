@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-  </ItemGroup>
+  </ItemGroup>  
 
 	<ItemGroup>
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />

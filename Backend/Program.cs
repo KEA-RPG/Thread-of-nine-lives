@@ -1,58 +1,20 @@
+using Backend;
 using Backend.Controllers;
 using Backend.Repositories;
 using Backend.Services;
 using Infrastructure.Persistance.Relational;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Backend; 
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// JWT Authentication configuration
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "threadgame",
-            ValidAudience = "threadgame",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s=")),
-            RoleClaimType = ClaimTypes.Role,
-            ClockSkew = TimeSpan.Zero  // Set clock skew to zero for precise validation
-        };
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = context =>
-            {
-                var memoryCache = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
-
-                // Access the claims directly from context.Principal
-                var jti = context.Principal?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-
-                Debug.WriteLine($"Checking cache for jti during validation: {jti}");
-
-                if (jti != null && memoryCache.TryGetValue(jti, out _))
-                {
-                    context.Fail("This token has been revoked.");
-                }
-               
-
-                return Task.CompletedTask;
-            }
-        };
-
-
-    });
+builder.Services.AddJwtAuthentication(
+    issuer: "threadgame",
+    audience: "threadgame",
+    signingKey: "UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="
+);
 
 // Add services to the container
 builder.Services.AddEndpointsApiExplorer();
