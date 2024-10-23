@@ -9,7 +9,7 @@ namespace Backend.Controllers
         public static void MapDeckEndpoint(this WebApplication app)
         {
             //Get all decks
-            app.MapGet("/decks", (IDeckService deckService) =>
+            app.MapGet("/decks", (IDeckService deckService) => //TODO need to take user id from JWT token
             {
                 return deckService.GetUserDecks();
             });
