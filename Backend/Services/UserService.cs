@@ -42,6 +42,9 @@ namespace Backend.Services
             }
 
             return false;
+
+
+            //Fjern callback i tests og find user i repo ud fra username. 
         }
     }
 }

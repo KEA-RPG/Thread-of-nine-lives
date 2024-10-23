@@ -32,7 +32,7 @@ namespace Backend.Tests.Services
             // Act
             _userService.CreateUser(credentials);
 
-            // Assert
+            // 
             Assert.NotEqual("testpassword", capturedUser.PasswordHash);
         }
 
