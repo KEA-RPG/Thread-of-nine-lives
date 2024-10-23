@@ -26,7 +26,7 @@ namespace UnitTests
                 {
                     Id = i,
                     Name = $"Enemy {i}",
-                    Health = $"{i * 100} HP", // Health as a string (per the Enemy class)
+                    Health = i * 100, // Health was a string (per the Enemy class(OUTDATED))
                     ImagePath = $"ImagePath_{i}.jpg"
                 });
             }
@@ -52,7 +52,7 @@ namespace UnitTests
             {
                 Id = 1,
                 Name = "Enemy 1",
-                Health = "100 HP",
+                Health = 100,
                 ImagePath = "ImagePath_1.jpg"
             };
 
@@ -98,7 +98,7 @@ namespace UnitTests
             {
                 Id = 1,
                 Name = "Enemy 1",
-                Health = "100 HP",
+                Health = 100,
                 ImagePath = "ImagePath_1.jpg"
             };
 
