@@ -33,12 +33,19 @@ namespace Backend.Services
         // Implement the method to validate user credentials
         public bool ValidateUserCredentials(string username, string password)
         {
-            var user = _userRepository.GetUserByUsername(username);
-
-            // Check if user exists and if the password matches
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            try
             {
-                return true;
+                var user = _userRepository.GetUserByUsername(username);
+
+                // Check if user exists and if the password matches
+                if (user != null && !string.IsNullOrEmpty(user.PasswordHash) && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                {
+                    return true;
+                }
+            }
+            catch (System.Exception)
+            {
+                // Log exception (optional)
             }
 
             return false;
