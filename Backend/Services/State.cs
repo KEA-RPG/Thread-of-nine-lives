@@ -1,17 +1,18 @@
-﻿
+﻿using Domain.Entities;
+
 namespace Backend.Services
 {
     public class State
     {
         public Player Player { get; set; }
-        public Boss Boss { get; set; }
+        public Enemy Enemy { get; set; }
         public List<Action> Actions { get; set; }
 
-        public State(Player player, Boss boss)
+        public State(Player player, Enemy enemy)
         {
             Actions = new List<Action>();
             Player = player;
-            Boss = boss;
+            Enemy = enemy;
         }
         public void ProcessAction(Action action)
         {
@@ -23,10 +24,10 @@ namespace Backend.Services
         {
             if (action.Type == "ATTACK")
             {
-                Boss.Health -= action.Value;
-                if (Boss.Health <= 0)
+                Enemy.Health -= action.Value;
+                if (Enemy.Health <= 0)
                 {
-                    Boss.Health = 0;
+                    Enemy.Health = 0;
                 }
             }
             
@@ -38,11 +39,6 @@ namespace Backend.Services
     {
         public int Health { get; set; }
         
-    }
-
-    public class Boss
-    {
-        public int Health { get; set; }
     }
 
     public class Action
