@@ -23,17 +23,14 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var credentials = new Credentials { Username = "testuser", Password = "testpassword" };
-            User capturedUser = null;
-
-            _mockUserRepository
-                .Setup(repo => repo.CreateUser(It.IsAny<User>()))
-                .Callback<User>(user => capturedUser = user);
 
             // Act
             _userService.CreateUser(credentials);
 
-            // 
-            Assert.NotEqual("testpassword", capturedUser.PasswordHash);
+            // Assert
+            _mockUserRepository.Verify(repo => repo.CreateUser(It.Is<User>(
+                user => user.PasswordHash != "testpassword"
+            )), Times.Once);
         }
 
         [Fact]
