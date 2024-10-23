@@ -1,2 +1,10 @@
 Da vi bruger minimal API lukker vi vores endpoints ned ved at slutte endpointet med metoden: .RequireAuthorization(policy => policy.RequireRole("ROLE")); Role er Player eller Admin.
 I vores JWT token vil der være tilføjet en Role claim. Derfor skal intet nyt foretages når det kommer til at logge ind på endpoints, det skal vores middleware nok håndtere da den kan læse en brugers rolle i JWT token´s claim.
+
+
+
+
+
+
+
+Vores AuthController benytter sig af en Credentials DTO som ligger under Backend/Models/Credentials.cs. Denne bruger vi til at modtage data på et endpoint. I en UserService kan vi "caste" et Credentials object til et User object.
