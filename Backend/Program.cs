@@ -47,6 +47,8 @@ builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDeckRepository, DeckRepository>();
+builder.Services.AddScoped<IDeckService, DeckService>();
 
 
 
@@ -69,6 +71,7 @@ var app = builder.Build();
 CardController.MapCardEndpoint(app);
 AuthController.MapAuthEndpoints(app);
 EnemyController.MapEnemyEndpoint(app);
+DeckController.MapDeckEndpoint(app);
 
 app.UseAuthentication();
 app.UseAuthorization();
