@@ -1,3 +1,4 @@
+using Backend;
 using Backend.Controllers;
 using Backend.Repositories;
 using Backend.Services;
@@ -9,24 +10,10 @@ using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// JWT Authentication configuration
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "threadgame",
-            ValidAudience = "threadgame",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s=")),
-            RoleClaimType = ClaimTypes.Role
-        };
-    });
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // Add services to the container
 builder.Services.AddEndpointsApiExplorer();
@@ -70,6 +57,9 @@ builder.Services.AddDbContext<RelationalContext>(options =>
 
 builder.Services.AddScoped<IEnemyService, EnemyService>();
 builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
+builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
+
+
 builder.Services.AddCors(p => p.AddPolicy("*", b =>
 b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 //PersistanceConfiguration.ConfigureServices(builder.Services, builder.Configuration, "relational");
