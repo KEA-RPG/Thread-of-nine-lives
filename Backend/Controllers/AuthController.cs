@@ -25,9 +25,8 @@ namespace Backend.Controllers
                     var loggedInUser = userService.GetUserByUsername(user.Username);
                     var claims = new[]
                     {
-                        new Claim(JwtClaimNames.Sub, user.Username),
-                        new Claim(ClaimTypes.Role, loggedInUser.Role),
-                        new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                    new Claim(ClaimTypes.Role, loggedInUser.Role)
         };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));
