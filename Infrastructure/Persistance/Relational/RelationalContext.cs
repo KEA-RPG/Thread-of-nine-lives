@@ -14,5 +14,6 @@ namespace Infrastructure.Persistance.Relational
         public RelationalContext(DbContextOptions options):base (options) { }
         public DbSet<Enemy> Enemies { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

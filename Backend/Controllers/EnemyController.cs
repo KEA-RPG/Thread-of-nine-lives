@@ -12,7 +12,7 @@ namespace Backend.Controllers
             app.MapGet("/enemies", (IEnemyService enemyService) =>
             {
                 return enemyService.GetAllEnemies();
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Get enemy by id
             app.MapGet("/enemies/{id}", (IEnemyService enemyService, int id) =>

@@ -1,11 +1,17 @@
-import { FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 
-const UsernameInput = () =>
+interface Props {
+    type: string;
+    placeholder: string;
+    value: string;
+    onChange: (event: string) => void;
+}
+
+const PasswordInput = ({ type, placeholder, value, onChange }: Props) => (
     <FormControl>
-        <FormLabel>Username</FormLabel>
-        <Input type="text" placeholder="Username" />
+        <FormLabel>Password</FormLabel>
+        <Input type={type} placeholder={placeholder} value={value} onChange={ (e) => onChange(e.target.value)} />
     </FormControl>
+);
 
-
-
-export default UsernameInput;
+export default PasswordInput;
