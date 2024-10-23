@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const CombatPage = () => {
-    const [enemyHealth, setEnemyHealth] = useState(null); 
+    const [enemyName, setEnemyName] = useState(null);
+    const [enemyHealth, setEnemyHealth] = useState(null);
     const [playerAttackValue] = useState(10); 
     const [loading, setLoading] = useState(false);
 
@@ -13,6 +14,7 @@ const CombatPage = () => {
                     throw new Error('Failed to fetch game state');
                 }
                 const data = await response.json();
+                setEnemyName(data.enemy.name);
                 setEnemyHealth(data.enemy.health);
             } catch (error) {
                 console.error('Error fetching game state:', error);
@@ -60,6 +62,7 @@ const CombatPage = () => {
         <div style={{ padding: '20px', textAlign: 'center' }}>
             <h1>Combat Page</h1>
             <div>
+                <h2>{enemyName}</h2>
                 <h2>Enemy Health: {enemyHealth}</h2>
             </div>
             <button onClick={handleAttack} disabled={loading}>
