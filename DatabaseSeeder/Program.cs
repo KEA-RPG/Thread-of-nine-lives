@@ -16,21 +16,15 @@ namespace DataSeeder
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            SeedDatabase(host);
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args)
-        {
-
             var builder = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
                 PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
             });
 
+            var host = builder.Build();
 
-            return builder;
+            SeedDatabase(host);
         }
 
         private static void SeedDatabase(IHost host)
@@ -63,17 +57,17 @@ namespace DataSeeder
 
         private static List<Enemy> GenerateEnemies()
         {
-            var enemies = Reader<Enemy>("../../../Enemies.json", "Enemies");
+            var enemies = Reader<List<Enemy>>("Enemies.json");
             return enemies;
         }
 
         private static List<Card> GenerateCards()
         {
-            var cards = Reader<Card>("../../../Cards.json", "Cards");
+            var cards = Reader<List<Card>>("Cards.json");
             return cards;
         }
 
-        private static List<T> Reader<T>(string filePath, string type)
+        private static T Reader<T>(string filePath)
         {
             var options = new JsonSerializerOptions
             {
@@ -82,16 +76,7 @@ namespace DataSeeder
 
             string jsonString = File.ReadAllText(filePath);
             var jsonDoc = JsonDocument.Parse(jsonString);
-
-            if (type == "Cards" || type == "Enemies")
-            {
-                var elements = jsonDoc.RootElement.GetProperty(type);
-                return JsonSerializer.Deserialize<List<T>>(elements.ToString(), options);
-            }
-            else
-            {
-                throw new Exception("NOT A VALID OBJECT TYPE");
-            }
+            return JsonSerializer.Deserialize<T>(jsonDoc, options);
         }
     }
 }

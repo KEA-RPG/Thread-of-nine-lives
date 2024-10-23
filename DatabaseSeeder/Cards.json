@@ -1,5 +1,4 @@
-{
-  "Cards": [
+ [
     {
       "Name": "First Battle",
       "Description": "It's this little fellas first battle! He can aid in hitting, but have not yet learned to defend himself",
@@ -74,4 +73,3 @@
       "ImagePath": "9.jpg"
     }
   ]
-}

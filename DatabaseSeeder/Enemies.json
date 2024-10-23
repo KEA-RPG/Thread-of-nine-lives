@@ -1,5 +1,4 @@
-{
-  "Enemies": [
+[
     {
       "Name": "Rat",
       "Health": 10,
@@ -81,4 +80,3 @@
       "ImagePath": "Bjoerggle.png"
     }
   ]
-}
