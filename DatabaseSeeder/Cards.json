@@ -1,0 +1,77 @@
+{
+  "Cards": [
+    {
+      "Name": "First Battle",
+      "Description": "It's this little fellas first battle! He can aid in hitting, but have not yet learned to defend himself",
+      "Attack": 3,
+      "Defense": 0,
+      "Cost": 0,
+      "ImagePath": "1.jpg"
+    },
+    {
+      "Name": "Guidance",
+      "Description": "With the guidence of his mentor, he is now a little bit more sturdy",
+      "Attack": 3,
+      "Defense": 2,
+      "Cost": 1,
+      "ImagePath": "2.jpg"
+    },
+
+    {
+      "Name": "Surprise attack!",
+      "Description": "They never saw it comming",
+      "Attack": 5,
+      "Defense": 0,
+      "Cost": 3,
+      "ImagePath": "3.jpg"
+    },
+    {
+      "Name": "Inner power!",
+      "Description": "Dispenses the power from within",
+      "Attack": 10,
+      "Defense": 5,
+      "Cost": 8,
+      "ImagePath": "4.jpg"
+    },
+    {
+      "Name": "Darkness within",
+      "Description": "Sacrafices defend for high power",
+      "Attack": 12,
+      "Defense": -3,
+      "Cost": 9,
+      "ImagePath": "5.jpg"
+    },
+    {
+      "Name": "Power of Purr-ship",
+      "Description": "Power of friendship!",
+      "Attack": 12,
+      "Defense": 8,
+      "Cost": 10,
+      "ImagePath": "6.jpg"
+    },
+    {
+      "Name": "Apprentice",
+      "Description": "The apprentice rises",
+      "Attack": 4,
+      "Defense": 2,
+      "Cost": 3,
+      "ImagePath": "7.jpg"
+    },
+    {
+      "Name": "The guard",
+      "Description": "The Cat army guard",
+      "Attack": 2,
+      "Defense": 5,
+      "Cost": 2,
+      "ImagePath": "8.jpg"
+    },
+    {
+      "Name": "The Magistar",
+      "Description": "The wandering Magistar",
+      "Attack": 6,
+      "Defense": 2,
+      "Cost": 5,
+      "ImagePath": "9.jpg"
+    }
+  ]
+}

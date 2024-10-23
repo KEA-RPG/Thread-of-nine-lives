@@ -14,7 +14,7 @@ namespace Domain.Entities
 
         public string Name { get; set; }
 
-        public string Health { get; set; }
+        public int Health { get; set; }
 
         public string ImagePath { get; set; }
 
