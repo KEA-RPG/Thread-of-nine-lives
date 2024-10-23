@@ -1,5 +1,5 @@
 ﻿using Backend.Services;
-using Domain.Entities;
+using Domain.DTOs;
 
 namespace Backend.Controllers
 {
@@ -33,14 +33,14 @@ namespace Backend.Controllers
             });
 
             //Create deck
-            app.MapPost("/decks", (IDeckService deckService, Deck deck) =>
+            app.MapPost("/decks", (IDeckService deckService, DeckDTO deck) =>
             {
                 deckService.CreateDeck(deck);
                 return Results.Created($"/decks/{deck.Id}", deck);
             });
 
             //Update deck
-            app.MapPut("/decks", (IDeckService deckService, Deck deck) =>
+            app.MapPut("/decks", (IDeckService deckService, DeckDTO deck) =>
             {
 
                 var dbDeck = deckService.GetDeckById(deck.Id);

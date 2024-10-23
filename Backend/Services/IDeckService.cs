@@ -1,13 +1,13 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Backend.Services
 {
     public interface IDeckService
     {
-        Deck GetDeckById(int id);
-        List<Deck> GetUserDecks();
-        Deck CreateDeck(Deck deck);
-        Deck UpdateDeck(Deck deck);
+        DeckDTO GetDeckById(int id);
+        List<DeckDTO> GetUserDecks();
+        DeckDTO CreateDeck(DeckDTO deck);
+        DeckDTO UpdateDeck(DeckDTO deck);
 
         void DeleteDeck(int id);
     }

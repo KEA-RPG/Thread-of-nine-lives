@@ -1,5 +1,6 @@
 ﻿using Backend.Repositories;
 using Domain.Entities;
+using Domain.DTOs;
 
 namespace Backend.Services
 {
@@ -12,10 +13,9 @@ namespace Backend.Services
             _deckRepository = deckRepository;
         }
 
-        public Deck CreateDeck(Deck deck)
+        public DeckDTO CreateDeck(DeckDTO deck)
         {
             _deckRepository.AddDeck(deck);
-
             return deck;
         }
 
@@ -32,17 +32,17 @@ namespace Backend.Services
             }
         }
 
-        public List<Deck> GetUserDecks()//TODO: parse user id
+        public List<DeckDTO> GetUserDecks() //TODO: parse user id
         {
             throw new NotImplementedException();
         }
 
-        public Deck GetDeckById(int id)
+        public DeckDTO GetDeckById(int id)
         {
             return _deckRepository.GetDeckById(id);
         }
 
-        public Deck UpdateDeck(Deck deck)
+        public DeckDTO UpdateDeck(DeckDTO deck)
         {
             _deckRepository.UpdateDeck(deck);
             return _deckRepository.GetDeckById(deck.Id);

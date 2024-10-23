@@ -1,13 +1,13 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Backend.Repositories
 {
     public interface IDeckRepository
     {
-        void AddDeck(Deck deck);
-        void DeleteDeck(Deck deck);
-        List<Deck> GetUserDecks();
-        Deck GetDeckById(int id);
-        void UpdateDeck(Deck deck);
+        DeckDTO AddDeck(DeckDTO deck);
+        void DeleteDeck(DeckDTO deck);
+        List<DeckDTO> GetUserDecks();
+        DeckDTO GetDeckById(int id);
+        void UpdateDeck(DeckDTO deck);
     }
 }
