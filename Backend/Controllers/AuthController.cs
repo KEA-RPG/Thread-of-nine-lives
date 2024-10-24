@@ -5,13 +5,11 @@ using System.Text;
 using Backend.Services;
 using Domain.Entities;
 using Microsoft.Extensions.Caching.Memory;
-using System.Diagnostics;
 using Microsoft.IdentityModel.JsonWebTokens;
 using JwtClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace Backend.Controllers
 {
-
     public static class AuthController
     {
         public static void MapAuthEndpoints(this WebApplication app)
@@ -25,9 +23,10 @@ namespace Backend.Controllers
                     var loggedInUser = userService.GetUserByUsername(user.Username);
                     var claims = new[]
                     {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                    new Claim(ClaimTypes.Role, loggedInUser.Role)
-        };
+                        new Claim(JwtClaimNames.Sub, user.Username),
+                        new Claim("role", loggedInUser.Role),
+                        new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
+                    };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

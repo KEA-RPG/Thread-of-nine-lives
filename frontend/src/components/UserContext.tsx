@@ -1,32 +1,67 @@
-import React, { createContext, useState, ReactNode } from 'react';
-
-export interface User {
-  loggedIn: boolean;
-  isAdmin: boolean;
-  token: string;
-}
+import { createContext, ReactNode, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useLogin, { LoginCredentials, Token } from "../hooks/useUser";
+import { jwtDecode } from 'jwt-decode';
+import { Response } from '../services/apiClient';
 
 interface UserContextType {
-  user: User | null;
-  loginAsUser: () => void;
-  loginAsAdmin: () => void;
+  token?: string;
+  username?: string;
+  login: (credentials: LoginCredentials) => Promise<Response<Token>>;
   logout: () => void;
+  role?: string;
+}
+interface JwtToken {
+  sub: string;
+  iat: number;
+  exp: number;
+  iss?: string;
+  aud?: string | string[];
+  role?: string;
+  name: string;
 }
 
+// Create the UserContext
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+// UserContext provider component
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [role, setRole] = useState<string>();
+  const [token, setToken] = useState<string>();
+  const [username, setUsername] = useState<string>();
+  const navigate = useNavigate();
+  const login = async (credentials: LoginCredentials) : Promise<Response<Token>> => {
+    // Replace with actual login logic (e.g., API call)
+    const loggedInUser = await useLogin(credentials);
 
-  const loginAsUser = () => setUser({ loggedIn: true, isAdmin: false, token: "asdf" });
-  const loginAsAdmin = () => setUser({ loggedIn: true, isAdmin: true, token: "asdf" });
-  const logout = () => setUser(null);
+    if (loggedInUser && loggedInUser.data) {
+      setToken(loggedInUser.data.token)
+      const decodedToken = jwtDecode(loggedInUser.data.token) as JwtToken;
+      setRole(decodedToken.role?.toLowerCase());
+      setUsername(decodedToken.name);
+      navigate('/menu');
+    }
+    else {
+      console.error('Login failed: result is undefined');
+    }
+    return loggedInUser;
+  };
+
+  const logout = () => {
+    navigate('/login');
+  };
 
   return (
-    <UserContext.Provider value={{ user, loginAsUser, loginAsAdmin, logout }}>
+    <UserContext.Provider value={{ token, username, login, logout, role }}>
       {children}
     </UserContext.Provider>
   );
 };
-
-export { UserProvider, UserContext };
+// Custom hook to use the UserContext
+export const useUserContext = (): UserContextType => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUserContext must be used within a UserProvider');
+  }
+  return context;
+};

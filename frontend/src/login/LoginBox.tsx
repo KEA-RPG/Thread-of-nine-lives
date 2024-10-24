@@ -1,21 +1,15 @@
 import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, Link } from '@chakra-ui/react';
 import { useState } from 'react';
 import InputFieldElement from '../components/InputFieldElement';
-import { jwtDecode } from 'jwt-decode';
-import useLogin from '../hooks/useUser';  // Make sure this hook is correctly implemented
-
-export interface LoginCredentials {
-  username: string;
-  passwordHash: string;//Skal hedde noget andet når api er opdateret
-}
+import { LoginCredentials } from '../hooks/useUser';
+import { useUserContext } from '../components/UserContext'; // Assuming you're handling auth here
 
 const LoginBox = () => {
   const [credentials, setCredentials] = useState<LoginCredentials>({ username: '', passwordHash: '' });
-
-  const { login, error, isLoading } = useLogin();  // Call useLogin at the top of the component
+  const { login } = useUserContext();
 
   const handleLogin = async () => {
-    const test = triggerLogin(credentials);  // Trigger the login function
+    login(credentials);
   };
 
   return (
@@ -42,10 +36,9 @@ const LoginBox = () => {
             value={credentials.passwordHash}
             onChange={(password) => setCredentials({ ...credentials, passwordHash: password })}
           />
-          <Button variant="solid" colorScheme="blue" mt={3} onClick={handleLogin} isLoading={isLoading}>
+          <Button variant="solid" colorScheme="blue" mt={3} onClick={handleLogin} >
             Sign in
           </Button>
-          {error && <Text color="red.500">Error: {error}</Text>}
         </CardBody>
 
         <CardFooter>

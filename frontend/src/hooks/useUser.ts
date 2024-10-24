@@ -1,12 +1,12 @@
-import { LoginCredentials } from "../login/LoginBox";
 import { usePost } from "./useData";
+export interface Token {
+    token: string;
+}
+export interface LoginCredentials {
+    username: string;
+    passwordHash: string; //Skal hedde noget andet når api er opdateret
+}
+const useLogin = (credentials: LoginCredentials) => usePost<LoginCredentials, Token>(`/auth/login`, credentials)
 
-const useLogin = () => {
-    const { data, error, isLoading, triggerPost } = usePost<string, LoginCredentials>(`/auth/login`);
-
-    // Return the triggerPost function, data, error, and isLoading state
-    return { login: triggerPost, data, error, isLoading };
-};
-const useLogin = () => usePost<Enemy, Enemy>(`/enemies`);
 
 export default useLogin;

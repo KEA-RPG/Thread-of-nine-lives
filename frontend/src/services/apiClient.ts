@@ -1,39 +1,108 @@
-import axios from "axios";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../components/UserContext";
+// apiCaller.ts
+import axios, { AxiosInstance } from 'axios';
+export interface Response<T> {
+  data: T | undefined;
+  error: string | null;
+  isLoading: boolean;
+}
 
-// Create an Axios instance
-const apiClient = axios.create({
-  baseURL: "https://localhost:7195/",
-  timeout: 10000,
-});
+class ApiCaller {
+  public apiClient: AxiosInstance | undefined;
 
-const useApiClient = () => {
-  const userContext = useContext(UserContext);
-  if (!userContext) {
-    throw new Error("UserContext is undefined");
-  }
-  const { user } = userContext;
-
-  useEffect(() => {
-    const requestInterceptor = apiClient.interceptors.request.use(
-      (config) => {
-        if (user?.loggedIn && user.token) {
-          config.headers['Authorization'] = `Bearer ${user.token}`;
+  public getClient() : AxiosInstance {
+    if (!this.apiClient) {
+      this.apiClient = axios.create({
+        baseURL: "https://localhost:7195/",
+        timeout: 10000,
+        headers: {
+          ContentType: 'application/json',
         }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+      });
+    }
+    console.log(this.getToken());
+    return this.apiClient;
+  }
 
-    return () => {
-      apiClient.interceptors.request.eject(requestInterceptor);
+  private getHeaders() {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
     };
-  }, [user]);
+    if (this.getToken()) {
+      headers['Authorization'] = `Bearer ${this.getToken()}`;
+    }
+    return headers;
+  }
 
-  return apiClient;
-};
+  async get<T>(url: string): Promise<Response<T>> {
+    let data: T | undefined;
+    let error: string | null = null;
+    let isLoading = true;
 
-export default useApiClient;
+    this.getClient().get<T>(`${url}`, {
+      headers: this.getHeaders()
+    })
+      .then((response) => data = response.data)
+      .catch((response) => error = response.message)
+      .finally(() => isLoading = false);
+
+    return { data, error, isLoading };
+  }
+
+  async post<TBody,TReturn>(url: string, body: TBody ): Promise<Response<TReturn>> {
+    let data: TReturn | undefined;
+    let error: string | null = null;
+    let isLoading = true;
+
+    await this.getClient().post<TReturn>(`${url}`,body, {
+      headers: this.getHeaders()
+    })
+      .then((response) => data = response.data)
+      .catch((response) => error = response.message)
+      .finally(() => isLoading = false);
+
+    return { data, error, isLoading };
+  }
+
+  async put<TBody,TReturn>(url: string, body: TBody ): Promise<Response<TReturn>> {
+    let data: TReturn | undefined;
+    let error: string | null = null;
+    let isLoading = true;
+
+    await this.getClient().put<TReturn>(`${url}`,body, {
+      headers: this.getHeaders()
+    })
+      .then((response) => data = response.data)
+      .catch((response) => error = response.message)
+      .finally(() => isLoading = false);
+
+    return { data, error, isLoading };
+  }
+
+  async delete<T>(url: string): Promise<Response<T>> {
+    let data: T | undefined;
+    let error: string | null = null;
+    let isLoading = true;
+
+    this.getClient().delete<T>(`${url}`, {
+      headers: this.getHeaders()
+    })
+      .then((response) => data = response.data)
+      .catch((response) => error = response.message)
+      .finally(() => isLoading = false);
+
+    return { data, error, isLoading };
+  }
+
+  setToken(token: string) {
+    localStorage.setItem('token', token);
+    if (this.apiClient) {
+      this.apiClient.defaults.headers['Authorization'] = token ? `Bearer ${token}` : '';
+    }
+  }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
+}
+
+export default ApiCaller;

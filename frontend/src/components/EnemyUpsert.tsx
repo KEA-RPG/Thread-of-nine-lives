@@ -1,35 +1,39 @@
 import { Box, HStack, VStack, Image, Button } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { Enemy, useEnemies, usePostEnemy, usePutEnemy } from "../hooks/useEnemy";
+import { Enemy, useEnemy, usePostEnemy, usePutEnemy } from "../hooks/useEnemy";
 import { useState, useEffect } from "react";
 import InputFieldElement from "./InputFieldElement";
-import { usePost, usePut } from "../hooks/useData";
-import useApiClient from "../services/apiClient";
 
 const EnemyUpsert = () => {
-    const apiClient = useApiClient(); 
+    // const apiClient = useApiClient(); 
 
     const param = useParams().enemyid;
     const [enemy, setEnemy] = useState<Enemy>({} as Enemy);
     const value = param !== undefined && !isNaN(Number(param)) ? Number(param) : null;
 
-    const { data: enemyData } = value !== null ? useEnemies(value) : { data: undefined };
 
-        useEffect(() => {
-            if (enemyData !== undefined) {
-                setEnemy(enemyData);
+    useEffect(() => {
+        const fetchEnemyData = async () => {
+            if (value !== null) {
+                const enemyData = await useEnemy(value);
+                if (enemyData.data) {
+                    setEnemy(enemyData.data);
+                }
             }
-        }, [enemyData]);
+        };
+    
+        fetchEnemyData();
+    }, []);
 
 
 
     const handleUpsert = () => { 
         //TODO: Implement the handleUpsert function in the useEnemies class, this is ass and i cant get it to work
         if (enemy.id === undefined) {
-            apiClient.post<Enemy>("/enemies",enemy);
+            usePostEnemy(enemy);
         }
         else {
-            apiClient.put<Enemy>(`/enemies/${enemy.id}`,enemy);
+            usePutEnemy(enemy.id, enemy);
         }
     }
 

@@ -1,56 +1,23 @@
-import { useState } from "react";
 import useApiClient from "../services/apiClient";
 
 
-const apiClient = useApiClient();
+const apiClient = new useApiClient();
 const useGet = <T>(endpoint: string) => {
-    const [data, setData] = useState<T>();
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const triggerGet = () => {
-        setIsLoading(true);
-        setError(null);
-
-        apiClient.get<T>(endpoint)
-            .then((response) => setData(response.data))
-            .catch((error) => setError(error.message))
-            .finally(() => setIsLoading(false))
-    }
-
-    return { data, error, isLoading, triggerGet };
+    return apiClient.get<T>(endpoint);
 }
 
-const usePost = <res, req>(endpoint: string,) => {
-    const [data, setData] = useState<res | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const triggerPost = (object: req) => {
-        setIsLoading(true);
-        setError(null);
-
-        apiClient.post<res>(endpoint, object)
-            .then((response) => setData(response.data))
-            .catch((error) => setError(error.message))
-            .finally(() => setIsLoading(false));
-    };
-
-    return { data, error, isLoading, triggerPost };
+const usePost = <TBody, TReturn>(endpoint: string, body: TBody) => {
+    return apiClient.post<TBody, TReturn>(endpoint, body);
 };
 
-const usePut = <res, req>(endpoint: string) => {
-    const [data, setData] = useState<res>();
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const triggerPut = (object: req) => {
-        setIsLoading(true);
-        setError(null);
+const usePut = <TBody, TReturn>(endpoint: string, body: TBody) => {
+    return apiClient.put<TBody, TReturn>(endpoint, body);
+};
 
-        apiClient.put<res>(endpoint, object)
-            .then((response) => setData(response.data))
-            .catch((error) => setError(error.message))
-            .finally(() => setIsLoading(false));
-    }
-    return { data, error, isLoading, triggerPut };
+const useDelete = <T>(endpoint: string) => {
+    return apiClient.delete<T>(endpoint);
+};
+const setToken = (token: string) => {
+    apiClient.setToken(token);
 }
-export { useGet, usePost, usePut };
+export { useGet, usePost, usePut, useDelete, setToken };
