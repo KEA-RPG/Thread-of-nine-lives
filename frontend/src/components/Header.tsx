@@ -2,24 +2,24 @@ import React from 'react';
 import { Button, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { MoonIcon } from '@chakra-ui/icons';
 import NavBar from "./NavBar"
-import useUser from '../hooks/useUser';
+// import useUser from '../hooks/useUser';
 
 
 const Header: React.FC = () => {
-  const { user, loginAsUser, loginAsAdmin, logout } = useUser();
+  // const { user, loginAsUser, loginAsAdmin, logout } = useUser();
 
   return <HStack justifyContent="space-between">
-    <a href={user?.loggedIn ? "/menu" : "/"}>
+    {/* <a href={user?.loggedIn ? "/menu" : "/"}>
       <HStack spacing={2}>
         <MoonIcon />
         <Text>Thread of Nine Lives</Text>
       </HStack>
-    </a>
+    </a> */}
 
 
     <Spacer />
     <HStack spacing={4}>
-      {!user && (
+      {/* {!user && (
         <>
           <Button onClick={loginAsUser}>Login as User</Button>
           <Button onClick={loginAsAdmin}>Login as Admin</Button>
@@ -34,7 +34,7 @@ const Header: React.FC = () => {
             <Button>User Profile</Button>
           )}
         </>
-      )}
+      )} */}
       <NavBar />
     </HStack>
   </HStack>

@@ -1,50 +1,54 @@
-import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, Link } from '@chakra-ui/react'
-import { useState } from 'react'
-import LoginHandler from './LoginHandler';
+import { Image, Button, Card, CardBody, CardFooter, Heading, Stack, Text, Link } from '@chakra-ui/react';
+import { useState } from 'react';
 import InputFieldElement from '../components/InputFieldElement';
+import { LoginCredentials } from '../hooks/useUser';
+import { useUserContext } from '../components/UserContext'; // Assuming you're handling auth here
 
 const LoginBox = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null);
+  const [credentials, setCredentials] = useState<LoginCredentials>({ username: '', passwordHash: '' });
+  const { login } = useUserContext();
 
   const handleLogin = async () => {
-    setError(null);
-    try {
-      await LoginHandler({ username, password });
-
-    } catch (err) {
-      setError('failed to login');
-    }
+    login(credentials);
   };
 
-  return <Card
-    direction={{ base: 'column', sm: 'row' }}
-    overflow='hidden'
-    variant='elevated'>
+  return (
+    <Card direction={{ base: 'column', sm: 'row' }} overflow="hidden" variant="elevated">
+      <Image objectFit="cover" maxW={{ base: '100%', sm: '200px' }} src="https://loremflickr.com/1280/720" />
 
-    <Image
-      objectFit='cover'
-      maxW={{ base: '100%', sm: '200px' }}
-      src='https://loremflickr.com/1280/720'
-    />
+      <Stack>
+        <CardBody>
+          <Heading size="md">Log in</Heading>
+        </CardBody>
 
-    <Stack>
-      <CardBody>
-        <Heading size='md'>Log in</Heading>
-      </CardBody>
-      <CardBody>
-        <InputFieldElement type="text" name="Username" placeholder="Username" value={username} onChange={(e) => setUsername(e)} />
-        <InputFieldElement type="password" name="Password" placeholder="Password" value={password} onChange={(e) => setPassword(e)} />
-        <Button variant='solid' colorScheme='blue' mt={3} onClick={handleLogin}>
-          Sign in
-        </Button>
-      </CardBody>
-      <CardFooter>
-        <Text>Or sign up <Link href='/signup'>here</Link></Text>
-      </CardFooter>
-    </Stack>
-  </Card>
-}
+        <CardBody>
+          <InputFieldElement
+            type="text"
+            name="Username"
+            placeholder="Username"
+            value={credentials.username}
+            onChange={(username) => setCredentials({ ...credentials, username })}
+          />
+          <InputFieldElement
+            type="password"
+            name="Password"
+            placeholder="Password"
+            value={credentials.passwordHash}
+            onChange={(password) => setCredentials({ ...credentials, passwordHash: password })}
+          />
+          <Button variant="solid" colorScheme="blue" mt={3} onClick={handleLogin} >
+            Sign in
+          </Button>
+        </CardBody>
 
-export default LoginBox
+        <CardFooter>
+          <Text>
+            Or sign up <Link href="/signup">here</Link>
+          </Text>
+        </CardFooter>
+      </Stack>
+    </Card>
+  );
+};
+
+export default LoginBox;

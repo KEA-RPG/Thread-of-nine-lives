@@ -1,9 +1,9 @@
 import { Card, CardBody, Divider } from "@chakra-ui/react";
 import NavigationItem from "./NavigationItem";
-import useUser from "../hooks/useUser";
+import { useUserContext } from "./UserContext";
 
 const CenterNavigation = () => {
-    const { user, loginAsUser, loginAsAdmin, logout } = useUser();
+    const { role, token } = useUserContext();
     const data = [
         { link: "/combat", text: "Fight!" },
         { link: "/decks", text: "Decks" },
@@ -20,7 +20,7 @@ const CenterNavigation = () => {
     return (
         <Card>
             <CardBody>
-                {user?.isAdmin ? (
+                {role == "admin" ? (
                     adminData.map((item, index) => (
                         <>
                             <NavigationItem key={index} link={item.link}>
@@ -29,7 +29,7 @@ const CenterNavigation = () => {
                             {index < adminData.length - 1 && <Divider />}
                         </>
                     ))
-                ) : user?.loggedIn ? (
+                ) : role == "player" ? (
                     data.map((item, index) => (
                         <>
                             <NavigationItem key={index} link={item.link}>
@@ -39,7 +39,6 @@ const CenterNavigation = () => {
                         </>
                     ))
                 ) : null}
-                {user?.isAdmin}
             </CardBody>
         </Card >
     )

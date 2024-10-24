@@ -18,12 +18,9 @@ const InputFieldElement = (props: Props) => {
         <FormControl isInvalid={isError} >
             <FormLabel>{name}</FormLabel>
             {type === 'file' ? (
-                <>
-                    <input type={type} onChange={(e) => onChange && onChange(e.target.value)} defaultValue={value} placeholder={placeholder} />
-                </>
+                <input type={type} onChange={(e) => onChange && onChange(e.target.value)} placeholder={placeholder} />
             ) : (
-
-                <Input width={60} type={type} value={value} onChange={(e) => onChange && onChange(e.target.value)} defaultValue={value} placeholder={placeholder} />
+                <Input width={60} type={type} value={value} onChange={(e) => onChange && onChange(e.target.value)} placeholder={placeholder} />
             )}
             {errorText ?? (
                 <>
