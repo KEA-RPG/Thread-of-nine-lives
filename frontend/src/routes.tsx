@@ -7,6 +7,7 @@ import DeckManager from './components/DeckManager.tsx';
 import ListLayout from './components/ListLayout.tsx';
 import EnemyUpsert from './components/EnemyUpsert.tsx';
 import MainLayout from './layouts/MainLayout.tsx'; // Import your MainLayout
+import Logout from "./components/logout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,14 @@ const router = createBrowserRouter([
         element: (
           <MainLayout header="Log in">
             <LoginBox />
+          </MainLayout>
+        ),
+      },      
+      {
+        path: "/logout",
+        element: (
+          <MainLayout header="Log in">
+            <Logout/>
           </MainLayout>
         ),
       },

@@ -1,41 +1,40 @@
 import React from 'react';
 import { Button, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { MoonIcon } from '@chakra-ui/icons';
-import NavBar from "./NavBar"
-// import useUser from '../hooks/useUser';
+import { useUserContext } from './UserContext';
 
 
 const Header: React.FC = () => {
-  // const { user, loginAsUser, loginAsAdmin, logout } = useUser();
+  const { role, logout } = useUserContext();
+  const buttonMenu = () => {
+    if (role === "admin") {
+      return (
+        <>
+          <Button onClick={logout}>Logout</Button>
+          <Button>Admin Dashboard</Button>
+        </>
+      )
+    }
+    else if (role === "player") {
+      return <Link href="/logout">
+        <Button >Logout</Button>
+      </Link>
+    }
+  }
 
-  return <HStack justifyContent="space-between">
-    {/* <a href={user?.loggedIn ? "/menu" : "/"}>
+
+  return <HStack justifyContent="space-between" h={12}>
+    <a href={role ? "/menu" : "/"}>
       <HStack spacing={2}>
         <MoonIcon />
         <Text>Thread of Nine Lives</Text>
       </HStack>
-    </a> */}
+    </a>
 
 
     <Spacer />
-    <HStack spacing={4}>
-      {/* {!user && (
-        <>
-          <Button onClick={loginAsUser}>Login as User</Button>
-          <Button onClick={loginAsAdmin}>Login as Admin</Button>
-        </>
-      )}
-      {user && user.loggedIn && (
-        <>
-          <Button onClick={logout}>Logout</Button>
-          {user.isAdmin ? (
-            <Button>Admin Dashboard</Button>
-          ) : (
-            <Button>User Profile</Button>
-          )}
-        </>
-      )} */}
-      <NavBar />
+    <HStack spacing={4} mr={4}>
+      {buttonMenu()}
     </HStack>
   </HStack>
 };

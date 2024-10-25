@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useLogin, { LoginCredentials, Token } from "../hooks/useUser";
 import { jwtDecode } from 'jwt-decode';
@@ -30,16 +30,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string>();
   const [username, setUsername] = useState<string>();
   const navigate = useNavigate();
-  const login = async (credentials: LoginCredentials) : Promise<Response<Token>> => {
+  const login = async (credentials: LoginCredentials): Promise<Response<Token>> => {
     // Replace with actual login logic (e.g., API call)
     const loggedInUser = await useLogin(credentials);
 
     if (loggedInUser && loggedInUser.data) {
       setToken(loggedInUser.data.token)
       const decodedToken = jwtDecode(loggedInUser.data.token) as JwtToken;
-      setRole(decodedToken.role?.toLowerCase());
-      setUsername(decodedToken.name);
-      navigate('/menu');
+      if (decodedToken.role) {
+        setRole(decodedToken.role.toLowerCase());
+        setUsername(decodedToken.name);
+        navigate('/menu');
+      }
     }
     else {
       console.error('Login failed: result is undefined');
@@ -48,7 +50,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    navigate('/login');
+    useEffect(() => {
+      console.log("logged out");
+      setRole("");
+      navigate('/');
+    })
   };
 
   return (
