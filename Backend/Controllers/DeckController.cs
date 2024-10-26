@@ -11,7 +11,7 @@ namespace Backend.Controllers
             app.MapGet("/decks", (IDeckService deckService) => //TODO need to take user id from JWT token
             {
                 int userId = 1;
-                return deckService.GetUserDecks(userId);
+                return deckService.GetUserDecks(/*userId*/);
             });
 
             //Get deck by id

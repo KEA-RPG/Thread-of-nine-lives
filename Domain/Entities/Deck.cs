@@ -14,8 +14,6 @@ namespace Domain.Entities
         public string Name { get; set; }
         public List<DeckCard> DeckCards { get; set; }
 
-        public int UserId { get; set; }
-
         public User User { get; set; }
     }
 }
