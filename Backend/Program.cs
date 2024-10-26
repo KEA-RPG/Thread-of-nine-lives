@@ -4,9 +4,12 @@ using Backend.Repositories;
 using Backend.Services;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Backend;
+using System.Security.Claims;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);

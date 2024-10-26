@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 using Microsoft.IdentityModel.JsonWebTokens;
 using JwtClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
+using Backend.Models;
 
 namespace Backend.Controllers
 {
@@ -17,15 +18,15 @@ namespace Backend.Controllers
         public static void MapAuthEndpoints(this WebApplication app)
         {
             // Login Endpoint
-            app.MapPost("/auth/login", (IUserService userService, User user) =>
+            app.MapPost("/auth/login", (IUserService userService, Credentials credentials) =>
             {
                 // Check if user exists and password is correct
-                if (userService.ValidateUserCredentials(user.Username, user.PasswordHash))
+                if (userService.ValidateUserCredentials(credentials.Username, credentials.Password))
                 {
-                    var loggedInUser = userService.GetUserByUsername(user.Username);
+                    var loggedInUser = userService.GetUserByUsername(credentials.Username);
                     var claims = new[]
                     {
-                        new Claim(JwtClaimNames.Sub, user.Username),
+                        new Claim(JwtClaimNames.Sub, credentials.Username),
                         new Claim(ClaimTypes.Role, loggedInUser.Role),
                         new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
         };
@@ -53,23 +54,17 @@ namespace Backend.Controllers
             });
 
             // Signup (Create User) Endpoint
-            app.MapPost("/auth/signup", (IUserService userService, User user) =>
+            app.MapPost("/auth/signup", (IUserService userService, Credentials credentials) =>
             {
                 // Check if user already exists
-                var existingUser = userService.GetUserByUsername(user.Username);
+                var existingUser = userService.GetUserByUsername(credentials.Username);
                 if (existingUser != null)
                 {
                     return Results.BadRequest("User already exists");
                 }
 
                 // Create new user
-                var newUser = new User
-                {
-                    Username = user.Username,
-                    PasswordHash = user.PasswordHash // Password will be hashed in the service
-                };
-
-                userService.CreateUser(newUser);
+                userService.CreateUser(credentials);
 
                 return Results.Ok("User created successfully");
             });
