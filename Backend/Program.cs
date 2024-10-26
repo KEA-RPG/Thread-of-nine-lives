@@ -71,7 +71,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/", () => "Hello World!");
-EnemyController.MapEnemyEndpoint(app);
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors("*");

@@ -18,7 +18,7 @@ namespace Backend.Services
             var enemy = _enemyRepository.GetEnemyById(id);
             if (enemy != null)
             {
-                return ToEnemyDTO(enemy);
+                return EnemyDTO.FromEntity(enemy);
             }
             else
             {
@@ -29,12 +29,12 @@ namespace Backend.Services
         public List<EnemyDTO> GetAllEnemies()
         {
             var enemies = _enemyRepository.GetAllEnemies();
-            return enemies.Select(ToEnemyDTO).ToList();
+            return enemies.Select(EnemyDTO.FromEntity).ToList();
         }
 
         public EnemyDTO CreateEnemy(EnemyDTO enemyDTO)
         {
-            var enemy = ToEnemy(enemyDTO);
+            var enemy = Enemy.FromDTO(enemyDTO);
             _enemyRepository.AddEnemy(enemy);
 
             // Update the DTO with the generated Id from the entity
@@ -58,7 +58,7 @@ namespace Backend.Services
 
             _enemyRepository.UpdateEnemy(existingEnemy);
 
-            return ToEnemyDTO(existingEnemy);
+            return EnemyDTO.FromEntity(existingEnemy);
         }
 
         public void DeleteEnemy(int id)
@@ -68,29 +68,6 @@ namespace Backend.Services
             {
                 _enemyRepository.DeleteEnemy(enemy);
             }
-        }
-
-        // Mapping methods
-        private Enemy ToEnemy(EnemyDTO enemyDTO)
-        {
-            return new Enemy
-            {
-                Id = enemyDTO.Id,
-                Name = enemyDTO.Name,
-                Health = enemyDTO.Health,
-                ImagePath = enemyDTO.ImagePath
-            };
-        }
-
-        private EnemyDTO ToEnemyDTO(Enemy enemy)
-        {
-            return new EnemyDTO
-            {
-                Id = enemy.Id,
-                Name = enemy.Name,
-                Health = enemy.Health,
-                ImagePath = enemy.ImagePath
-            };
         }
     }
 }

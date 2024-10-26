@@ -46,7 +46,7 @@ namespace Backend.Tests.Services
             {
                 Id = enemyId,
                 Name = "Goblin",
-                Health = "100",
+                Health = 100,
                 ImagePath = "/images/goblin.png"
             };
             _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns(enemy);
@@ -57,7 +57,7 @@ namespace Backend.Tests.Services
             // Assert
             Assert.Equal(enemyId, result.Id);
             Assert.Equal("Goblin", result.Name);
-            Assert.Equal("100", result.Health);
+            Assert.Equal(100, result.Health);
             Assert.Equal("/images/goblin.png", result.ImagePath);
         }
 
@@ -99,8 +99,8 @@ namespace Backend.Tests.Services
             // Arrange
             var enemies = new List<Enemy>
             {
-                new Enemy { Id = 1, Name = "Goblin", Health = "100", ImagePath = "/images/goblin.png" },
-                new Enemy { Id = 2, Name = "Orc", Health = "200", ImagePath = "/images/orc.png" }
+                new Enemy { Id = 1, Name = "Goblin", Health = 100, ImagePath = "/images/goblin.png" },
+                new Enemy { Id = 2, Name = "Orc", Health = 200, ImagePath = "/images/orc.png" }
             };
             _mockRepository.Setup(repo => repo.GetAllEnemies()).Returns(enemies);
 
@@ -133,7 +133,13 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var enemies = Enumerable.Range(1, numberOfEnemies)
-                .Select(id => new Enemy { Id = id, Name = $"Enemy{id}", Health = "100", ImagePath = $"/images/enemy{id}.png" })
+                .Select(id => new Enemy
+                {
+                    Id = id,
+                    Name = $"Enemy{id}",
+                    Health = 100,
+                    ImagePath = $"/images/enemy{id}.png"
+                })
                 .ToList();
             _mockRepository.Setup(repo => repo.GetAllEnemies()).Returns(enemies);
 
@@ -153,7 +159,7 @@ namespace Backend.Tests.Services
             var enemyDTO = new EnemyDTO
             {
                 Name = "Troll",
-                Health = "300",
+                Health = 300,
                 ImagePath = "/images/troll.png"
             };
             Enemy savedEnemy = null;
@@ -179,7 +185,7 @@ namespace Backend.Tests.Services
             var enemyDTO = new EnemyDTO
             {
                 Name = "Troll",
-                Health = "300",
+                Health = 300,
                 ImagePath = "/images/troll.png"
             };
 
@@ -199,7 +205,7 @@ namespace Backend.Tests.Services
             var enemyDTO = new EnemyDTO
             {
                 Name = "Troll",
-                Health = "300",
+                Health = 300,
                 ImagePath = "/images/troll.png"
             };
             Enemy savedEnemy = null;
@@ -216,7 +222,7 @@ namespace Backend.Tests.Services
 
             // Assert
             Assert.Equal("Troll", savedEnemy.Name);
-            Assert.Equal("300", savedEnemy.Health);
+            Assert.Equal(300, savedEnemy.Health);
             Assert.Equal("/images/troll.png", savedEnemy.ImagePath);
         }
 
@@ -230,7 +236,7 @@ namespace Backend.Tests.Services
             {
                 Id = 2,
                 Name = "Orc",
-                Health = "200",
+                Health = 200,
                 ImagePath = "/images/orc.png"
             };
             _mockRepository.Setup(repo => repo.GetEnemyById(enemyDTO.Id)).Returns((Enemy)null);
@@ -250,14 +256,14 @@ namespace Backend.Tests.Services
             {
                 Id = 1,
                 Name = "Goblin King",
-                Health = "500",
+                Health = 500,
                 ImagePath = "/images/goblin_king.png"
             };
             var existingEnemy = new Enemy
             {
                 Id = 1,
                 Name = "Goblin",
-                Health = "100",
+                Health = 100,
                 ImagePath = "/images/goblin.png"
             };
             _mockRepository.Setup(repo => repo.GetEnemyById(enemyDTO.Id)).Returns(existingEnemy);
@@ -267,7 +273,7 @@ namespace Backend.Tests.Services
 
             // Assert
             Assert.Equal("Goblin King", existingEnemy.Name);
-            Assert.Equal("500", existingEnemy.Health);
+            Assert.Equal(500, existingEnemy.Health);
             Assert.Equal("/images/goblin_king.png", existingEnemy.ImagePath);
         }
 
@@ -279,7 +285,7 @@ namespace Backend.Tests.Services
             {
                 Id = 1,
                 Name = "Goblin King",
-                Health = "500",
+                Health = 500,
                 ImagePath = "/images/goblin_king.png"
             };
             var existingEnemy = new Enemy { Id = 1 };
