@@ -23,11 +23,7 @@ namespace Backend.Tests.Services
         public void CreateUser_ShouldHashPassword_WhenUserIsCreated()
         {
             // Arrange
-            var credentials = new Credentials
-            {
-                Username = "testuser",
-                Password = "testpassword"
-            };
+            var credentials = new Credentials { Username = "testuser", Password = "testpassword" };
 
             // Act
             _userService.CreateUser(credentials);
@@ -42,11 +38,7 @@ namespace Backend.Tests.Services
         public void CreateUser_ShouldSetRoleToPlayer_WhenUserIsCreated()
         {
             // Arrange
-            var credentials = new Credentials
-            {
-                Username = "testuser",
-                Password = "testpassword"
-            };
+            var credentials = new Credentials { Username = "testuser", Password = "testpassword" };
 
             // Act
             _userService.CreateUser(credentials);
@@ -65,12 +57,7 @@ namespace Backend.Tests.Services
             var password = "testpassword";
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
-            var user = new User
-            {
-                Username = username,
-                PasswordHash = passwordHash,
-                Role = "Player"
-            };
+            var user = new User { Username = username, PasswordHash = passwordHash, Role = "Player" };
             _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns(user);
 
             // Act
@@ -101,12 +88,7 @@ namespace Backend.Tests.Services
             var username = "testuser";
             var passwordHash = BCrypt.Net.BCrypt.HashPassword("correctpassword");
 
-            var user = new User
-            {
-                Username = username,
-                PasswordHash = passwordHash,
-                Role = "Player"
-            };
+            var user = new User { Username = username, PasswordHash = passwordHash, Role = "Player" };
             _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns(user);
 
             // Act
@@ -116,19 +98,13 @@ namespace Backend.Tests.Services
             Assert.False(result);
         }
 
-        // **New Test Methods for GetUserByUsername**
-
+        // New Test Methods for GetUserByUsername after UserDTO was implemented
         [Fact]
         public void GetUserByUsername_ShouldReturnUserDTO_WhenUserExists()
         {
             // Arrange
             var username = "testuser";
-            var user = new User
-            {
-                Username = username,
-                PasswordHash = "hashedpassword",
-                Role = "Player"
-            };
+            var user = new User { Username = username, PasswordHash = "hashedpassword", Role = "Player" };
             _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns(user);
 
             // Act
