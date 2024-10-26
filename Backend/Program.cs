@@ -2,6 +2,7 @@ using Backend;
 using Backend.Controllers;
 using Backend.Repositories;
 using Backend.Services;
+using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -47,10 +48,8 @@ builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.Services.AddDbContext<RelationalContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("Infrastructure")));
+
+
 
 builder.Services.AddScoped<IEnemyService, EnemyService>();
 builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
@@ -59,7 +58,11 @@ builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blackl
 
 builder.Services.AddCors(p => p.AddPolicy("*", b =>
 b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-//PersistanceConfiguration.ConfigureServices(builder.Services, builder.Configuration, "relational");
+
+
+PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
+
+
 var app = builder.Build();
 
 // Map controllers
