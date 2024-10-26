@@ -1,0 +1,82 @@
+[
+    {
+      "Name": "Rat",
+      "Health": 10,
+      "Damage": 2,
+      "Experience": 5,
+      "Gold": 5,
+      "ImagePath": "Rat.png"
+    },
+    {
+      "Name": "Goblin",
+      "Health": 20,
+      "Damage": 5,
+      "Experience": 10,
+      "Gold": 10,
+      "ImagePath": "Goblin.png"
+    },
+    {
+      "Name": "Orc",
+      "Health": 30,
+      "Damage": 10,
+      "Experience": 15,
+      "Gold": 15,
+      "ImagePath": "Orc.png"
+    },
+    {
+      "Name": "Troll",
+      "Health": 40,
+      "Damage": 15,
+      "Experience": 20,
+      "Gold": 20,
+      "ImagePath": "Troll.png"
+    },
+    {
+      "Name": "Dragon",
+      "Health": 50,
+      "Damage": 20,
+      "Experience": 25,
+      "Gold": 25,
+      "ImagePath": "Dragon.png"
+    },
+    {
+      "Name": "Wraith",
+      "Health": 30,
+      "Damage": 10,
+      "Experience": 15,
+      "Gold": 15,
+      "ImagePath": "Wraith.png"
+    },
+    {
+      "Name": "Minotaur",
+      "Health": 28,
+      "Damage": 8,
+      "Experience": 13,
+      "Gold": 13,
+      "ImagePath": "Minotaur.png"
+    },
+    {
+      "Name": "Harpy",
+      "Health": 25,
+      "Damage": 6,
+      "Experience": 11,
+      "Gold": 11,
+      "ImagePath": "Harpy.png"
+    },
+    {
+      "Name": "Vampire",
+      "Health": 35,
+      "Damage": 12,
+      "Experience": 17,
+      "Gold": 17,
+      "ImagePath": "Vampire.png"
+    },
+    {
+      "Name": "Bjoerggle",
+      "Health": 10000000,
+      "Damage": 100,
+      "Experience": 100000,
+      "Gold": 100000,
+      "ImagePath": "Bjoerggle.png"
+    }
+  ]
