@@ -15,7 +15,7 @@ namespace Backend.Controllers
             });//.RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             // Get enemy by id
-            app.MapGet("/enemy/{id}", (IEnemyService enemyService, int id) =>
+            app.MapGet("/enemies/{id}", (IEnemyService enemyService, int id) =>
             {
                 var enemyDTO = enemyService.GetEnemyById(id);
                 if (enemyDTO == null)
