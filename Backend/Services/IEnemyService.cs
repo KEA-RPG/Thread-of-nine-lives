@@ -1,14 +1,13 @@
-﻿using Domain.Entities;
-namespace Backend.Services
+﻿using Domain.DTOs;
 
+namespace Backend.Services
 {
     public interface IEnemyService
     {
-        Enemy GetEnemyById(int id);
-        List<Enemy> GetAllEnemies();
-        Enemy CreateEnemy(Enemy enemy);
-        Enemy UpdateEnemy(Enemy enemy);
+        EnemyDTO GetEnemyById(int id);
+        List<EnemyDTO> GetAllEnemies();
+        EnemyDTO CreateEnemy(EnemyDTO enemyDTO);
+        EnemyDTO UpdateEnemy(EnemyDTO enemyDTO);
         void DeleteEnemy(int id);
     }
 }
-
