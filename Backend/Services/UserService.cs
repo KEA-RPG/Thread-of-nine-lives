@@ -1,5 +1,7 @@
 ﻿using Domain.Entities;
 using Backend.Repositories;
+using Backend.Models;
+using Domain.DTOs;
 
 namespace Backend.Services
 {
@@ -12,16 +14,23 @@ namespace Backend.Services
             _userRepository = userRepository;
         }
 
-        public User GetUserByUsername(string username)
+        public UserDTO GetUserByUsername(string username)
         {
-            return _userRepository.GetUserByUsername(username);
+            var user = _userRepository.GetUserByUsername(username);
+            if (user == null)
+                return null;
+            return UserDTO.FromUser(user);
         }
 
-        public void CreateUser(User user)
+        public void CreateUser(Credentials credentials)
         {
-            user.Role = "Player"; // Sætter det automatisk til player. Admin roller tildeles i databasen.
-            // Hash the user's password before saving
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+            var user = new User
+            {
+                Username = credentials.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(credentials.Password),
+                Role = "Player" // Automatically set to "Player"; admin roles are assigned in the database.
+            };
+
             _userRepository.CreateUser(user);
         }
 
@@ -37,6 +46,9 @@ namespace Backend.Services
             }
 
             return false;
+
+
+           
         }
     }
 }
