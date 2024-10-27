@@ -12,14 +12,14 @@ namespace Backend.Controllers
 
         public static void MapStateEndpoints(this WebApplication app)
         {
-            app.MapPost("/combat", (Services.Action action) =>
+            app.MapPost("/combat", (GameAction gameAction) =>
             {
-                if (action == null || string.IsNullOrEmpty(action.Type))
+                if (gameAction == null || string.IsNullOrEmpty(gameAction.Type))
                 {
                     return Results.BadRequest("Invalid action.");
                 }
 
-                gameState.ProcessAction(action);
+                gameState.ProcessAction(gameAction);
 
                 return Results.Ok(gameState);
             });

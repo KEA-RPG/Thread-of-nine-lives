@@ -6,35 +6,34 @@ namespace Backend.Services
     public class State
     {
         public Player Player { get; set; }
-        //public Enemy Enemy { get; set; }
-        public List<Action> Actions { get; set; }
-        string CurrentTurn { get; set; } = "PLAYER";
+        public List<GameAction> GameActions { get; set; }
+        public string CurrentTurn { get; set; } = "PLAYER";
         public EnemyDTO EnemyDTO { get; }
 
         public State(Player player, EnemyDTO enemyDTO)
         {
-            Actions = new List<Action>();
+            GameActions = new List<GameAction>();
             Player = player;
             EnemyDTO = enemyDTO;
         }
 
-        public void ProcessAction(Action action)
+        public void ProcessAction(GameAction gameAction)
         {
-            Actions.Add(action);
-            UpdateGameState(action);
+            GameActions.Add(gameAction);
+            UpdateGameState(gameAction);
         }
 
-        public void UpdateGameState(Action action)
+        public void UpdateGameState(GameAction gameAction)
         {
-            if (action.Type == "ATTACK")
+            if (gameAction.Type == "ATTACK")
             {
-                EnemyDTO.Health -= action.Value;
+                EnemyDTO.Health -= gameAction.Value;
                 if (EnemyDTO.Health <= 0)
                 {
                     EnemyDTO.Health = 0;
                 }
             } 
-            else if (action.Type == "END_TURN")
+            else if (gameAction.Type == "END_TURN")
             {
                 ToggleTurn();
             }
@@ -68,9 +67,5 @@ namespace Backend.Services
 
     }
 
-    public class Action
-    {
-        public string Type { get; set; }
-        public int Value { get; set; }
-    }
+    
 }
