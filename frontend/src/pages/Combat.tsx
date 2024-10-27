@@ -16,8 +16,8 @@ const CombatPage = () => {
                     throw new Error('Failed to fetch game state');
                 }
                 const data = await response.json();
-                setEnemyName(data.enemy.name);
-                setEnemyHealth(data.enemy.health);
+                setEnemyName(data.enemyDTO.name);
+                setEnemyHealth(data.enemyDTO.health);
                 setPlayerHealth(data.player.health);
             } catch (error) {
                 console.error('Error fetching game state:', error);
@@ -49,11 +49,8 @@ const CombatPage = () => {
 
             const updatedState = await response.json();
 
-            if (updatedState.enemy && typeof updatedState.enemy.health === 'number') {
-                setEnemyHealth(updatedState.enemy.health);
-            } else {
-                console.error('Unexpected response structure:', updatedState);
-            }
+            setEnemyHealth(updatedState.enemyDTO.health);
+            
         } catch (error) {
             console.error('Error during attack:', error);
         } finally {
