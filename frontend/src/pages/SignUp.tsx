@@ -5,7 +5,7 @@ import InputFieldElement from '../components/InputFieldElement';
 import { Credentials } from '../hooks/useUser';
 import { useUserContext } from '../components/UserContext';
 
-const SignUpBox = () => {
+const SignUp = () => {
   const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
   const [repeatPassword, setRepeatPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -79,4 +79,4 @@ const SignUpBox = () => {
 
 }
 
-export default SignUpBox
+export default SignUp

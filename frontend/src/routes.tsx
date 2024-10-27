@@ -4,10 +4,12 @@ import CenterNavigation from './components/CenterNavigation.tsx';
 import DeckManager from './pages/DeckManager.tsx';
 import ListLayout from './components/ListLayout.tsx';
 import EnemyUpsert from './pages/EnemyUpsert.tsx';
-import MainLayout from './layouts/MainLayout.tsx'; 
 import Login from './pages/Login.tsx';
 import Logout from "./pages/Logout.tsx";
 import SignUp from "./pages/SignUp.tsx";
+import GuestLayout from "./layouts/GuestLayout.tsx";
+import PlayerLayout from "./layouts/PlayerLayout.tsx";
+import AdminLayout from "./layouts/Adminlayout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,97 +18,97 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <MainLayout header="Log in">
+          <PlayerLayout header="Log in">
             <CenterNavigation/>
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/login",
         element: (
-          <MainLayout header="Log in">
+          <GuestLayout header="Log in">
             <Login/>
-          </MainLayout>
+          </GuestLayout>
         ),
       },      
       {
         path: "/logout",
         element: (
-          <MainLayout header="Log in">
+          <GuestLayout header="Log in">
             <Logout/>
-          </MainLayout>
+          </GuestLayout>
         ),
       },
       {
         path: "/signup",
         element: (
-          <MainLayout header="Sign up">
+          <GuestLayout header="Sign up">
             <SignUp/>
-          </MainLayout>
+          </GuestLayout>
         ),
       },
       {
         path: "/menu",
         element: (
-          <MainLayout header="Main Menu">
+          <PlayerLayout header="Main Menu">
             <CenterNavigation />
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/decks",
         element: (
-          <MainLayout header="Decks">
+          <PlayerLayout header="Decks">
             <ListLayout />
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/decks/:deckId",
         element: (
-          <MainLayout header="Deck Manager">
+          <PlayerLayout header="Deck Manager">
             <DeckManager />
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/admin/cards",
         element: (
-          <MainLayout header="Admin Cards">
+          <AdminLayout header="Admin Cards">
             <ListLayout />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/cards/:cardId",
         element: (
-          <MainLayout header="Card Manager">
+          <AdminLayout header="Card Manager">
             <CenterNavigation />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/enemies",
         element: (
-          <MainLayout header="Admin Enemies">
+          <AdminLayout header="Admin Enemies">
             <ListLayout />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/enemies/upsert",
         element: (
-          <MainLayout header="Enemy Upsert">
+          <AdminLayout header="Enemy Upsert">
             <EnemyUpsert />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/enemies/upsert/:enemyid",
         element: (
-          <MainLayout header="Enemy Upsert">
+          <AdminLayout header="Enemy Upsert">
             <EnemyUpsert />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
 

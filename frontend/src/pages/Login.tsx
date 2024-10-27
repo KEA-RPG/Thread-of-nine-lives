@@ -4,7 +4,7 @@ import InputFieldElement from '../components/InputFieldElement';
 import { Credentials } from '../hooks/useUser';
 import { useUserContext } from '../components/UserContext'; // Assuming you're handling auth here
 
-const LoginBox = () => {
+const Login = () => {
   const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
   const [error, setError] = useState<boolean>(false);
   const { login } = useUserContext();
@@ -55,4 +55,4 @@ const LoginBox = () => {
   );
 };
 
-export default LoginBox;
+export default Login;

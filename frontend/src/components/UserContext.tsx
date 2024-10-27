@@ -11,6 +11,7 @@ interface UserContextType {
   login: (credentials: Credentials) => Promise<Response<Token>>;
   logout: () => void;
   signUp: (credentials: Credentials) => Promise<Response<string>>;
+  requireLogin: (role: string) => void;
   role?: string;
 }
 interface JwtToken {
@@ -72,9 +73,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const signedUpUser = await useSignUp(credentials);
     return signedUpUser;
   }
-
+  const requireLogin = (requiredRole: string) => {
+    if (!token) {
+      console.error('No token found, redirecting to login');
+      navigate('/login');
+    }
+    else if (requiredRole === "admin" && role !== "admin") {
+      console.error('Admin role required, but current role is not admin, redirecting to login');
+      navigate('/login');
+    }
+    else if (requiredRole !== "player" && requiredRole !== "admin") {
+      console.error('Invalid role specified, role not found');
+    }
+  }
   return (
-    <UserContext.Provider value={{ token, username, login, logout, signUp, role }}>
+    <UserContext.Provider value={{ token, username, login, logout, signUp, requireLogin, role }}>
       {children}
     </UserContext.Provider>
   );

@@ -4,6 +4,7 @@ import { useUserContext } from "./UserContext";
 
 const CenterNavigation = () => {
     const { role } = useUserContext();
+
     const data = [
         { link: "/combat", text: "Fight!" },
         { link: "/decks", text: "Decks" },
