@@ -6,7 +6,9 @@ const CombatPage = () => {
     const [playerAttackValue] = useState(10);
     const [playerHealth, setPlayerHealth] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [currentTurn] = useState("PLAYER");
+    const [currentTurn, setCurrentTurn] = useState("PLAYER");
+    const [usedAttacks, setUsedAttacks] = useState([false, false, false, false, false]);
+
 
     useEffect(() => {
         const fetchGameState = async () => {
@@ -27,7 +29,8 @@ const CombatPage = () => {
         fetchGameState();
     }, []);
 
-    const handleAttack = async () => {
+    const handleAttack = async (index: number) => {
+        if (usedAttacks[index]) return;
         setLoading(true);
         try {
             const action = {
@@ -48,8 +51,11 @@ const CombatPage = () => {
             }
 
             const updatedState = await response.json();
-
             setEnemyHealth(updatedState.enemyDTO.health);
+
+            const newUsedAttacks = [...usedAttacks];
+            newUsedAttacks[index] = true;
+            setUsedAttacks(newUsedAttacks);
             
         } catch (error) {
             console.error('Error during attack:', error);
@@ -80,8 +86,12 @@ const CombatPage = () => {
             }
 
             const updatedState = await response.json();
-
             setPlayerHealth(updatedState.player.health);
+
+            setUsedAttacks([false, false, false, false, false]);
+            setCurrentTurn("ENEMY");
+
+            setTimeout(() => setCurrentTurn("PLAYER"), 2000);
             
         } catch (error) {
             console.error('Error during end turn:', error);
@@ -99,12 +109,43 @@ const CombatPage = () => {
                 <h2>Player Health: {playerHealth}</h2>
                 <h3>Current Turn: {currentTurn}</h3>
             </div>
-            <button onClick={handleAttack} disabled={loading}>
-                {loading ? 'Attacking...' : 'ATTACK'}
-            </button>
             <button onClick={handleEndTurn} disabled={loading || currentTurn !== "PLAYER"}>
                 {loading ? 'Ending Turn...' : 'End Turn'}
             </button>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
+                {usedAttacks.map((used, index) => (
+                    <div
+                        key={index}
+                        style={{
+                            width: '80px',
+                            height: '120px',
+                            border: '2px solid #333',
+                            borderRadius: '8px',
+                            backgroundColor: '#f4f4f4',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            cursor: used || loading || currentTurn !== "PLAYER" ? 'not-allowed' : 'pointer',
+                        }}
+                    >
+                        <button
+                            onClick={() => handleAttack(index)}
+                            disabled={used || loading || currentTurn !== "PLAYER"}
+                            style={{
+                                border: 'none',
+                                backgroundColor: 'transparent',
+                                cursor: 'inherit',
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                                color: used ? '#999' : '#000',
+                            }}
+                        >
+                            {used ? 'Used' : `Attack ${index + 1}`}
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
