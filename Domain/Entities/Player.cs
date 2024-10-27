@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    internal class Player
+    public class Player
     {
         public int Health { get; set; }
 
