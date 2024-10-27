@@ -1,6 +1,6 @@
 import { Box, Button, Heading, HStack, SimpleGrid, VStack } from "@chakra-ui/react";
-import CardCard, { Card } from "./GameCard";
-import SelectedCardListItem from "./SelectedCardListItem";
+import CardCard, { Card } from "../components/GameCard";
+import SelectedCardListItem from "../components/SelectedCardListItem";
 import { useState } from "react";
 
 interface CardNumber {

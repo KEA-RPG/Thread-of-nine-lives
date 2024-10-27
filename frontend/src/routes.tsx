@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from './App.tsx';
-import LoginBox from './login/LoginBox.tsx';
-import SignUpBox from './login/SignUpBox.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
-import DeckManager from './components/DeckManager.tsx';
+import DeckManager from './pages/DeckManager.tsx';
 import ListLayout from './components/ListLayout.tsx';
-import EnemyUpsert from './components/EnemyUpsert.tsx';
-import MainLayout from './layouts/MainLayout.tsx'; // Import your MainLayout
-import Logout from "./components/logout.tsx";
+import EnemyUpsert from './pages/EnemyUpsert.tsx';
+import MainLayout from './layouts/MainLayout.tsx'; 
+import Login from './pages/Login.tsx';
+import Logout from "./pages/Logout.tsx";
+import SignUp from "./pages/SignUp.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <MainLayout header="Log in">
-            <LoginBox />
+            <CenterNavigation/>
           </MainLayout>
         ),
       },
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         path: "/login",
         element: (
           <MainLayout header="Log in">
-            <LoginBox />
+            <Login/>
           </MainLayout>
         ),
       },      
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         path: "/signup",
         element: (
           <MainLayout header="Sign up">
-            <SignUpBox />
+            <SignUp/>
           </MainLayout>
         ),
       },

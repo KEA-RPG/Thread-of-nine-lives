@@ -2,11 +2,12 @@ import { usePost } from "./useData";
 export interface Token {
     token: string;
 }
-export interface LoginCredentials {
+export interface Credentials {
     username: string;
-    passwordHash: string; //Skal hedde noget andet når api er opdateret
+    password: string; //Skal hedde noget andet når api er opdateret
 }
-const useLogin = (credentials: LoginCredentials) => usePost<LoginCredentials, Token>(`/auth/login`, credentials)
+const useLogin = (credentials: Credentials) => usePost<Credentials, Token>(`/auth/login`, credentials);
+const useSignUp = (credentials: Credentials) => usePost<Credentials, string/*no return data*/>(`/auth/signup`, credentials);
 
 
-export default useLogin;
+export { useLogin, useSignUp };

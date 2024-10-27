@@ -25,6 +25,7 @@ namespace Backend.Controllers
                     var claims = new[]
                     {
                         new Claim(JwtClaimNames.Sub, loggedInUser.Username),
+                        new Claim("role", loggedInUser.Role),
                         new Claim(ClaimTypes.Role, loggedInUser.Role),
                         new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
                     };
@@ -48,7 +49,7 @@ namespace Backend.Controllers
                 }
 
                 // If user is not valid
-                return Results.Unauthorized();
+                return Results.BadRequest();
             });
 
             // Signup (Create User) Endpoint

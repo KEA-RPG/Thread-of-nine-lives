@@ -22,25 +22,25 @@ const CenterNavigation = () => {
             <CardBody w="100%">
                 {role === "admin" ? (
                     adminData.map((item, index) => (
-                        <>
-                            <NavigationItem key={index} link={item.link}>
+                        <div key={index}>
+                            <NavigationItem link={item.link}>
                                 <Text>{item.text}</Text>
                             </NavigationItem>
                             {index < adminData.length - 1 && <Divider />}
-                        </>
+                        </div>
                     ))
-                ) : role == "player" ? (
+                ) : role === "player" ? (
                     data.map((item, index) => (
-                        <>
-                            <NavigationItem key={index} link={item.link}>
+                        <div key={index}>
+                            <NavigationItem link={item.link}>
                                 <Text>{item.text}</Text>
-                                </NavigationItem>
+                            </NavigationItem>
                             {index < data.length - 1 && <Divider />}
-                        </>
+                        </div>
                     ))
                 ) : null}
             </CardBody>
-        </Card >
+        </Card>
     )
 }
 

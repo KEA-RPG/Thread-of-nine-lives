@@ -2,10 +2,9 @@ import { Box, HStack, VStack, Image, Button } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { Enemy, useEnemy, usePostEnemy, usePutEnemy } from "../hooks/useEnemy";
 import { useState, useEffect } from "react";
-import InputFieldElement from "./InputFieldElement";
+import InputFieldElement from "../components/InputFieldElement";
 
 const EnemyUpsert = () => {
-    // const apiClient = useApiClient(); 
 
     const param = useParams().enemyid;
     const [enemy, setEnemy] = useState<Enemy>({} as Enemy);
