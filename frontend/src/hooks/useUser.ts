@@ -4,7 +4,7 @@ export interface Token {
 }
 export interface Credentials {
     username: string;
-    password: string; //Skal hedde noget andet når api er opdateret
+    password: string;
 }
 const useLogin = (credentials: Credentials) => usePost<Credentials, Token>(`/auth/login`, credentials);
 const useSignUp = (credentials: Credentials) => usePost<Credentials, string/*no return data*/>(`/auth/signup`, credentials);
