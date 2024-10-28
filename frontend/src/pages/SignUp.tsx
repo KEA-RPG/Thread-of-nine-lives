@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, Button, Card, CardBody, Heading, Stack, CardFooter, Text, Link, Box } from '@chakra-ui/react'
+import { Image, Button, Card, CardBody, Stack, CardFooter, Text, Link, Box } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/react'
 import InputFieldElement from '../components/InputFieldElement';
 import { Credentials } from '../hooks/useUser';
