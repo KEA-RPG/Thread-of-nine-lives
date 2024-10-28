@@ -53,6 +53,35 @@ namespace Backend.Controllers
                 return Results.Unauthorized();
             });
 
+
+            // Guest Endpoint
+            app.MapPost("/auth/guest", () =>
+            {
+                var claims = new[]
+                {
+            new Claim(JwtClaimNames.Sub, "GuestUser"),
+            new Claim(ClaimTypes.Role, "Guest"),
+            new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddHours(1),
+                    Issuer = "threadgame",
+                    Audience = "threadgame",
+                    SigningCredentials = creds
+                };
+
+                var jwtHandler = new JsonWebTokenHandler();
+                var token = jwtHandler.CreateToken(tokenDescriptor);
+
+                return Results.Ok(new { Token = token });
+            });
+
             // Signup (Create User) Endpoint
             app.MapPost("/auth/signup", (IUserService userService, Credentials credentials) =>
             {
