@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 import { Box, Heading, VStack } from '@chakra-ui/react';
 
-interface Props {
+export interface LayoutProps {
     children: ReactNode;
     header?: string;
 }
 
-const MainLayout = ({ children, header }: Props) => {
+const MainLayout = ({ children, header }: LayoutProps) => {
     return <VStack spacing={5}>
         {header !== undefined ? (
             <Heading as='h3' size='xl'>

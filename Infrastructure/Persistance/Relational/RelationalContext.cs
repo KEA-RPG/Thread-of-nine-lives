@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Infrastructure.Persistance.Relational
 {

@@ -1,12 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from './App.tsx';
-import LoginBox from './login/LoginBox.tsx';
-import SignUpBox from './login/SignUpBox.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
-import DeckManager from './components/DeckManager.tsx';
+import DeckManager from './pages/DeckManager.tsx';
 import ListLayout from './components/ListLayout.tsx';
-import EnemyUpsert from './components/EnemyUpsert.tsx';
-import MainLayout from './layouts/MainLayout.tsx'; // Import your MainLayout
+import EnemyUpsert from './pages/EnemyUpsert.tsx';
+import Login from './pages/Login.tsx';
+import Logout from "./pages/Logout.tsx";
+import SignUp from "./pages/SignUp.tsx";
+import GuestLayout from "./layouts/GuestLayout.tsx";
+import PlayerLayout from "./layouts/PlayerLayout.tsx";
+import AdminLayout from "./layouts/Adminlayout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -15,89 +18,97 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <MainLayout header="Log in">
-            <LoginBox />
-          </MainLayout>
+          <PlayerLayout header="Log in">
+            <CenterNavigation/>
+          </PlayerLayout>
         ),
       },
       {
         path: "/login",
         element: (
-          <MainLayout header="Log in">
-            <LoginBox />
-          </MainLayout>
+          <GuestLayout header="Log in">
+            <Login/>
+          </GuestLayout>
+        ),
+      },      
+      {
+        path: "/logout",
+        element: (
+          <GuestLayout header="Log in">
+            <Logout/>
+          </GuestLayout>
         ),
       },
       {
         path: "/signup",
         element: (
-          <MainLayout header="Sign up">
-            <SignUpBox />
-          </MainLayout>
+          <GuestLayout header="Sign up">
+            <SignUp/>
+          </GuestLayout>
         ),
       },
       {
         path: "/menu",
         element: (
-          <MainLayout header="Main Menu">
+          <PlayerLayout header="Main Menu">
             <CenterNavigation />
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/decks",
         element: (
-          <MainLayout header="Decks">
+          <PlayerLayout header="Decks">
             <ListLayout />
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/decks/:deckId",
         element: (
-          <MainLayout header="Deck Manager">
+          <PlayerLayout header="Deck Manager">
             <DeckManager />
-          </MainLayout>
+          </PlayerLayout>
         ),
       },
       {
         path: "/admin/cards",
         element: (
-          <MainLayout header="Admin Cards">
+          <AdminLayout header="Admin Cards">
             <ListLayout />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/cards/:cardId",
         element: (
-          <MainLayout header="Card Manager">
+          <AdminLayout header="Card Manager">
             <CenterNavigation />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/enemies",
         element: (
-          <MainLayout header="Admin Enemies">
+          <AdminLayout header="Admin Enemies">
             <ListLayout />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/enemies/upsert",
         element: (
-          <MainLayout header="Enemy Upsert">
+          <AdminLayout header="Enemy Upsert">
             <EnemyUpsert />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
       {
         path: "/admin/enemies/upsert/:enemyid",
         element: (
-          <MainLayout header="Enemy Upsert">
+          <AdminLayout header="Enemy Upsert">
             <EnemyUpsert />
-          </MainLayout>
+          </AdminLayout>
         ),
       },
 
