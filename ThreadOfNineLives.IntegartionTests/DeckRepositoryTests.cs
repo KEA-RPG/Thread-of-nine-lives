@@ -26,7 +26,12 @@ namespace ThreadOfNineLives.IntegrationTests
             _deckRepository = new DeckRepository(_context);
         }
 
-         //[Fact]
+        private CardDTO CreateCardDTO()
+        {
+            return new CardDTO { Name = "Test Card", Attack = 1, Cost = 1, Defense = 1, Description = "description", ImagePath = "image.png" };
+        }
+
+        //[Fact]
         public void AddDeck_ShouldAddDeckToDatabase()
         {
             // Arrange
@@ -36,8 +41,8 @@ namespace ThreadOfNineLives.IntegrationTests
                 UserId = 1,
                 Cards = new List<CardDTO> // Specify the type as CardDTO
                         {
-                            new CardDTO { Id = 1, Name = "Card 1" },
-                            new CardDTO { Id = 2, Name = "Card 2" }
+                            CreateCardDTO(),
+                            CreateCardDTO()
                         }
             };
 
