@@ -17,8 +17,15 @@ namespace Backend.Controllers
             //Get deck by id
             app.MapGet("/decks/{id}", (IDeckService deckService, int id) =>
             {
-                return deckService.GetDeckById(id);
+                var dbDeck = deckService.GetDeckById(id);
+                if (dbDeck?.IsPublic == true)
+                {
+                    return Results.Ok(dbDeck);
+                }
+
+                return Results.BadRequest("Deck is private");
             });
+
 
             //Delete deck
             app.MapDelete("/decks/{id}", (IDeckService deckService, int id) =>

@@ -40,7 +40,7 @@ namespace Backend.Repositories
             return GetDeckById(deck.Id);
         }
 
-        public void DeleteDeck(DeckDTO deckDto)
+        public IResult DeleteDeck(DeckDTO deckDto)
         {
             var deck = _context.Decks.Find(deckDto.Id);
             if (deck != null)
@@ -52,7 +52,9 @@ namespace Backend.Repositories
                 }
                 _context.Decks.Remove(deck);
                 _context.SaveChanges();
+                return Results.Ok("Deck Deleted!");
             }
+            return Results.NotFound("No Deck with that ID exists");
         }
 
         public DeckDTO GetDeckById(int id)
@@ -63,10 +65,25 @@ namespace Backend.Repositories
             return new DeckDTO
             {
                 // Map properties from deck to deckDto
+                Id = id,
+                UserId = deck.UserId,
+                Name = deck.Name,
+                IsPublic = deck.IsPublic, // Include the IsPublic property
+                Cards = deck.DeckCards.Select(dc => new CardDTO
+                {
+                    // Map properties from dc.Card to cardDto
+                    Id = dc.Card.Id,
+                    Name = dc.Card.Name,
+                    Description = dc.Card.Description,
+                    Attack = dc.Card.Attack,
+                    Defense = dc.Card.Defense,
+                    Cost = dc.Card.Cost,
+                    ImagePath = dc.Card.ImagePath
+                }).ToList(),
             };
         }
 
-        public void UpdateDeck(DeckDTO deckDto)
+        public IResult UpdateDeck(DeckDTO deckDto)
         {
             var deck = _context.Decks.Find(deckDto.Id);
             if (deck != null)
@@ -74,7 +91,9 @@ namespace Backend.Repositories
                 // Map properties from deckDto to deck
                 _context.Decks.Update(deck);
                 _context.SaveChanges();
+                return Results.Ok("Deck updated!");
             }
+            return Results.NotFound("No Deck with that ID exists");
         }
 
         public List<DeckDTO> GetUserDecks()
@@ -82,6 +101,21 @@ namespace Backend.Repositories
             return _context.Decks.Select(deck => new DeckDTO
             {
                 // Map properties from deck to deckDto
+                Id = deck.Id,
+                UserId = deck.UserId,
+                Name = deck.Name,
+                IsPublic = deck.IsPublic, // Include the IsPublic property
+                Cards = deck.DeckCards.Select(dc => new CardDTO
+                {
+                    // Map properties from dc.Card to cardDto
+                    Id = dc.Card.Id,
+                    Name = dc.Card.Name,
+                    Description = dc.Card.Description,
+                    Attack = dc.Card.Attack,
+                    Defense = dc.Card.Defense,
+                    Cost = dc.Card.Cost,
+                    ImagePath = dc.Card.ImagePath
+                }).ToList(),
             }).ToList();
         }
     }

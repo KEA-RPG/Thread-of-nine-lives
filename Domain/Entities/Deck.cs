@@ -13,7 +13,7 @@ namespace Domain.Entities
         public int UserId { get; set; }
         public string Name { get; set; }
         public List<DeckCard> DeckCards { get; set; }
-
+        public bool IsPublic { get; set; }
         public User User { get; set; }
     }
 }
