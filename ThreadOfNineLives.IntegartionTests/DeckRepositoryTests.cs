@@ -26,7 +26,7 @@ namespace ThreadOfNineLives.IntegrationTests
             _deckRepository = new DeckRepository(_context);
         }
 
-       // [Fact]
+         //[Fact]
         public void AddDeck_ShouldAddDeckToDatabase()
         {
             // Arrange
@@ -34,11 +34,11 @@ namespace ThreadOfNineLives.IntegrationTests
             {
                 Name = "Test Deck",
                 UserId = 1,
-                Cards = new List<Card>
-                    {
-                        new Card { Id = 1, Name = "Card 1" },
-                        new Card { Id = 2, Name = "Card 2" }
-                    }
+                Cards = new List<CardDTO> // Specify the type as CardDTO
+                        {
+                            new CardDTO { Id = 1, Name = "Card 1" },
+                            new CardDTO { Id = 2, Name = "Card 2" }
+                        }
             };
 
             // Act
