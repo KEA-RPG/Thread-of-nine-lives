@@ -20,7 +20,7 @@ const CombatPage = () => {
                 const data = await response.json();
                 setEnemyName(data.enemyDTO.name);
                 setEnemyHealth(data.enemyDTO.health);
-                setPlayerHealth(data.player.health);
+                setPlayerHealth(data.playerDTO.health);
             } catch (error) {
                 console.error('Error fetching game state:', error);
             }   
@@ -86,7 +86,7 @@ const CombatPage = () => {
             }
 
             const updatedState = await response.json();
-            setPlayerHealth(updatedState.player.health);
+            setPlayerHealth(updatedState.playerDTO.health);
 
             setUsedAttacks([false, false, false, false, false]);
             setCurrentTurn("ENEMY");
