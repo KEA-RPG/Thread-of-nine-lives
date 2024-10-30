@@ -7,9 +7,9 @@ namespace UnitTests
     public class StateUnitTests
     {
 
-        private Player CreateTestPlayer(int health = 100)
+        private PlayerDTO CreateTestPlayer(int health = 100)
         {
-            return new Player { Health = health };
+            return new PlayerDTO { Health = health };
         }
 
         private EnemyDTO CreateTestEnemy(int health = 50)
@@ -21,9 +21,9 @@ namespace UnitTests
         public void ProcessAction_AttackAction_ReducesEnemyHealth()
         {
             // Arrange
-            var player = CreateTestPlayer();
+            var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy();
-            var state = new State(player, enemyDTO);
+            var state = new State(playerDTO, enemyDTO);
             var gameAction = new GameAction { Type = "ATTACK", Value = 10 };
 
             // Act
@@ -37,9 +37,9 @@ namespace UnitTests
         public void ProcessAction_AttackAction_EnemyHealthNotBelowZero()
         {
             // Arrange
-            var player = CreateTestPlayer();
+            var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy(5);
-            var state = new State(player, enemyDTO);
+            var state = new State(playerDTO, enemyDTO);
             var gameAction = new GameAction { Type = "ATTACK", Value = 10 };
 
             // Act
@@ -53,16 +53,16 @@ namespace UnitTests
         public void ProcessAction_EndTurn_EnemyAttacksAndPlayerMinus5Health()
         {
             // Arrange
-            var player = CreateTestPlayer();
+            var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy();
-            var state = new State(player, enemyDTO);
+            var state = new State(playerDTO, enemyDTO);
             var gameAction = new GameAction { Type = "END_TURN", Value = 0 };
 
             // Act
             state.ProcessAction(gameAction);
 
             // Assert
-            Assert.Equal(95, state.Player.Health);
+            Assert.Equal(95, state.PlayerDTO.Health);
         }
 
 
@@ -70,9 +70,9 @@ namespace UnitTests
         public void ProcessAction_EndTurn_ChangesTurnBackToPlayer()
         {
             // Arrange
-            var player = CreateTestPlayer();
+            var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy();
-            var state = new State(player, enemyDTO);
+            var state = new State(playerDTO, enemyDTO);
 
             // Act
             state.ProcessAction(new GameAction { Type = "END_TURN", Value = 0 });
@@ -85,15 +85,15 @@ namespace UnitTests
         public void ProcessAction_PlayerHealthNotBelowZero()
         {
             // Arrange
-            var player = CreateTestPlayer(3);
+            var playerDTO = CreateTestPlayer(3);
             var enemyDTO = CreateTestEnemy();
-            var state = new State(player, enemyDTO);
+            var state = new State(playerDTO, enemyDTO);
 
             // Act
             state.ProcessAction(new GameAction { Type = "END_TURN", Value = 0 });
 
             // Assert
-            Assert.Equal(0, state.Player.Health);
+            Assert.Equal(0, state.PlayerDTO.Health);
         }
     }
 }
