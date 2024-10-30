@@ -5,15 +5,15 @@ namespace Backend.Services
 {
     public class State
     {
-        public Player Player { get; set; }
         public List<GameAction> GameActions { get; set; }
         public string CurrentTurn { get; set; } = "PLAYER";
+        public PlayerDTO PlayerDTO { get; }
         public EnemyDTO EnemyDTO { get; }
 
-        public State(Player player, EnemyDTO enemyDTO)
+        public State(PlayerDTO playerDTO, EnemyDTO enemyDTO)
         {
             GameActions = new List<GameAction>();
-            Player = player;
+            PlayerDTO = playerDTO;
             EnemyDTO = enemyDTO;
         }
 
@@ -56,10 +56,10 @@ namespace Backend.Services
         private void PerformEnemyTurn()
         {
             int enemyAttackValue = 5;
-            Player.Health -= enemyAttackValue;
-            if (Player.Health < 0)
+            PlayerDTO.Health -= enemyAttackValue;
+            if (PlayerDTO.Health < 0)
             {
-                Player.Health = 0;
+                PlayerDTO.Health = 0;
             }
 
             CurrentTurn = "PLAYER";
