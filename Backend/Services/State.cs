@@ -6,7 +6,6 @@ namespace Backend.Services
     public class State
     {
         public List<GameAction> GameActions { get; set; }
-        public string CurrentTurn { get; set; } = "PLAYER";
         public PlayerDTO PlayerDTO { get; }
         public EnemyDTO EnemyDTO { get; }
 
@@ -35,22 +34,9 @@ namespace Backend.Services
             } 
             else if (gameAction.Type == "END_TURN")
             {
-                ToggleTurn();
-            }
-            
-        }
-
-        private void ToggleTurn()
-        {
-            if (CurrentTurn == "PLAYER")
-            {
-                CurrentTurn = "ENEMY";
                 PerformEnemyTurn();
             }
-            else
-            {
-                CurrentTurn = "PLAYER";
-            }
+            
         }
 
         private void PerformEnemyTurn()
@@ -62,7 +48,6 @@ namespace Backend.Services
                 PlayerDTO.Health = 0;
             }
 
-            CurrentTurn = "PLAYER";
         }
 
     }
