@@ -1,10 +1,13 @@
-import { useContext } from 'react';
-import { UserContext } from '../components/UserContext';
+import { usePost } from "./useData";
+export interface Token {
+    token: string;
+}
+export interface Credentials {
+    username: string;
+    password: string;
+}
+const useLogin = (credentials: Credentials) => usePost<Credentials, Token>(`/auth/login`, credentials);
+const useSignUp = (credentials: Credentials) => usePost<Credentials, string/*no return data*/>(`/auth/signup`, credentials);
 
-const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) throw new Error("useUser must be used within a UserProvider");
-  return context;
-};
 
-export default useUser;
+export { useLogin, useSignUp };
