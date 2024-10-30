@@ -37,14 +37,14 @@ namespace Backend.Controllers
                 }
                 deckService.DeleteDeck(id);
                 return Results.Ok();
-            }).RequireAuthorization(policy => policy.RequireRole("User", "Admin")); //I tilfælde af at der skal kunnes slette offentlige decks
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin")); //I tilfælde af at der skal kunnes slette offentlige decks
 
             //Create deck
             app.MapPost("/decks", (IDeckService deckService, DeckDTO deck) =>
             {
                 deckService.CreateDeck(deck);
                 return Results.Created($"/decks/{deck.Id}", deck);
-            }).RequireAuthorization(policy => policy.RequireRole("User", "Admin"));//I tilfælde der skal laves offentlige free decks
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal laves offentlige free decks
 
             //Update deck
             app.MapPut("/decks", (IDeckService deckService, DeckDTO deck) =>
@@ -59,7 +59,7 @@ namespace Backend.Controllers
 
                 deckService.UpdateDeck(deck);
                 return Results.Ok(deck);
-            }).RequireAuthorization(policy => policy.RequireRole("User", "Admin"));//I tilfælde der skal opdateres offentlige free decks
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal opdateres offentlige free decks
         }
     }
 }
