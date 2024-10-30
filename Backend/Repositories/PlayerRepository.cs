@@ -12,7 +12,7 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public void CreatePlayer(Player player)
+        public void AddPlayer(Player player)
         {
             _context.Players.Add(player);
             _context.SaveChanges();

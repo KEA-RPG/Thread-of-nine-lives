@@ -1,13 +1,13 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Backend.Services
 {
     public interface IPlayerService
     {
-        Player GetPlayerById(int id);
-        List<Player> GetAllPlayers();
-        Player CreatePlayer(Player player);
-        Player UpdatePlayer(Player player);
+        PlayerDTO GetPlayerById(int id);
+        List<PlayerDTO> GetAllPlayers();
+        PlayerDTO CreatePlayer(PlayerDTO playerDTO);
+        PlayerDTO UpdatePlayer(PlayerDTO playerDTO);
         void DeletePlayer(int id);
     }
 }

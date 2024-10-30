@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.DTOs;
 
 namespace Domain.Entities
 {
@@ -11,9 +7,15 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int Health { get; set; }
 
-        public Player()
-        {
+        public Player() { }
 
+        public static Player FromDTO(PlayerDTO playerDTO)
+        {
+            return new Player
+            {
+                Id = playerDTO.Id,
+                Health = playerDTO.Health,
+            };
         }
     }
 }
