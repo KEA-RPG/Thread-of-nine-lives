@@ -24,9 +24,9 @@ namespace Backend.Controllers
                 return Results.Ok(gameState);
             });
 
-            app.MapGet("/game-state", (IEnemyService enemyService) =>
+            app.MapGet("/game-state", (IEnemyService enemyService, IPlayerService playerService) =>
             {
-                if (gameState == null || gameState.EnemyDTO == null)
+                if (gameState == null || gameState.EnemyDTO == null || gameState.PlayerDTO == null)
                 {
                     var enemyDTO = enemyService.GetEnemyById(2);
                     if (enemyDTO == null)
@@ -34,13 +34,16 @@ namespace Backend.Controllers
                         return Results.NotFound("Enemy not found.");
                     }
 
-                    gameState = new State(new Player { Health = 30 }, enemyDTO);
+                    var playerDTO = playerService.GetPlayerById(1);
+                    if (playerDTO == null)
+                    {
+                        return Results.NotFound("Player not found.");
+                    }
+
+                    gameState = new State(playerDTO, enemyDTO);
                 }
                 return Results.Ok(gameState);
             });
-
-            
-
         }
     }
 }
