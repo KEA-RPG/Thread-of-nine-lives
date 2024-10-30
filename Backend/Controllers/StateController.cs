@@ -24,24 +24,32 @@ namespace Backend.Controllers
                 return Results.Ok(gameState);
             });
 
+            app.MapPost("/init-game-state", (IEnemyService enemyService, IPlayerService playerService) =>
+            {
+                var enemyDTO = enemyService.GetEnemyById(2);
+                if (enemyDTO == null)
+                {
+                    return Results.NotFound("Enemy not found.");
+                }
+
+                var playerDTO = playerService.GetPlayerById(1);
+                if (playerDTO == null)
+                {
+                    return Results.NotFound("Player not found.");
+                }
+
+                gameState = new State(playerDTO, enemyDTO);
+
+                return Results.Ok(gameState);
+            });
+
             app.MapGet("/game-state", (IEnemyService enemyService, IPlayerService playerService) =>
             {
-                if (gameState == null || gameState.EnemyDTO == null || gameState.PlayerDTO == null)
+                if (gameState == null)
                 {
-                    var enemyDTO = enemyService.GetEnemyById(2);
-                    if (enemyDTO == null)
-                    {
-                        return Results.NotFound("Enemy not found.");
-                    }
-
-                    var playerDTO = playerService.GetPlayerById(1);
-                    if (playerDTO == null)
-                    {
-                        return Results.NotFound("Player not found.");
-                    }
-
-                    gameState = new State(playerDTO, enemyDTO);
+                    return Results.NotFound("Game state has not been initialized.");
                 }
+
                 return Results.Ok(gameState);
             });
         }
