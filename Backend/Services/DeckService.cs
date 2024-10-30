@@ -32,9 +32,14 @@ namespace Backend.Services
             }
         }
 
-        public List<DeckDTO> GetUserDecks() //TODO: parse user id
+        public List<DeckDTO> GetUserDecks(string userName)
         {
-            return _deckRepository.GetUserDecks(/*id*/);
+            return _deckRepository.GetUserDecks(userName);
+        }
+
+        public List<DeckDTO> GetPublicDecks()
+        {
+            return _deckRepository.GetPublicDecks();
         }
 
         public DeckDTO GetDeckById(int id)

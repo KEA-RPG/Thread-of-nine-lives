@@ -96,9 +96,37 @@ namespace Backend.Repositories
             return Results.NotFound("No Deck with that ID exists");
         }
 
-        public List<DeckDTO> GetUserDecks()
+        public List<DeckDTO> GetPublicDecks()
         {
-            return _context.Decks.Select(deck => new DeckDTO
+            return _context.Decks.Where(deck => deck.IsPublic).Select(deck => new DeckDTO
+            {
+                // Map properties from deck to deckDto
+                Id = deck.Id,
+                UserId = deck.UserId,
+                Name = deck.Name,
+                IsPublic = deck.IsPublic, // Include the IsPublic property
+                Cards = deck.DeckCards.Select(dc => new CardDTO
+                {
+                    // Map properties from dc.Card to cardDto
+                    Id = dc.Card.Id,
+                    Name = dc.Card.Name,
+                    Description = dc.Card.Description,
+                    Attack = dc.Card.Attack,
+                    Defense = dc.Card.Defense,
+                    Cost = dc.Card.Cost,
+                    ImagePath = dc.Card.ImagePath
+                }).ToList(),
+            }).ToList();
+
+        }
+
+        public List<DeckDTO> GetUserDecks(string userName)
+        {
+
+            var user = _context.Users.FirstOrDefault(u => u.Username == userName);
+            if (user == null) return null;
+
+            return _context.Decks.Where(deck => deck.User == user).Select(deck => new DeckDTO
             {
                 // Map properties from deck to deckDto
                 Id = deck.Id,

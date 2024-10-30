@@ -6,7 +6,8 @@ namespace Backend.Repositories
     {
         DeckDTO AddDeck(DeckDTO deck);
         IResult DeleteDeck(DeckDTO deck);
-        List<DeckDTO> GetUserDecks();
+        List<DeckDTO> GetUserDecks(string userName);
+        List<DeckDTO> GetPublicDecks();
         DeckDTO GetDeckById(int id);
         IResult UpdateDeck(DeckDTO deck);
     }

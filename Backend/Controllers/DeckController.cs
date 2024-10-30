@@ -1,29 +1,52 @@
 ﻿using Backend.Services;
 using Domain.DTOs;
+using Microsoft.Identity.Client;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Backend.Controllers
 {
     public static class DeckController
     {
+        public static string Authorization(HttpContext context)
+        {
+            string authorizationHeader = context.Request.Headers["Authorization"];
+            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
+            {
+                string token = authorizationHeader.Substring("Bearer ".Length).Trim();
+                // Use the token as needed
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken decodedToken = tokenHandler.ReadJwtToken(token);
+                string userName = decodedToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+                return userName;
+            }
+            else
+            {
+                return null;
+            }
+             
+        }
+
         public static void MapDeckEndpoint(this WebApplication app)
         {
-            //Get all decks
-            app.MapGet("/decks", (IDeckService deckService) => //TODO need to take user id from JWT token
+
+            //Get all public decks
+            app.MapGet("/decks/public", (IDeckService deckService) =>
             {
-                return deckService.GetUserDecks(/*userId*/);
+                return Results.Ok(deckService.GetPublicDecks());
             });
 
-            //Get deck by id
-            //Samme årsag som ovenover
-            app.MapGet("/decks/{id}", (IDeckService deckService, int id) =>
+            //Get all user decks
+            app.MapGet("/decks", (IDeckService deckService, HttpContext context) =>
             {
-                var dbDeck = deckService.GetDeckById(id);
-                if (dbDeck?.IsPublic == true)
+                string userName = Authorization(context);
+                if(userName != null)
                 {
-                    return Results.Ok(dbDeck);
+                    return Results.Ok(deckService.GetUserDecks(userName));
                 }
-
-                return Results.BadRequest("Deck is private");
+                else
+                {
+                    return Results.Unauthorized();
+                }
             });
 
 
