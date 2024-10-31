@@ -116,7 +116,7 @@ jobs:
       run: |
         cd ./frontend
         npm install
-        npm run dev $env:Frontend_Port &
+        npm run dev &
         sleep 10
 
   
