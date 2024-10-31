@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: .NET Core Full Integration
 
 on:
   push:
@@ -7,44 +7,116 @@ on:
     branches: [ "main" ]
 
 jobs:
-
+  # Build Job
   build:
-
-    strategy:
-      matrix:
-        configuration: [Release]
-
-    runs-on: windows-latest  
-                             
+    runs-on: ubuntu-latest
 
     env:
-      Solution_Name: Backend.sln                         
-      Test_Project_Path: UnitTests/UnitTests.csproj
+      Solution_Name: Backend.sln
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-    - name: Test
-      run: ls
-#    - name: Execute unit tests
-#      run: dotnet test UnitTests/UnitTests.csproj
-    - name: Deploy Backend in Background
-      run: Start-Process -FilePath "dotnet" -ArgumentList "run --project Backend/Backend.csproj" -NoNewWindow -PassThru
+    - name: Restore Dependencies
+      run: dotnet restore $env:Solution_Name
 
-    - name: Deploy Frontend in Background
-      run: Start-Process -FilePath "npm" -ArgumentList "run dev" -NoNewWindow -PassThru
-      
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+    - name: Build Solution
+      run: dotnet build $env:Solution_Name --configuration Release
+
+    - name: Publish Artifacts
+      run: dotnet publish $env:Solution_Name --configuration Release --output ./output
+     
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-artifact
+        path: ./output
+
+  # Database Setup Job
+  setup_database:
+    runs-on: ubuntu-latest
+    needs: build  # Depends on build job
+
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "yourStrong(!)Password"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Download Backend Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: backend-artifact
+
+    - name: Wait for SQL Server
+      run: |
+        for i in {1..30}; do
+          if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "YourPassword123!" -Q "SELECT 1" > /dev/null 2>&1; then
+            echo "SQL Server is ready!"
+            break
+          fi
+          echo "Waiting for SQL Server to start..."
+          sleep 5
+        done
+
+  # Backend Deployment Job
+  deploy_backend:
+    runs-on: ubuntu-latest
+    needs: [build, setup_database]  # Depends on build and setup_database jobs
+
+    env:
+      Backend_Port: 7195
+
+    steps:
+    - name: Download Backend Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: backend-artifact
+
+    - name: Start Backend in Background
+      run: |
+        dotnet Backend.dll --urls "http://localhost:$env:Backend_Port" &
+        sleep 10
+
+  # Frontend Deployment Job
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: build  # Depends on build job
+
+    env:
+      Frontend_Port: 5173
+
+    steps:
+    - name: Checkout Frontend Code
+      uses: actions/checkout@v4
+      with:
+        path: ./frontend
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Dependencies and Start Frontend
+      run: |
+        cd ./frontend
+        npm install
+        npm run dev $env:Frontend_Port &
+        sleep 10
+
+  
