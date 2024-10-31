@@ -41,7 +41,8 @@ jobs:
     - name: Deploy Backend in Background
       run: Start-Process -FilePath "dotnet" -ArgumentList "run --project Backend/Backend.csproj" -NoNewWindow -PassThru
 
-
+    - name: Deploy Frontend in Background
+      run: Start-Process -FilePath "npm" -ArgumentList "run dev" -NoNewWindow -PassThru
       
     - name: Restore the application
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
