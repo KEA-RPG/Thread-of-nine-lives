@@ -24,7 +24,7 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore Dependencies
-      run: dotnet restore $env:Solution_Name
+      run: dotnet restore 
 
     - name: Build Solution
       run: dotnet build $env:Solution_Name --configuration Release
