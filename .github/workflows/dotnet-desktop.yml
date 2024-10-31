@@ -39,7 +39,7 @@ jobs:
 #    - name: Execute unit tests
 #      run: dotnet test UnitTests/UnitTests.csproj
     - name: Deploy Backend
-      run: dotnet run Backend/Backend.csproj
+      run: dotnet run --project Backend/Backend.csproj
 
       
     - name: Restore the application
