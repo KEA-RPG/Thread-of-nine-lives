@@ -67,8 +67,6 @@ jobs:
   # Database Setup Job
   setup_database:
     runs-on: ubuntu-latest
-    needs: build-backend  # Depends on build-backend job
-
     services:
       mssql:
         image: mcr.microsoft.com/mssql/server:2022-latest
@@ -84,11 +82,6 @@ jobs:
           --health-retries 5
 
     steps:
-    - name: Download Backend Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: backend-artifact
-
     - name: Wait for SQL Server
       run: |
         for i in {1..30}; do
