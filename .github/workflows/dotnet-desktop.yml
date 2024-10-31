@@ -34,7 +34,8 @@ jobs:
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
-
+    - name: Test
+      run: ls
 #    - name: Execute unit tests
 #      run: dotnet test UnitTests/UnitTests.csproj
     - name: Deploy Backend
