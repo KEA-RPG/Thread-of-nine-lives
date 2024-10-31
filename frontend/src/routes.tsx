@@ -8,6 +8,7 @@ import ListLayout from './components/ListLayout.tsx';
 import EnemyUpsert from './components/EnemyUpsert.tsx';
 import MainLayout from './layouts/MainLayout.tsx'; // Import your MainLayout
 import CombatPage from "./pages/Combat.tsx";
+import SelectionPage from "./pages/Selection.tsx"
 
 const router = createBrowserRouter([
   {
@@ -98,6 +99,14 @@ const router = createBrowserRouter([
         element: (
           <MainLayout header="Enemy Upsert">
             <EnemyUpsert />
+          </MainLayout>
+        ),
+      },
+      {
+        path: "/selection",
+        element: (
+          <MainLayout header="Select Enemy and Player">
+            <SelectionPage />
           </MainLayout>
         ),
       },

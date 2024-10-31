@@ -11,26 +11,6 @@ const CombatPage = () => {
 
 
     useEffect(() => {
-        // Step 1: Initialize the game state
-        const initializeGameState = async () => {
-            try {
-                const initResponse = await fetch('http://localhost:5281/init-game-state?enemyId=2&playerId=1', {
-                    method: 'POST'
-                });
-                if (!initResponse.ok) {
-                    throw new Error('Failed to initialize game state');
-                }
-                await initResponse.json();
-                console.log("Game initialized");
-
-                // Step 2: Fetch the initialized game state
-                fetchGameState();
-            } catch (error) {
-                console.error("Error initializing game state:", error);
-            }
-        };
-
-        // Step 2: Fetch the game state data
         const fetchGameState = async () => {
             try {
                 const response = await fetch('http://localhost:5281/game-state');
@@ -46,8 +26,7 @@ const CombatPage = () => {
             }
         };
 
-        initializeGameState(); // Start the process by initializing first
-
+        fetchGameState();
     }, []);
     
 
