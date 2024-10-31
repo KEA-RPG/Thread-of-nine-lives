@@ -27,10 +27,10 @@ jobs:
       run: dotnet restore 
 
     - name: Build Solution
-      run: dotnet build $env:Solution_Name --configuration Release
+      run: dotnet build --configuration Release
 
     - name: Publish Artifacts
-      run: dotnet publish $env:Solution_Name --configuration Release --output ./output
+      run: dotnet publish --configuration Release --output ./output
      
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v3
