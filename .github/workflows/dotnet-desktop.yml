@@ -38,8 +38,9 @@ jobs:
       run: ls
 #    - name: Execute unit tests
 #      run: dotnet test UnitTests/UnitTests.csproj
-    - name: Deploy Backend
-      run: dotnet run --project Backend/Backend.csproj
+    - name: Deploy Backend in Background
+      run: Start-Process -FilePath "dotnet" -ArgumentList "run --project Backend/Backend.csproj" -NoNewWindow -PassThru
+
 
       
     - name: Restore the application
