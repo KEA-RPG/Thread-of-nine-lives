@@ -85,7 +85,7 @@ jobs:
     - name: Wait for SQL Server
       run: |
         for i in {1..30}; do
-          if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "YourPassword123!" -Q "SELECT 1" > /dev/null 2>&1; then
+          if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "yourStrong(!)Password" -Q "SELECT 1" > /dev/null 2>&1; then
             echo "SQL Server is ready!"
             break
           fi
