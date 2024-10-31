@@ -8,7 +8,7 @@ on:
 
 jobs:
   # Build Job
-  build:
+  build-backend:
     runs-on: ubuntu-latest
 
     env:
@@ -37,11 +37,34 @@ jobs:
       with:
         name: backend-artifact
         path: ./output
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
 
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: Upload Frontend Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-artifact
+        path: frontend/build
+        
   # Database Setup Job
   setup_database:
     runs-on: ubuntu-latest
-    needs: build  # Depends on build job
+    needs: build-backend  # Depends on build-backend job
 
     services:
       mssql:
@@ -77,7 +100,7 @@ jobs:
   # Backend Deployment Job
   deploy_backend:
     runs-on: ubuntu-latest
-    needs: [build, setup_database]  # Depends on build and setup_database jobs
+    needs: [build-backend, setup_database]  # Depends on build-backend and setup_database jobs
 
     env:
       Backend_Port: 7195
@@ -96,7 +119,7 @@ jobs:
   # Frontend Deployment Job
   deploy_frontend:
     runs-on: ubuntu-latest
-    needs: build  # Depends on build job
+    needs: build-frontend  # Depends on build-frontend job
 
     env:
       Frontend_Port: 5173
