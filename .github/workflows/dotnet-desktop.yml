@@ -139,7 +139,9 @@ jobs:
         node-version: '18'
         
     - name: test
-      run: ls
+      run: |
+        cd frontend
+        ls
       
     - name: Install Dependencies and Start Frontend
       run: |
