@@ -44,7 +44,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-
+    - name: test
+      run: ls
+      
     - name: Install Frontend Dependencies
       run: |
         cd frontend
