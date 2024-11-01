@@ -137,7 +137,7 @@ jobs:
         sleep 10
   run_api_test:
       runs-on: ubuntu-latest
-      needs: deploy-backend
+      needs: deploy_backend
       steps: 
         - name: Install Node.js
           uses: actions/setup-node@v3
