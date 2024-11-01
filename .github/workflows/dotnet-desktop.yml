@@ -147,6 +147,9 @@ jobs:
         - name: Install postwoman npm
           run: npm i -g @hoppscotch/cli
 
+        - name: Test CardEndpoints
+          run: hopp test -e cm2voy4tk002lnyzhnaow1za9 -d 1000 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}} --server https://localhost:7195
+
   end-to-end-tests:
     needs: [deploy_backend,deploy_frontend]
     runs-on: ubuntu-latest
