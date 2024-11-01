@@ -57,7 +57,7 @@ namespace Backend.Services
         
         public Deck UpdateDeck(Deck deck, DeckDTO deckDTO)
         {
-            if(deck != null && deckDTO == null)
+            if(deck != null)
             {
                 // Update the existing deck with the new values
                 deck.Name = deckDTO.Name;
@@ -99,8 +99,6 @@ namespace Backend.Services
 
                 return DeckDTO.FromEntity(updatedDeckAdmin);
             }
-
-
         }
 
         public List<DeckDTO> GetPublicDecks()
