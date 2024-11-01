@@ -8,7 +8,7 @@ on:
 
 jobs:
   # Build Job
-  build-backend:
+  build_backend:
     runs-on: ubuntu-latest
 
     env:
@@ -38,7 +38,7 @@ jobs:
         name: backend-artifact
         path: ./output
         
-  build-frontend:
+  build_frontend:
     runs-on: ubuntu-latest
     steps:
     - name: Setup Node.js
@@ -96,7 +96,7 @@ jobs:
   # Backend Deployment Job
   deploy_backend:
     runs-on: ubuntu-latest
-    needs: [build-backend, setup_database]  # Depends on build-backend and setup_database jobs
+    needs: [build_backend, setup_database]  # Depends on build-backend and setup_database jobs
 
     env:
       Backend_Port: 7195
@@ -115,7 +115,7 @@ jobs:
   # Frontend Deployment Job
   deploy_frontend:
     runs-on: ubuntu-latest
-    needs: build-frontend  # Depends on build-frontend job
+    needs: build_frontend  # Depends on build-frontend job
 
     env:
       Frontend_Port: 5173
@@ -147,7 +147,37 @@ jobs:
         - name: Install postwoman npm
           run: npm i -g @hoppscotch/cli
 
-#        - name: Get collection of API tests
+  end-to-end-tests:
+    needs: [deploy_backend,deploy_frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.x' # Specify your .NET version
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      # - name: Build end-to-end test project
+      #   run: dotnet build path/to/your/SeleniumTests.csproj --no-restore
+
+      # - name: Run Selenium tests
+      #   env:
+      #     # You may need to specify browser drivers, depending on your setup
+      #     CHROMEWEBDRIVER: /usr/local/bin/chromedriver
+      #   run: dotnet test path/to/your/SeleniumTests.csproj --no-build --logger "trx;LogFileName=e2e_test_results.trx"
+
+      # - name: Publish test results
+      #   if: always()
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: e2e-test-results
+      #     path: '**/*.trx'
+        
           
 
 
