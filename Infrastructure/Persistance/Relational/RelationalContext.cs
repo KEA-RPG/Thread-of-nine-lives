@@ -22,6 +22,7 @@ namespace Infrastructure.Persistance.Relational
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new DeckCardConfiguration().Configure(modelBuilder.Entity<DeckCard>());
+            new DeckConfiguration().Configure(modelBuilder.Entity<Deck>());
         }
         public DbSet<User> Users { get; set; }
     }

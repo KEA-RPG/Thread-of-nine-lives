@@ -52,7 +52,9 @@ namespace Backend.Controllers
             app.MapPost("/cards", (ICardService cardService, CardDTO cardDTO) =>
             {
                 var createdCardDTO = cardService.CreateCard(cardDTO);
+
                 return Results.Created($"/cards/{cardDTO.Id}", createdCardDTO);
+
             }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Update card
@@ -60,13 +62,13 @@ namespace Backend.Controllers
 
                 var existingCard = cardService.GetCardById(cardDTO.Id);
 
-
-                var updateCardDTO = cardService.UpdateCard(cardDTO);
-
-                if (updateCardDTO == null)
+                if(existingCard == null)
                 {
                     return Results.NotFound();
                 }
+
+                var updateCardDTO = cardService.UpdateCard(cardDTO);
+
                 return Results.Ok(updateCardDTO);
             }).RequireAuthorization(policy => policy.RequireRole("Admin"));
         }
