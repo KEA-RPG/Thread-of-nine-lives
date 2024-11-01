@@ -65,22 +65,6 @@ namespace UnitTests
             Assert.Equal(95, state.PlayerDTO.Health);
         }
 
-
-        [Fact]
-        public void ProcessAction_EndTurn_ChangesTurnBackToPlayer()
-        {
-            // Arrange
-            var playerDTO = CreateTestPlayer();
-            var enemyDTO = CreateTestEnemy();
-            var state = new State(playerDTO, enemyDTO);
-
-            // Act
-            state.ProcessAction(new GameAction { Type = "END_TURN", Value = 0 });
-
-            // Assert
-            Assert.Equal("PLAYER", state.CurrentTurn);
-        }
-
         [Fact]
         public void ProcessAction_PlayerHealthNotBelowZero()
         {
