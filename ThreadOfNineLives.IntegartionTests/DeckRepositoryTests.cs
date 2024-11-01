@@ -32,7 +32,7 @@ namespace ThreadOfNineLives.IntegrationTests
         }
 
         //[Fact]
-        public void AddDeck_ShouldAddDeckToDatabase()
+/*        public void AddDeck_ShouldAddDeckToDatabase()
         {
             // Arrange
             var deckDto = new DeckDTO
@@ -54,6 +54,6 @@ namespace ThreadOfNineLives.IntegrationTests
             Assert.Equal(deckDto.Name, deck.Name);
             Assert.Equal(deckDto.UserId, deck.UserId);
             Assert.Equal(deckDto.Cards.Count, deck.Cards.Count);
-        }
+        }*/
     }
 }

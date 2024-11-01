@@ -16,136 +16,60 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public DeckDTO AddDeck(DeckDTO deckDto)
+        public DeckDTO AddDeck(Deck deck)
         {
-            var deck = new Deck
-            {
-                Name = deckDto.Name,
-                UserId = deckDto.UserId,
-                DeckCards = new List<DeckCard>()
-            };
-
-            foreach (var card in deckDto.Cards)
-            {
-                var deckCard = new DeckCard
-                {
-                    CardId = card.Id,
-                    Deck = deck
-                };
-                deck.DeckCards.Add(deckCard);
-            }
-
             _context.Decks.Add(deck);
             _context.SaveChanges();
 
-            return GetDeckById(deck.Id);
+            return DeckDTO.FromEntity(deck);
         }
 
-        public IResult DeleteDeck(DeckDTO deckDto)
+        public void DeleteDeck(Deck deck)
         {
-            var deck = _context.Decks.Find(deckDto.Id);
+            var dbDeck = _context.Decks.Find(deck.Id);
             if (deck != null)
             {
-                var deckCards = _context.DeckCards.Where(dc => dc.DeckId == deck.Id);
+                var deckCards = _context.DeckCards.Where(dc => dc.DeckId == dbDeck.Id);
                 foreach (var deckCard in deckCards)
                 {
                     _context.DeckCards.Remove(deckCard);
                 }
-                _context.Decks.Remove(deck);
+                _context.Decks.Remove(dbDeck);
                 _context.SaveChanges();
-                return Results.Ok("Deck Deleted!");
             }
-            return Results.NotFound("No Deck with that ID exists");
         }
 
-        public DeckDTO GetDeckById(int id)
+        public Deck GetDeckById(int id, string userName)
         {
-            var deck = _context.Decks.Find(id);
-            if (deck == null) return null;
-
-            return new DeckDTO
+            if(userName != null)
             {
-                // Map properties from deck to deckDto
-                Id = id,
-                UserId = deck.UserId,
-                Name = deck.Name,
-                IsPublic = deck.IsPublic, // Include the IsPublic property
-                Cards = deck.DeckCards.Select(dc => new CardDTO
-                {
-                    // Map properties from dc.Card to cardDto
-                    Id = dc.Card.Id,
-                    Name = dc.Card.Name,
-                    Description = dc.Card.Description,
-                    Attack = dc.Card.Attack,
-                    Defense = dc.Card.Defense,
-                    Cost = dc.Card.Cost,
-                    ImagePath = dc.Card.ImagePath
-                }).ToList(),
-            };
+                var user = _context.Users.FirstOrDefault(u => u.Username == userName);
+                if (user == null) return null;
+
+                return _context.Decks.FirstOrDefault(deck => deck.Id == id && deck.User == user);
+            }
+
+
+            return _context.Decks.Find(id);
         }
 
-        public IResult UpdateDeck(DeckDTO deckDto)
+        public void UpdateDeck(Deck deck)
         {
-            var deck = _context.Decks.Find(deckDto.Id);
-            if (deck != null)
-            {
-                // Map properties from deckDto to deck
-                _context.Decks.Update(deck);
-                _context.SaveChanges();
-                return Results.Ok("Deck updated!");
-            }
-            return Results.NotFound("No Deck with that ID exists");
+            _context.Decks.Update(deck);
+            _context.SaveChanges();
         }
 
         public List<DeckDTO> GetPublicDecks()
         {
-            return _context.Decks.Where(deck => deck.IsPublic).Select(deck => new DeckDTO
-            {
-                // Map properties from deck to deckDto
-                Id = deck.Id,
-                UserId = deck.UserId,
-                Name = deck.Name,
-                IsPublic = deck.IsPublic, // Include the IsPublic property
-                Cards = deck.DeckCards.Select(dc => new CardDTO
-                {
-                    // Map properties from dc.Card to cardDto
-                    Id = dc.Card.Id,
-                    Name = dc.Card.Name,
-                    Description = dc.Card.Description,
-                    Attack = dc.Card.Attack,
-                    Defense = dc.Card.Defense,
-                    Cost = dc.Card.Cost,
-                    ImagePath = dc.Card.ImagePath
-                }).ToList(),
-            }).ToList();
-
+            return _context.Decks.Where(deck => deck.IsPublic).Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
 
         public List<DeckDTO> GetUserDecks(string userName)
         {
-
             var user = _context.Users.FirstOrDefault(u => u.Username == userName);
             if (user == null) return null;
 
-            return _context.Decks.Where(deck => deck.User == user).Select(deck => new DeckDTO
-            {
-                // Map properties from deck to deckDto
-                Id = deck.Id,
-                UserId = deck.UserId,
-                Name = deck.Name,
-                IsPublic = deck.IsPublic, // Include the IsPublic property
-                Cards = deck.DeckCards.Select(dc => new CardDTO
-                {
-                    // Map properties from dc.Card to cardDto
-                    Id = dc.Card.Id,
-                    Name = dc.Card.Name,
-                    Description = dc.Card.Description,
-                    Attack = dc.Card.Attack,
-                    Defense = dc.Card.Defense,
-                    Cost = dc.Card.Cost,
-                    ImagePath = dc.Card.ImagePath
-                }).ToList(),
-            }).ToList();
+            return _context.Decks.Where(deck => deck.User == user).Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
     }
 }

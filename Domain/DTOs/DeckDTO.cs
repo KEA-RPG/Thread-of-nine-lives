@@ -14,5 +14,21 @@ namespace Domain.DTOs
         public string Name { get; set; }
         public List<CardDTO> Cards { get; set; }
         public bool IsPublic { get; set; }
+
+
+        public static DeckDTO FromEntity(Deck deck)
+        {
+            return new DeckDTO
+            {
+                Id = deck.Id,
+                UserId = deck.UserId,
+                Name = deck.Name,
+                Cards = deck.DeckCards.Select(dc => CardDTO.FromEntity(dc.Card)).ToList(),
+                IsPublic = deck.IsPublic
+            };
+        }
+
+
+
     }
 }

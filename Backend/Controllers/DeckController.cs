@@ -41,8 +41,18 @@ namespace Backend.Controllers
                 {
                     return Results.NotFound();
                 }
-                deckService.DeleteDeck(id);
-                return Results.Ok();
+                else
+                {
+                    try
+                    {
+                        deckService.DeleteDeck(id);
+                        return Results.NoContent();
+                    }
+                    catch (Exception e)
+                    {
+                        return Results.BadRequest(e.Message);
+                    }
+                }
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin")); //I tilfælde af at der skal kunnes slette offentlige decks
 
             //Create deck
@@ -53,18 +63,38 @@ namespace Backend.Controllers
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal laves offentlige free decks
 
             //Update deck
-            app.MapPut("/decks", (IDeckService deckService, DeckDTO deck) =>
+            app.MapPut("/decks", (IDeckService deckService, HttpContext context, DeckDTO deck) =>
             {
-
                 var dbDeck = deckService.GetDeckById(deck.Id);
-
+                var userName = context.GetUserName();
+                var role = context.GetUserRole();
                 if (dbDeck == null)
                 {
                     return Results.NotFound();
                 }
-
-                deckService.UpdateDeck(deck);
-                return Results.Ok(deck);
+                if(role == "Admin")
+                {   //Check if the user is an admin
+                    try
+                    {
+                        deckService.UpdateDeck(deck, Role: role);
+                        return Results.Ok(deck);
+                    }catch (Exception e)
+                    {
+                        return Results.BadRequest(e.Message);
+                    }
+                }
+                else
+                {   //Check if the user is the owner of the deck
+                    try
+                    {
+                        deckService.UpdateDeck(deck, UserName: userName);
+                        return Results.Ok(deck);
+                    }
+                    catch (Exception e)
+                    {
+                        return Results.BadRequest(e.Message);
+                    }
+                }
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal opdateres offentlige free decks
         }
     }
