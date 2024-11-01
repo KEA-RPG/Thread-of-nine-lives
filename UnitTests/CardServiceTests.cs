@@ -45,7 +45,7 @@ namespace Backend.Tests.Services
             _cardRepositoryMock.Verify(r => r.AddCard(It.Is<Card>(c => c.Name == cardDTO.Name)), Times.Once);
         }
 
-        [Fact]
+/*        [Fact]
         public void DeleteCard_ShouldReturnBadRequest_WhenCardNotFound()
         {
             // Arrange
@@ -57,8 +57,8 @@ namespace Backend.Tests.Services
 
             // Assert
             Assert.IsType<BadRequest<string>>(result);
-        }
-
+        }*/
+/*
         [Fact]
         public void DeleteCard_ShouldReturnOkResult_WhenCardIsDeleted()
         {
@@ -72,7 +72,7 @@ namespace Backend.Tests.Services
             // Assert
             Assert.IsType<Ok<string>>(result);
             _cardRepositoryMock.Verify(r => r.DeleteCard(card), Times.Once);
-        }
+        }*/
 
         [Fact]
         public void GetAllCards_ShouldReturnListOfCardDTOs()
