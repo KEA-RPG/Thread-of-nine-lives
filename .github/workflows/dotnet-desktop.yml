@@ -157,7 +157,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.x' # Specify your .NET version
+          dotnet-version: 8.0.x
 
       - name: Install dependencies
         run: dotnet restore
@@ -177,7 +177,22 @@ jobs:
       #   with:
       #     name: e2e-test-results
       #     path: '**/*.trx'
-        
+
+  integration_tests:
+    needs: [deploy_backend,setup_database]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install dependencies
+        run: dotnet restore
+    
           
 
 
