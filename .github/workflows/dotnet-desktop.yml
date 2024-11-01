@@ -121,7 +121,7 @@ jobs:
       run: npm i -g @hoppscotch/cli
 
     - name: Test CardEndpoints
-      run: hopp test -e cm2voy4tk002lnyzhnaow1za9 -d 1000 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}} --server https://localhost:7195
+      run: hopp test -e cm2voy4tk002lnyzhnaow1za9 -d 1000 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}} --server http://localhost:5000
 
   # Frontend Deployment Job
   deploy_frontend:
