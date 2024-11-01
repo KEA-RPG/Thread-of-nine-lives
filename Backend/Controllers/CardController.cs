@@ -13,8 +13,8 @@ namespace Backend.Controllers
             //Tænker det skal være muligt for alle at se eksisterende kort, regardless af roller
             app.MapGet("/cards", (ICardService cardService) =>
             {
-                var cardDTO = cardService.GetAllCards();
-                return cardDTO;
+                var cards = cardService.GetAllCards();
+                return cards;
             });
 
             //Get card by id

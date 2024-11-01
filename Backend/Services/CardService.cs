@@ -26,7 +26,7 @@ namespace Backend.Services
             return cardDTO;
         }
 
-        public IResult DeleteCard(int id)
+        public void DeleteCard(int id)
         {
             var card = _cardRepository.GetCardById(id);
             if (card == null)

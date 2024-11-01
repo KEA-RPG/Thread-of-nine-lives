@@ -8,6 +8,6 @@ namespace Backend.Services
         List<CardDTO> GetAllCards();
         CardDTO CreateCard(CardDTO card);
         CardDTO UpdateCard(CardDTO card);
-        IResult DeleteCard(int id);
+        void DeleteCard(int id);
     }
 }

@@ -1,30 +1,14 @@
-﻿using Backend.Services;
+﻿using Backend.Extensions;
+using Backend.Services;
 using Domain.DTOs;
 using Microsoft.Identity.Client;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 
 namespace Backend.Controllers
 {
     public static class DeckController
     {
-        public static string Authorization(HttpContext context)
-        {
-            string authorizationHeader = context.Request.Headers["Authorization"];
-            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
-            {
-                string token = authorizationHeader.Substring("Bearer ".Length).Trim();
-                // Use the token as needed
-                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken decodedToken = tokenHandler.ReadJwtToken(token);
-                string userName = decodedToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-                return userName;
-            }
-            else
-            {
-                return null;
-            }
-             
-        }
 
         public static void MapDeckEndpoint(this WebApplication app)
         {
@@ -38,8 +22,8 @@ namespace Backend.Controllers
             //Get all user decks
             app.MapGet("/decks", (IDeckService deckService, HttpContext context) =>
             {
-                string userName = Authorization(context);
-                if(userName != null)
+                string userName = context.GetUserName();
+                if (userName != null)
                 {
                     return Results.Ok(deckService.GetUserDecks(userName));
                 }
@@ -48,7 +32,6 @@ namespace Backend.Controllers
                     return Results.Unauthorized();
                 }
             });
-
 
             //Delete deck
             app.MapDelete("/decks/{id}", (IDeckService deckService, int id) =>
