@@ -109,7 +109,7 @@ jobs:
 
     - name: Start Backend in Background
       run: |
-        dotnet Backend.dll --urls "http://localhost:$env:Backend_Port" &
+        dotnet Backend.dll --urls &
         sleep 10
 
   # Frontend Deployment Job
