@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 
+interface Card {
+    id: number;
+    name: string;
+    attack: number;
+  }
+
 const CombatPage = () => {
     const [enemyName, setEnemyName] = useState(null);
     const [enemyHealth, setEnemyHealth] = useState(null);
-    const [playerAttackValue] = useState(10);
     const [playerHealth, setPlayerHealth] = useState(null);
     const [loading, setLoading] = useState(false);
     const [currentTurn, setCurrentTurn] = useState("PLAYER");
     const [usedAttacks, setUsedAttacks] = useState([false, false, false, false, false]);
-
+    const [cards, setCards] = useState<Card[]>([]);
 
     useEffect(() => {
         const fetchGameState = async () => {
@@ -26,17 +31,31 @@ const CombatPage = () => {
             }
         };
 
+        const fetchCards = async () => {
+            try {
+                const response = await fetch('http://localhost:5281/cards');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cards');
+                }
+                const data = await response.json();
+                setCards(data);
+            } catch (error) {
+                console.error('Error fetching cards:', error);
+            }
+        };
+
         fetchGameState();
+        fetchCards();
     }, []);
-    
 
     const handleAttack = async (index: number) => {
-        if (usedAttacks[index]) return;
+        if (usedAttacks[index] || !cards[index]) return;
         setLoading(true);
         try {
+            const card = cards[index];
             const action = {
                 type: 'ATTACK',
-                value: playerAttackValue,
+                value: card.attack
             };
 
             const response = await fetch('http://localhost:5281/combat', {
@@ -50,7 +69,7 @@ const CombatPage = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
+            
             const updatedState = await response.json();
             setEnemyHealth(updatedState.enemyDTO.health);
 
@@ -114,7 +133,7 @@ const CombatPage = () => {
                 {loading ? 'Ending Turn...' : 'End Turn'}
             </button>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
-                {usedAttacks.map((used, index) => (
+                {cards.map((card, index) => (
                     <div
                         key={index}
                         style={{
@@ -127,22 +146,22 @@ const CombatPage = () => {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            cursor: used || loading || currentTurn !== "PLAYER" ? 'not-allowed' : 'pointer',
+                            cursor: usedAttacks[index] || loading || currentTurn !== "PLAYER" ? 'not-allowed' : 'pointer',
                         }}
                     >
                         <button
                             onClick={() => handleAttack(index)}
-                            disabled={used || loading || currentTurn !== "PLAYER"}
+                            disabled={usedAttacks[index] || loading || currentTurn !== "PLAYER"}
                             style={{
                                 border: 'none',
                                 backgroundColor: 'transparent',
                                 cursor: 'inherit',
                                 fontSize: '14px',
                                 fontWeight: 'bold',
-                                color: used ? '#999' : '#000',
+                                color: usedAttacks[index] ? '#999' : '#000',
                             }}
                         >
-                            {used ? 'Used' : `Attack ${index + 1}`}
+                            {usedAttacks[index] ? 'Used' : `${card.name} Attack: ${card.attack}`}
                         </button>
                     </div>
                 ))}
