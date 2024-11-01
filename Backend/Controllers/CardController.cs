@@ -29,14 +29,23 @@ namespace Backend.Controllers
             app.MapDelete("/cards/{id}", (ICardService cardService, int id) =>
             {
                 var cardDTO = cardService.GetCardById(id);
+
                 if (cardDTO == null)
                 {
                     return Results.NotFound();
                 }
-                
-                return cardService.DeleteCard(id);
-
-
+                else
+                {
+                    try
+                    {
+                        cardService.DeleteCard(id);
+                        return Results.NoContent();
+                    }
+                    catch (Exception e)
+                    {
+                        return Results.BadRequest(e.Message);
+                    }
+                }
             }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Create card
@@ -48,6 +57,9 @@ namespace Backend.Controllers
 
             //Update card
             app.MapPut("/cards", (ICardService cardService, CardDTO cardDTO) => {
+
+                var existingCard = cardService.GetCardById(cardDTO.Id);
+
 
                 var updateCardDTO = cardService.UpdateCard(cardDTO);
 

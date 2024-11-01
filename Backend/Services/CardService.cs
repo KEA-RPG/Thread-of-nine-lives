@@ -29,15 +29,8 @@ namespace Backend.Services
         public void DeleteCard(int id)
         {
             var card = _cardRepository.GetCardById(id);
-            if (card == null)
-            {
-                return Results.BadRequest("Card not found");
-            }
-            else
-            {
-                _cardRepository.DeleteCard(card);
-                return Results.Ok($"Card: {card.Id}, {card.Name} has been deleted!");
-            }
+            _cardRepository.DeleteCard(card);
+
         }
 
         public List<CardDTO> GetAllCards()

@@ -24,7 +24,6 @@ namespace Backend.Repositories
         {
             _context.Cards.Remove(card);
             _context.SaveChanges();
-            return Results.Ok($"Card: {card.Id}, {card.Name} has been deleted!");
         }
 
         public List<Card> GetAllCards()
