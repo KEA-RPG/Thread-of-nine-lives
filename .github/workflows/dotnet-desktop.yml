@@ -112,6 +112,17 @@ jobs:
         dotnet Backend.dll --urls &
         sleep 10
 
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+            
+    - name: Install postwoman npm
+      run: npm i -g @hoppscotch/cli
+
+    - name: Test CardEndpoints
+      run: hopp test -e cm2voy4tk002lnyzhnaow1za9 -d 1000 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}} --server https://localhost:7195
+
   # Frontend Deployment Job
   deploy_frontend:
     runs-on: ubuntu-latest
