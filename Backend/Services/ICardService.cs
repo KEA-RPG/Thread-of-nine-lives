@@ -1,13 +1,13 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Backend.Services
 {
     public interface ICardService
     {
-        Card GetCardById(int id);
-        List<Card> GetAllCards();
-        Card CreateCard(Card card);
-        Card UpdateCard(Card card);
+        CardDTO GetCardById(int id);
+        List<CardDTO> GetAllCards();
+        CardDTO CreateCard(CardDTO card);
+        CardDTO UpdateCard(CardDTO card);
         void DeleteCard(int id);
     }
 }
