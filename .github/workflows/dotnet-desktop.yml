@@ -128,12 +128,13 @@ jobs:
             dotnet-version: 8.0.x
         - name: test
           run : ls
-          
+
         - name: Run Data Seeder
-          run: dotnet DatabaseSeeder.dll
+          run: cd DatabaseSeeder &
+            dotnet DatabaseSeeder.dll
 
         - name: Start Backend in Background
-          run: |
+          run: cd ../Backend &
             dotnet Backend.dll &
             sleep 2
         - name: Install Node.js
