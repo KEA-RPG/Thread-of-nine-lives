@@ -75,6 +75,7 @@ EnemyController.MapEnemyEndpoint(app);
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapHealthChecks("/hc");
 app.MapGet("/", () => "Hello World!");
 app.UseSwagger();
