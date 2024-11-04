@@ -91,6 +91,9 @@ jobs:
           uses: actions/setup-dotnet@v3
           with:
             dotnet-version: 8.0.x
+            
+        - name: test
+          run: ls
 
         - name: Run Data Seeder
           run: dotnet run --project DataSeeder/DataSeeder.csproj
