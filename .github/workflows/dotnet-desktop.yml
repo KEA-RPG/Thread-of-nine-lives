@@ -24,7 +24,8 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore Dependencies
-      run: dotnet restore 
+      run:  cd Backend &
+        dotnet restore 
 
     - name: Build Solution
       run: dotnet build --configuration Release
