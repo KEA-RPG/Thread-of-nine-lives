@@ -17,20 +17,21 @@ namespace DataSeeder
     {
         public static void Main(string[] args)
         {
-            var builder = Host.CreateDefaultBuilder(args)
-            .ConfigureServices(services =>
+            var services = new ServiceCollection();
+            PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
+
+            using (var serviceProvider = services.BuildServiceProvider())
             {
-                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
-            });
-
-            var host = builder.Build();
-            Migrate(host);
-
-            SeedDatabase(host);
+                Console.WriteLine("Migrating Database..");
+                Migrate(serviceProvider);
+                Console.WriteLine("Seeding Database..");
+                SeedDatabase(serviceProvider);
+                Console.WriteLine("Done!");
+            }
         }
-        private static void Migrate(IHost host)
+        private static void Migrate(IServiceProvider serviceProvider)
         {
-            using (var scope = host.Services.CreateScope())
+            using (var scope = serviceProvider.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<RelationalContext>();
@@ -38,9 +39,9 @@ namespace DataSeeder
             }
         }
 
-        private static void SeedDatabase(IHost host)
+        private static void SeedDatabase(IServiceProvider serviceProvider)
         {
-            using (var scope = host.Services.CreateScope())
+            using (var scope = serviceProvider.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<RelationalContext>();
