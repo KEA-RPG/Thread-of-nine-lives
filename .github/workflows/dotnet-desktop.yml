@@ -52,12 +52,10 @@ jobs:
 
     - name: Restore Dependencies
       run: dotnet restore 
-      
-    - name: test
-      run: ls
 
     - name: Build Solution
-      run: dotnet build --project DataSeeder/DataSeeder.csproj --configuration Release
+      run: cd DataSeeder &
+        dotnet build --project DataSeeder/DataSeeder.csproj --configuration Release
 
     - name: Publish Artifacts
       run: dotnet publish --configuration Release --output ./output
