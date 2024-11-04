@@ -133,15 +133,7 @@ jobs:
         - name: Start Backend in Background
           run: |
             dotnet Backend.dll &
-            sleep 2 &
-            for i in {1..30}; do
-              if curl -s http://localhost:5000/hc > /dev/null; then
-                echo "API is ready!"
-                break
-              fi
-              echo "Waiting for API to start..."
-              sleep 5
-            done
+            sleep 2
         - name: Install Node.js
           uses: actions/setup-node@v3
           with:
