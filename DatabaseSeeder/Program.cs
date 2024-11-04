@@ -7,6 +7,7 @@ using Infrastructure.Persistance;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
 using System;
+using Microsoft.EntityFrameworkCore.Migrations.Internal;
 
 
 namespace DataSeeder
@@ -23,8 +24,18 @@ namespace DataSeeder
             });
 
             var host = builder.Build();
+            Migrate(host);
 
             SeedDatabase(host);
+        }
+        private static void Migrate(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<RelationalContext>();
+                context.Database.Migrate();
+            }
         }
 
         private static void SeedDatabase(IHost host)
