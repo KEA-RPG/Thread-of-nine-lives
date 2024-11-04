@@ -92,6 +92,9 @@ jobs:
           with:
             dotnet-version: 8.0.x
 
+        - name: Run Data Seeder
+          run: dotnet run --project DataSeeder/DataSeeder.csproj
+
         - name: Start Backend in Background
           run: |
             dotnet Backend.dll &
@@ -112,7 +115,7 @@ jobs:
           run: npm i -g @hoppscotch/cli
 
         - name: Test CardEndpoints
-          run: hopp test -e cm32vkcrw00dhh7mfs5l34099 -d 1000 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}}
+          run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}}
 
   # end-to-end-tests:
   #   runs-on: ubuntu-latest
