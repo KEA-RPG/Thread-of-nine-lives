@@ -87,17 +87,6 @@ jobs:
           with:
             name: backend-artifact
 
-        - name: Wait for SQL Server
-          run: |
-            for i in {1..30}; do
-              if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "yourStrong(!)Password" -Q "SELECT 1" > /dev/null 2>&1; then
-                echo "SQL Server is ready!"
-                break
-              fi
-              echo "Waiting for SQL Server to start..."
-              sleep 5
-            done
-
         - name: Setup .NET Core
           uses: actions/setup-dotnet@v3
           with:
@@ -105,9 +94,15 @@ jobs:
 
         - name: Start Backend in Background
           run: |
-            dotnet Backend.dll --urls &
-            sleep 10
-
+            dotnet Backend.dll &
+            for i in {1..30}; do
+              if curl -s http://localhost:5000/hc > /dev/null; then
+                echo "API is ready!"
+                break
+              fi
+              echo "Waiting for API to start..."
+              sleep 5
+            done
         - name: Install Node.js
           uses: actions/setup-node@v3
           with:
@@ -119,118 +114,103 @@ jobs:
         - name: Test CardEndpoints
           run: hopp test -e cm32vkcrw00dhh7mfs5l34099 -d 1000 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}}
 
-  end-to-end-tests:
-    runs-on: ubuntu-latest
-    needs: [build_backend,build_frontend]
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "yourStrong(!)Password"
-        ports:
-          - 1433:1433
-        options: >-
-          --health-cmd "exit 0"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+  # end-to-end-tests:
+  #   runs-on: ubuntu-latest
+  #   needs: [build_backend,build_frontend]
+  #   services:
+  #     mssql:
+  #       image: mcr.microsoft.com/mssql/server:2022-latest
+  #       env:
+  #         ACCEPT_EULA: "Y"
+  #         SA_PASSWORD: "yourStrong(!)Password"
+  #       ports:
+  #         - 1433:1433
+  #       options: >-
+  #         --health-cmd "exit 0"
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
 
-    steps: 
-      - name: Download Backend Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: backend-artifact
+  #   steps: 
+  #     - name: Download Backend Artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: backend-artifact
 
-      - name: Wait for SQL Server
-        run: |
-          for i in {1..30}; do
-            if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "yourStrong(!)Password" -Q "SELECT 1" > /dev/null 2>&1; then
-              echo "SQL Server is ready!"
-              break
-            fi
-            echo "Waiting for SQL Server to start..."
-            sleep 5
-          done
+  #     - name: Wait for SQL Server
+  #       run: |
+  #         for i in {1..30}; do
+  #           if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "yourStrong(!)Password" -Q "SELECT 1" > /dev/null 2>&1; then
+  #             echo "SQL Server is ready!"
+  #             break
+  #           fi
+  #           echo "Waiting for SQL Server to start..."
+  #           sleep 5
+  #         done
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.x
+  #     - name: Setup .NET Core
+  #       uses: actions/setup-dotnet@v3
+  #       with:
+  #         dotnet-version: 8.0.x
 
-      - name: Start Backend in Background
-        run: |
-          dotnet Backend.dll --urls &
-          sleep 10
+  #     - name: Start Backend in Background
+  #       run: |
+  #         dotnet Backend.dll --urls &
+  #         sleep 10
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+  #     - name: Install Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
         
-      - name: Install Dependencies and Start Frontend
-        run: |
-          cd ./frontend
-          npm install
-          npm run dev &
-          sleep 10
+  #     - name: Install Dependencies and Start Frontend
+  #       run: |
+  #         cd ./frontend
+  #         npm install
+  #         npm run dev &
+  #         sleep 10
 
-      # - name: Build end-to-end test project
-      #   run: dotnet build path/to/your/SeleniumTests.csproj --no-restore
 
-      # - name: Run Selenium tests
-      #   env:
-      #     # You may need to specify browser drivers, depending on your setup
-      #     CHROMEWEBDRIVER: /usr/local/bin/chromedriver
-      #   run: dotnet test path/to/your/SeleniumTests.csproj --no-build --logger "trx;LogFileName=e2e_test_results.trx"
+  # integration_tests:
+  #   needs: build_backend
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     mssql:
+  #       image: mcr.microsoft.com/mssql/server:2022-latest
+  #       env:
+  #         ACCEPT_EULA: "Y"
+  #         SA_PASSWORD: "yourStrong(!)Password"
+  #       ports:
+  #         - 1433:1433
+  #       options: >-
+  #         --health-cmd "exit 0"
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
 
-      # - name: Publish test results
-      #   if: always()
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: e2e-test-results
-      #     path: '**/*.trx'
+  #   steps: 
+  #     - name: Download Backend Artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: backend-artifact
 
-  integration_tests:
-    needs: build_backend
-    runs-on: ubuntu-latest
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "yourStrong(!)Password"
-        ports:
-          - 1433:1433
-        options: >-
-          --health-cmd "exit 0"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+  #     - name: Wait for SQL Server
+  #       run: |
+  #         for i in {1..30}; do
+  #           if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "yourStrong(!)Password" -Q "SELECT 1" > /dev/null 2>&1; then
+  #             echo "SQL Server is ready!"
+  #             break
+  #           fi
+  #           echo "Waiting for SQL Server to start..."
+  #           sleep 5
+  #         done
 
-    steps: 
-      - name: Download Backend Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: backend-artifact
+  #     - name: Setup .NET Core
+  #       uses: actions/setup-dotnet@v3
+  #       with:
+  #         dotnet-version: 8.0.x
 
-      - name: Wait for SQL Server
-        run: |
-          for i in {1..30}; do
-            if /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "yourStrong(!)Password" -Q "SELECT 1" > /dev/null 2>&1; then
-              echo "SQL Server is ready!"
-              break
-            fi
-            echo "Waiting for SQL Server to start..."
-            sleep 5
-          done
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Start Backend in Background
-        run: |
-          dotnet Backend.dll --urls &
-          sleep 10
+  #     - name: Start Backend in Background
+  #       run: |
+  #         dotnet Backend.dll --urls &
+  #         sleep 10
