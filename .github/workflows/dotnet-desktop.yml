@@ -192,7 +192,7 @@ jobs:
       #     path: '**/*.trx'
 
   integration_tests:
-    needs: [deploy_backend]
+    needs: build_backend
     runs-on: ubuntu-latest
     services:
       mssql:
