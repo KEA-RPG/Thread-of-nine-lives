@@ -30,7 +30,30 @@ namespace Backend.Controllers
                 }
 
                 return Results.Ok(deckService.GetUserDecks(userName));
+            });
 
+            app.MapGet("/decks/{id}", (IDeckService deckService, IUserService userService, int id, HttpContext context) =>
+            {
+                var dbDeck = deckService.GetDeckById(id);
+                var userName = context.GetUserName();
+                var role = context.GetUserRole();
+
+                if (dbDeck == null)
+                {
+                    return Results.NotFound();
+                }
+
+                else if (role == "Admin")//Check if the user is an admin
+                {
+                    return Results.Ok(dbDeck);
+                }
+
+                else if (role == "Player" && dbDeck.UserId == userService.GetUserIdByUserName(userName))//Check if the user is the owner of the deck
+                {
+                    return Results.Ok(dbDeck);
+                }
+
+                return Results.Unauthorized();
             });
 
             //Delete deck
@@ -66,31 +89,29 @@ namespace Backend.Controllers
 
                 int userID = userService.GetUserIdByUserName(userName);
                 deck.UserId = userID;
-                deckService.CreateDeck(deck);
-                return Results.Created($"/decks/{deck.Id}", deck);
+                var createdDeck = deckService.CreateDeck(deck);
+                return Results.Created($"/decks/{createdDeck.Id}", createdDeck);
 
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal laves offentlige free decks
 
             //Update deck
-            app.MapPut("/decks", (IDeckService deckService, HttpContext context, DeckDTO deck) =>
+            app.MapPut("/decks/{id}", (IDeckService deckService, IUserService userService, HttpContext context, DeckDTO deck, int id) =>
             {
-                var dbDeck = deckService.GetDeckById(deck.Id);
+                var dbDeck = deckService.GetDeckById(id);
                 var userName = context.GetUserName();
                 var role = context.GetUserRole();
                 if (dbDeck == null)
                 {
                     return Results.NotFound();
                 }
-
+                deck.Id = id;
                 if (role == "Admin")
                 {   //Check if the user is an admin
-
+                    
                     deckService.UpdateDeck(deck);
                     return Results.Ok(deck);
-
-
                 }
-                else if (role == "Player" && dbDeck.UserId == deck.UserId)
+                else if (role == "Player" && dbDeck.UserId == userService.GetUserIdByUserName(userName))
                 {   //Check if the user is the owner of the deck
 
                     deckService.UpdateDeck(deck);

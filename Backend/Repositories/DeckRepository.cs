@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
-using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -32,10 +31,7 @@ namespace Backend.Repositories
             if (dbDeck != null)
             {
                 var deckCards = _context.DeckCards.Where(dc => dc.DeckId == dbDeck.Id);
-                foreach (var deckCard in deckCards)
-                {
-                    _context.DeckCards.Remove(deckCard);
-                }
+                _context.DeckCards.RemoveRange(deckCards);
                 _context.Decks.Remove(dbDeck);
                 _context.SaveChanges();
             }
@@ -53,10 +49,26 @@ namespace Backend.Repositories
             return deck;
         }
 
-        public void UpdateDeck(DeckDTO deck)
+        public void UpdateDeck(DeckDTO deckToUpdate)
         {
-            _context.Decks.Update(Deck.FromDTO(deck));
-            _context.SaveChanges();
+            var dbDeck = _context.Decks.Find(deckToUpdate.Id);
+
+            if (dbDeck != null)
+            {
+                // Map the properties from the DTO to the entity
+                dbDeck.Name = deckToUpdate.Name;
+                dbDeck.Id = deckToUpdate.Id;
+                dbDeck.DeckCards = deckToUpdate.Cards.Select(card => new DeckCard
+                {
+                    CardId = card.Id,
+                    DeckId = deckToUpdate.Id
+                }).ToList();
+                dbDeck.IsPublic = deckToUpdate.IsPublic;
+
+
+                _context.Decks.Update(dbDeck);
+                _context.SaveChanges();
+            }
         }
 
         public List<DeckDTO> GetPublicDecks()
