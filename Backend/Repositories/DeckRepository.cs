@@ -1,7 +1,8 @@
 ﻿using Domain.Entities;
 using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
-
+using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
@@ -16,18 +17,19 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public DeckDTO AddDeck(Deck deck)
+        public DeckDTO AddDeck(DeckDTO deck)
         {
-            _context.Decks.Add(deck);
+            var dbDeck = Deck.FromDTO(deck);
+            _context.Decks.Add(dbDeck);
             _context.SaveChanges();
 
-            return DeckDTO.FromEntity(deck);
+            return GetDeckById(dbDeck.Id);
         }
 
-        public void DeleteDeck(Deck deck)
+        public void DeleteDeck(int deckId)
         {
-            var dbDeck = _context.Decks.Find(deck.Id);
-            if (deck != null)
+            var dbDeck = _context.Decks.Find(deckId);
+            if (dbDeck != null)
             {
                 var deckCards = _context.DeckCards.Where(dc => dc.DeckId == dbDeck.Id);
                 foreach (var deckCard in deckCards)
@@ -39,23 +41,21 @@ namespace Backend.Repositories
             }
         }
 
-        public Deck GetDeckById(int id, string userName)
+        public DeckDTO GetDeckById(int id)
         {
-            if(userName != null)
-            {
-                var user = _context.Users.FirstOrDefault(u => u.Username == userName);
-                if (user == null) return null;
+            var dbDeck = _context.Decks.
+                Include(deck => deck.DeckCards).
+                ThenInclude(deckCard => deckCard.Card).
+                FirstOrDefault(deck => deck.Id == id);
 
-                return _context.Decks.FirstOrDefault(deck => deck.Id == id && deck.User == user);
-            }
+            var deck = DeckDTO.FromEntity(dbDeck);
 
-
-            return _context.Decks.Find(id);
+            return deck;
         }
 
-        public void UpdateDeck(Deck deck)
+        public void UpdateDeck(DeckDTO deck)
         {
-            _context.Decks.Update(deck);
+            _context.Decks.Update(Deck.FromDTO(deck));
             _context.SaveChanges();
         }
 
