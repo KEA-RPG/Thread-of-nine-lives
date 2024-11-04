@@ -15,7 +15,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
-
+builder.Services.AddHealthChecks();
 // Add services to the container
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -75,7 +75,7 @@ EnemyController.MapEnemyEndpoint(app);
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapHealthChecks("/hc");
 app.MapGet("/", () => "Hello World!");
 app.UseSwagger();
 app.UseSwaggerUI();
