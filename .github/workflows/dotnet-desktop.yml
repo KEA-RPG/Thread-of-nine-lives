@@ -126,7 +126,7 @@ jobs:
             dotnet-version: 8.0.x
             
         - name: Run Data Seeder
-          run: dotnet DataSeeder.dll
+          run: dotnet DatabaseSeeder.dll
 
         - name: Start Backend in Background
           run: |
