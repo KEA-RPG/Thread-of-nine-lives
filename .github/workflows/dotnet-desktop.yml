@@ -115,16 +115,18 @@ jobs:
           with:
             name: backend-artifact
 
+        - name: Download Seeder Artifact
+          uses: actions/download-artifact@v3
+          with:
+            name: seeder-artifact
+
         - name: Setup .NET Core
           uses: actions/setup-dotnet@v3
           with:
             dotnet-version: 8.0.x
             
-        - name: test
-          run: ls
-
         - name: Run Data Seeder
-          run: dotnet run --project DataSeeder/DataSeeder.csproj
+          run: dotnet DataSeeder.dll
 
         - name: Start Backend in Background
           run: |
