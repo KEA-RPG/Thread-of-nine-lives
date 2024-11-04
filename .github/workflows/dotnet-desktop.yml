@@ -24,8 +24,7 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore Dependencies
-      run:  cd Backend &
-        dotnet restore 
+      run:  dotnet restore 
 
     - name: Build Solution
       run: dotnet build --configuration Release
@@ -134,6 +133,7 @@ jobs:
         - name: Start Backend in Background
           run: |
             dotnet Backend.dll &
+            sleep 2 &
             for i in {1..30}; do
               if curl -s http://localhost:5000/hc > /dev/null; then
                 echo "API is ready!"
