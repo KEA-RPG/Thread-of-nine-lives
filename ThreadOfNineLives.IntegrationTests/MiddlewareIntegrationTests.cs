@@ -156,7 +156,7 @@ namespace ThreadOfNineLives.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             // Act
-            var protectedResponse = await client.GetAsync("/cards");
+            var protectedResponse = await client.GetAsync("/admintest");
             var protectedResponseContent = await protectedResponse.Content.ReadAsStringAsync();
 
             // Assert
