@@ -13,7 +13,7 @@ namespace Domain.DTOs
         public required string Name { get; set; }
         public required string Description { get; set; }
         public required int Attack { get; set; }
-        public required int Defense { get; set; }
+        public required int Defence { get; set; }
         public required int Cost { get; set; }
         public required string ImagePath { get; set; }
 
@@ -28,7 +28,7 @@ namespace Domain.DTOs
                 Name = card.Name,
                 Description = card.Description,
                 Attack = card.Attack,
-                Defense = card.Defense,
+                Defence = card.Defence,
                 Cost = card.Cost,
                 ImagePath = card.ImagePath
             };

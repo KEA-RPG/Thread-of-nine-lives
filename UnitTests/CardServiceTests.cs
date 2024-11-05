@@ -24,7 +24,7 @@ namespace Backend.Tests.Services
 
         private CardDTO CreateCardDTO()
         {
-            return new CardDTO { Name = "Test Card", Attack = 1, Cost = 1, Defense = 1, Description = "description", ImagePath = "image.png" };
+            return new CardDTO { Name = "Test Card", Attack = 1, Cost = 1, Defence = 1, Description = "description", ImagePath = "image.png" };
         }
 
         [Fact]
