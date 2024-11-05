@@ -6,13 +6,13 @@ import { Response } from '../services/apiClient';
 import { Credentials, Token, useLogin, useSignUp } from "../hooks/useUser";
 
 interface UserContextType {
-  token?: string;
-  username?: string;
+  token: string | null;
+  username: string | null;
   login: (credentials: Credentials) => Promise<Response<Token>>;
   logout: () => void;
   signUp: (credentials: Credentials) => Promise<Response<string>>;
   requireLogin: (role: string) => void;
-  role?: string;
+  role: string | null;
 }
 interface JwtToken {
   sub: string;
@@ -29,29 +29,27 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // UserContext provider component
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [role, setRole] = useState<string>();
-  const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
-  const [username, setUsername] = useState<string>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      const decodedToken = jwtDecode<JwtToken>(token);
-      setRole(decodedToken.role?.toLowerCase());
-      setUsername(decodedToken.name);
-    }
-  }, [token]);
+  // Helper functions to get values from local storage
+  const getToken = (): string | null => localStorage.getItem("token");
+  const getRole = (): string | null => localStorage.getItem("role");
+  const getUsername = (): string | null => localStorage.getItem("username");
+
+  // Function to set values directly in local storage
+  const setToken = (token: string) => localStorage.setItem("token", token);
+  const setRole = (role: string) => localStorage.setItem("role", role);
+  const setUsername = (username: string) => localStorage.setItem("username", username);
 
   const login = async (credentials: Credentials): Promise<Response<Token>> => {
     const loggedInUser = await useLogin(credentials);
-
     if (loggedInUser && loggedInUser.data) {
       setToken(loggedInUser.data.token)
       const decodedToken = jwtDecode(loggedInUser.data.token) as JwtToken;
       if (decodedToken.role) {
-        localStorage.setItem("token", loggedInUser.data.token);
+        setToken(loggedInUser.data.token);
         setRole(decodedToken.role.toLowerCase());
-        setUsername(decodedToken.name);
+        setUsername(decodedToken.sub);
         navigate('/menu');
       }
     }
@@ -74,6 +72,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     return signedUpUser;
   }
   const requireLogin = (requiredRole: string) => {
+    const role = getRole();
+    const token = getToken(); 
     if (!token) {
       console.error('No token found, redirecting to login');
       navigate('/login');
@@ -87,7 +87,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }
   return (
-    <UserContext.Provider value={{ token, username, login, logout, signUp, requireLogin, role }}>
+    
+    <UserContext.Provider value={{ token: getToken(), username: getUsername(), login, logout, signUp, requireLogin, role: getRole() }}>
       {children}
     </UserContext.Provider>
   );
