@@ -12,7 +12,7 @@ namespace Backend.Controllers
             {
                 var enemyDTOs = enemyService.GetAllEnemies();
                 return enemyDTOs;
-            }).RequireAuthorization(policy => policy.RequireRole("Player"));
+            });
 
             // Get enemy by id
             app.MapGet("/enemies/{id}", (IEnemyService enemyService, int id) =>

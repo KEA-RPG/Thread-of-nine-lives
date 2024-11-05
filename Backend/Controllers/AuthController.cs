@@ -115,6 +115,15 @@ namespace Backend.Controllers
                 return Results.BadRequest("Token is invalid or has no jti.");
             });
 
+
+            // Player Test Endpoint
+            app.MapGet("/playertest", () => "Player endpoint accessed.")
+                .RequireAuthorization(policy => policy.RequireRole("Player"));
+
+            // Admin Test Endpoint
+            app.MapGet("/admintest", () => "Admin endpoint accessed.")
+                .RequireAuthorization(policy => policy.RequireRole("Admin"));
+
         }
     }
 }

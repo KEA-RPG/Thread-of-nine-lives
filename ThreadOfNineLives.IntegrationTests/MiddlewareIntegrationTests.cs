@@ -86,7 +86,7 @@ namespace ThreadOfNineLives.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             // Act: Access a protected endpoint
-            var protectedResponse = await client.GetAsync("/cards");
+            var protectedResponse = await client.GetAsync("/admintest");
             var protectedResponseContent = await protectedResponse.Content.ReadAsStringAsync();
 
             // Assert: Expecting OK
@@ -121,7 +121,7 @@ namespace ThreadOfNineLives.IntegrationTests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             // Act
-            var protectedResponse = await client.GetAsync("/enemies");
+            var protectedResponse = await client.GetAsync("/playertest");
             var protectedResponseContent = await protectedResponse.Content.ReadAsStringAsync();
 
             // Assert
@@ -170,7 +170,7 @@ namespace ThreadOfNineLives.IntegrationTests
             var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync("/enemies");
+            var response = await client.GetAsync("/admintest");
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
