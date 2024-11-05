@@ -56,6 +56,7 @@ builder.Services.AddScoped<IDeckService, DeckService>();
 
 
 
+
 builder.Services.AddScoped<IEnemyService, EnemyService>();
 builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
 builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
@@ -84,3 +85,5 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors("*");
 app.Run();
+
+public partial class Program { }
