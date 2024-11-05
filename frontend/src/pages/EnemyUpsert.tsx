@@ -84,9 +84,6 @@ const EnemyUpsert = () => {
                 <Button colorScheme="orange" onClick={handleUpsert}>
                     {param === undefined ? "Create" : "Update"}
                 </Button>
-                <div>
-                    {JSON.stringify(enemy)}
-                </div>
             </VStack>
         </Box>
     );

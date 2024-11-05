@@ -10,6 +10,7 @@ import SignUp from "./pages/SignUp.tsx";
 import GuestLayout from "./layouts/GuestLayout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import AdminLayout from "./layouts/Adminlayout.tsx";
+import CardUpsert from "./pages/CardUpsert.tsx";
 
 const router = createBrowserRouter([
   {
@@ -83,7 +84,7 @@ const router = createBrowserRouter([
         path: "/admin/cards/:cardId",
         element: (
           <AdminLayout header="Card Manager">
-            <CenterNavigation />
+            <CardUpsert />
           </AdminLayout>
         ),
       },

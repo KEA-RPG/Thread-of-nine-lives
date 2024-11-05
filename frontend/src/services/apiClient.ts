@@ -38,7 +38,7 @@ class ApiCaller {
     let error: string | null = null;
     let isLoading = true;
 
-    this.getClient().get<T>(`${url}`, {
+    await this.getClient().get<T>(`${url}`, {
       headers: this.getHeaders()
     })
       .then((response) => data = response.data)
