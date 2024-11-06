@@ -33,7 +33,7 @@ jobs:
       run: dotnet publish --configuration Release --output ./output
      
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: backend-artifact
         path: ./output
@@ -62,7 +62,7 @@ jobs:
       run: dotnet publish --configuration Release --output ./output
     
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: seeder-artifact
         path: ./output
@@ -89,7 +89,7 @@ jobs:
         npm run build
 
     - name: Upload Frontend Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: frontend-artifact
         path: frontend/build
@@ -113,12 +113,12 @@ jobs:
 
       steps: 
         - name: Download Backend Artifact
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: backend-artifact
 
         - name: Download Seeder Artifact
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: seeder-artifact
 
