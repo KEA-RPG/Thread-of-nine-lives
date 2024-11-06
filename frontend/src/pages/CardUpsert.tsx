@@ -32,7 +32,7 @@ const CardUpsert = () => {
 
     }
     useEffect(() => {
-        const fetchCardData = async () => {
+        const useFetchCardData = async () => {
             if (value !== null) {
                 const cardData = (await useCard(value)).data;
                 if (cardData) {
@@ -41,7 +41,7 @@ const CardUpsert = () => {
             }
         };
     
-        fetchCardData();
+        useFetchCardData();
     }, []);
     return (
         <Box backgroundColor="white" color="lightgray" py="20px" px="25px" rounded="10px" mt="20px">
