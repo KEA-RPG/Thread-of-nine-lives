@@ -7,6 +7,7 @@ namespace Domain.DTOs
         public int Id { get; set; }
         public string Type { get; set; }
         public int Value { get; set; }
+        public int? CardId { get; set; }
 
         public static GameActionDTO FromEntity(GameAction gameAction) 
         {
@@ -15,6 +16,7 @@ namespace Domain.DTOs
                 Id = gameAction.Id,
                 Type = gameAction.Type,
                 Value = gameAction.Value,
+                CardId = gameAction.CardId,
             };
         }
     }
