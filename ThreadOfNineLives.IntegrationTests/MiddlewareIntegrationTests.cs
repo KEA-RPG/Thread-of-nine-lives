@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace ThreadOfNineLives.IntegrationTests
 {
-    public class MiddlewareIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+    public class MiddlewareIntegrationTests : IClassFixture<WebApplicationFactory<Backend.Program>>
     {
-        private readonly WebApplicationFactory<Program> _factory;
+        private readonly WebApplicationFactory<Backend.Program> _factory;
 
-        public MiddlewareIntegrationTests(WebApplicationFactory<Program> factory)
+        public MiddlewareIntegrationTests(WebApplicationFactory<Backend.Program> factory)
         {
             // Setup the factory with mocked services
             _factory = factory.WithWebHostBuilder(builder =>
