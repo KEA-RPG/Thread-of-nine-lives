@@ -1,6 +1,6 @@
 import { Box, HStack, VStack, Image, Button, useToast } from "@chakra-ui/react";
 import InputFieldElement from "../components/InputFieldElement";
-import { Card, useCard, usePostCard, usePutCard } from "../hooks/useCard";
+import { Card, useCard, postCard, putCard } from "../hooks/useCard";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -16,11 +16,11 @@ const CardUpsert = () => {
     const handleUpsert = () => { 
         let toastMessage = "";
         if (card.id === undefined) {
-            usePostCard(card);
+            postCard(card);
             toastMessage = "Card created";
         }
         else {
-            usePutCard(card.id, card);
+            putCard(card.id, card);
             toastMessage = "Card updated";
         }
         toast({

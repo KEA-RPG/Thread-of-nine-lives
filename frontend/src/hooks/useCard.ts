@@ -12,7 +12,7 @@ export interface Card {
 
 const useCards = () => useGet<Card[]>(`/cards`)
 const useCard = (id: number) => useGet<Card>(`/cards/${id}`)
-const usePostCard = (enemy: Card) => usePost<Card, Card>(`/cards`,enemy);
-const usePutCard = (id: number,enemy: Card) => usePut<Card, Card>(`/cards/${id}`,enemy); 
+const postCard = (enemy: Card) => usePost<Card, Card>(`/cards`,enemy);
+const putCard = (id: number,enemy: Card) => usePut<Card, Card>(`/cards/${id}`,enemy); 
 
-export { useCards, useCard, usePostCard,usePutCard };
+export { useCards, useCard, postCard,putCard };
