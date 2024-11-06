@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from 'jwt-decode';
@@ -86,9 +86,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.error('Invalid role specified, role not found');
     }
   }
+  const contextValue = useMemo(
+    () => ({
+      token: getToken(),
+      username: getUsername(),
+      login,
+      logout,
+      signUp,
+      requireLogin,
+      role: getRole(),
+    }),
+    [getToken(), getUsername(), getRole()]
+  );
   return (
     
-    <UserContext.Provider value={{ token: getToken(), username: getUsername(), login, logout, signUp, requireLogin, role: getRole() }}>
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   );
