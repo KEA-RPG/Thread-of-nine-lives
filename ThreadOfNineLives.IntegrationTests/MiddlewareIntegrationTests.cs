@@ -25,10 +25,10 @@ namespace ThreadOfNineLives.IntegrationTests
                 builder.ConfigureServices(services =>
                 {
                     // Remove the existing IUserRepository registration if any
-                    var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IUserRepository));
-                    if (descriptor != null)
+                    var userDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IUserRepository));
+                    if (userDescriptor != null)
                     {
-                        services.Remove(descriptor);
+                        services.Remove(userDescriptor);
                     }
 
                     // Create a mock IUserRepository
@@ -54,12 +54,47 @@ namespace ThreadOfNineLives.IntegrationTests
 
                     // Register the mock repository
                     services.AddScoped(_ => mockUserRepository.Object);
+
+                    // Remove the existing IEnemyRepository registration if any
+                    var enemyDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IEnemyRepository));
+                    if (enemyDescriptor != null)
+                    {
+                        services.Remove(enemyDescriptor);
+                    }
+
+                    // Create a mock IEnemyRepository
+                    var mockEnemyRepository = new Mock<IEnemyRepository>();
+
+                    // Setup mock behavior for an enemy
+                    mockEnemyRepository.Setup(repo => repo.GetEnemyById(1))
+                        .Returns(new Domain.Entities.Enemy
+                        {
+                            Id = 1,
+                            Name = "Test Enemy",
+                            Health = 100
+                        });
+
+                    // Setup mock behavior for getting all enemies
+                    mockEnemyRepository.Setup(repo => repo.GetAllEnemies())
+                        .Returns(new List<Domain.Entities.Enemy>
+                        {
+                    new Domain.Entities.Enemy
+                    {
+                        Id = 1,
+                        Name = "Test Enemy",
+                        Health = 100
+                    }
+                        });
+
+                    // Register the mock repository
+                    services.AddScoped(_ => mockEnemyRepository.Object);
                 });
             });
         }
 
+
         [Fact]
-        public async Task Authorize_AdminRole_ShouldReturnSuccess()
+        public async Task Authorize_AdminRole_ShouldReturnSuccessForAdminDeleteEndpoint()
         {
             // Arrange: Create a client
             var client = _factory.CreateClient();
@@ -85,8 +120,8 @@ namespace ThreadOfNineLives.IntegrationTests
             // Add the token to the Authorization header
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Act: Access a protected endpoint
-            var protectedResponse = await client.GetAsync("/admintest");
+            // Act: Access the admin-protected delete endpoint
+            var protectedResponse = await client.DeleteAsync("/enemies/1");
             var protectedResponseContent = await protectedResponse.Content.ReadAsStringAsync();
 
             // Assert: Expecting OK
@@ -94,7 +129,7 @@ namespace ThreadOfNineLives.IntegrationTests
         }
 
         [Fact]
-        public async Task Authorize_PlayerRole_ShouldReturnSuccessForPlayerEndpoints()
+        public async Task Authorize_PlayerRole_ShouldReturnSuccessForPlayerGetEndpoint()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -120,16 +155,16 @@ namespace ThreadOfNineLives.IntegrationTests
             // Add the token to the Authorization header
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Act
-            var protectedResponse = await client.GetAsync("/playertest");
+            // Act: Access the player-protected get endpoint
+            var protectedResponse = await client.GetAsync("/enemies");
             var protectedResponseContent = await protectedResponse.Content.ReadAsStringAsync();
 
-            // Assert
+            // Assert: Expecting OK
             Assert.Equal(HttpStatusCode.OK, protectedResponse.StatusCode);
         }
 
         [Fact]
-        public async Task Authorize_InvalidRole_ShouldReturnForbidden()
+        public async Task Authorize_InvalidRole_ShouldReturnForbiddenForAdminDeleteEndpoint()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -155,31 +190,38 @@ namespace ThreadOfNineLives.IntegrationTests
             // Add the token to the Authorization header
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Act
-            var protectedResponse = await client.GetAsync("/admintest");
+            // Act: Try to access the admin-protected delete endpoint
+            var protectedResponse = await client.DeleteAsync("/enemies/1");
             var protectedResponseContent = await protectedResponse.Content.ReadAsStringAsync();
 
-            // Assert
+            // Assert: Expecting Forbidden
             Assert.Equal(HttpStatusCode.Forbidden, protectedResponse.StatusCode);
         }
 
         [Fact]
-        public async Task NoAuthorizationHeader_ShouldReturnUnauthorized()
+        public async Task NoAuthorizationHeader_ShouldReturnUnauthorizedForAdminDeleteEndpoint()
         {
             // Arrange
             var client = _factory.CreateClient();
 
-            // Act
-            var response = await client.GetAsync("/admintest");
+            // Act: Try to access the admin-protected delete endpoint without a token
+            var response = await client.DeleteAsync("/enemies/1");
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            // Assert
+            // Assert: Expecting Unauthorized
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         public class AuthResponse
         {
             public string Token { get; set; }
+        }
+
+        public class EnemyResponse
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public int Health { get; set; }
         }
     }
 }
