@@ -89,6 +89,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/admin/cards/create",
+        element: (
+          <AdminLayout header="Card Manager">
+            <CardUpsert />
+          </AdminLayout>
+        ),
+      },
+      {
         path: "/admin/enemies",
         element: (
           <AdminLayout header="Admin Enemies">
