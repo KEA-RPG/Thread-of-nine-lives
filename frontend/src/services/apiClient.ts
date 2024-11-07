@@ -33,12 +33,12 @@ class ApiCaller {
     return headers;
   }
 
-  async get<T>(url: string): Promise<Response<T>> {
+  get<T>(url: string): Response<T> {
     let data: T | undefined;
     let error: string | null = null;
     let isLoading = true;
 
-    await this.getClient().get<T>(`${url}`, {
+    this.getClient().get<T>(`${url}`, {
       headers: this.getHeaders()
     })
       .then((response) => data = response.data)
@@ -48,12 +48,12 @@ class ApiCaller {
     return { data, error, isLoading };
   }
 
-  async post<TBody,TReturn>(url: string, body: TBody ): Promise<Response<TReturn>> {
+  post<TBody,TReturn>(url: string, body: TBody ): Response<TReturn> {
     let data: TReturn | undefined;
     let error: string | null = null;
     let isLoading = true;
 
-    await this.getClient().post<TReturn>(`${url}`,body, {
+    this.getClient().post<TReturn>(`${url}`,body, {
       headers: this.getHeaders()
     })
       .then((response) => data = response.data)
@@ -63,12 +63,12 @@ class ApiCaller {
     return { data, error, isLoading };
   }
 
-  async put<TBody,TReturn>(url: string, body: TBody ): Promise<Response<TReturn>> {
+  put<TBody,TReturn>(url: string, body: TBody ): Response<TReturn> {
     let data: TReturn | undefined;
     let error: string | null = null;
     let isLoading = true;
 
-    await this.getClient().put<TReturn>(`${url}`,body, {
+    this.getClient().put<TReturn>(`${url}`,body, {
       headers: this.getHeaders()
     })
       .then((response) => data = response.data)
@@ -78,7 +78,7 @@ class ApiCaller {
     return { data, error, isLoading };
   }
 
-  async delete<T>(url: string): Promise<Response<T>> {
+  delete<T>(url: string): Response<T> {
     let data: T | undefined;
     let error: string | null = null;
     let isLoading = true;

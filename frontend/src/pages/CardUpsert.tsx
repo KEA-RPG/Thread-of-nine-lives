@@ -1,19 +1,28 @@
-import { Box, HStack, VStack, Image, Button, useToast } from "@chakra-ui/react";
+import { Box, HStack, VStack, Image, Button, useToast, Spinner } from "@chakra-ui/react";
 import InputFieldElement from "../components/InputFieldElement";
-import { Card, useCard, postCard, putCard } from "../hooks/useCard";
-import { useEffect, useState } from "react";
+import { Card, postCard, putCard, useCard } from "../hooks/useCard";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 
 const CardUpsert = () => {
+    const param = useParams().cardId;
+    const value = param !== undefined && !isNaN(Number(param)) ? Number(param) : null;
     const navigate = useNavigate();
     const toast = useToast()
 
-    const param = useParams().cardId;
-    const [card, setCard] = useState<Card>({id: undefined, name: '', description: '', attack: 0, defence: 0, cost: 0, imagePath: ''});
-    const value = param !== undefined && !isNaN(Number(param)) ? Number(param) : null;
+    if (value === null) {
+        return <Spinner />;
+    }
 
-    const handleUpsert = () => { 
+    const { data, isLoading } = useCard(value);
+    if (data === undefined || isLoading) {
+        return <Spinner />;
+    }
+    const [card, setCard] = useState<Card>(data);
+
+
+    const handleUpsert = () => {
         let toastMessage = "";
         if (card.id === undefined) {
             postCard(card);
@@ -31,18 +40,7 @@ const CardUpsert = () => {
 
 
     }
-    useEffect(() => {
-        const useFetchCardData = async () => {
-            if (value !== null) {
-                const cardData = (await useCard(value)).data;
-                if (cardData) {
-                    setCard(cardData);
-                }
-            }
-        };
-    
-        useFetchCardData();
-    }, []);
+
     return (
         <Box backgroundColor="white" color="lightgray" py="20px" px="25px" rounded="10px" mt="20px">
             <VStack>
@@ -106,7 +104,7 @@ const CardUpsert = () => {
                     </Box>
                 </HStack>
                 <Button colorScheme="orange" onClick={handleUpsert}>
-                    {param === undefined ? "Create" : "Update"}
+                    {card.id === undefined ? "Create" : "Update"}
                 </Button>
             </VStack>
         </Box>

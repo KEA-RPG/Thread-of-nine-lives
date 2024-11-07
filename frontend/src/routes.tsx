@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <PlayerLayout header="Log in">
-            <CenterNavigation/>
+            <CenterNavigation />
           </PlayerLayout>
         ),
       },
@@ -28,15 +28,15 @@ const router = createBrowserRouter([
         path: "/login",
         element: (
           <GuestLayout header="Log in">
-            <Login/>
+            <Login />
           </GuestLayout>
         ),
-      },      
+      },
       {
         path: "/logout",
         element: (
           <GuestLayout header="Log in">
-            <Logout/>
+            <Logout />
           </GuestLayout>
         ),
       },
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         path: "/signup",
         element: (
           <GuestLayout header="Sign up">
-            <SignUp/>
+            <SignUp />
           </GuestLayout>
         ),
       },
