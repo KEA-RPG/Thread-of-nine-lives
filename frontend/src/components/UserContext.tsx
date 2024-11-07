@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from 'jwt-decode';
 import { Response } from '../services/apiClient';
-import { Credentials, Token, useLogin, useSignUp } from "../hooks/useUser";
+import { Credentials, Token, login,signUp } from "../hooks/useUser";
 
 interface UserContextType {
   token: string | null;
   username: string | null;
-  login: (credentials: Credentials) => Promise<Response<Token>>;
+  handleLogin: (credentials: Credentials) => Response<Token>;
   logout: () => void;
-  signUp: (credentials: Credentials) => Promise<Response<string>>;
+  handleSignUp: (credentials: Credentials) => Response<string>;
   requireLogin: (role: string) => void;
   role: string | null;
 }
@@ -41,11 +41,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const setRole = (role: string) => localStorage.setItem("role", role);
   const setUsername = (username: string) => localStorage.setItem("username", username);
 
-  const login = async (credentials: Credentials): Promise<Response<Token>> => {
-    const loggedInUser = await useLogin(credentials);
-    if (loggedInUser && loggedInUser.data) {
+  const handleLogin = (credentials: Credentials): Response<Token> => {
+    const loggedInUser = login(credentials);
+    if (loggedInUser?.data) {
       setToken(loggedInUser.data.token)
-      const decodedToken = jwtDecode(loggedInUser.data.token) as JwtToken;
+      const decodedToken: JwtToken = jwtDecode(loggedInUser.data.token);
       if (decodedToken.role) {
         setToken(loggedInUser.data.token);
         setRole(decodedToken.role.toLowerCase());
@@ -67,8 +67,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     navigate('/');
   };
 
-  const signUp = async (credentials: Credentials): Promise<Response<string>> => {
-    const signedUpUser = await useSignUp(credentials);
+  const handleSignUp = (credentials: Credentials): Response<string> => {
+    const signedUpUser = signUp(credentials);
     return signedUpUser;
   }
   const requireLogin = (requiredRole: string) => {
@@ -90,9 +90,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       token: getToken(),
       username: getUsername(),
-      login,
+      handleLogin,
       logout,
-      signUp,
+      handleSignUp,
       requireLogin,
       role: getRole(),
     }),
