@@ -5,11 +5,11 @@ namespace Backend.Repositories
 {
     public interface IDeckRepository
     {
-        DeckDTO AddDeck(Deck deck);
-        void DeleteDeck(Deck deck);
+        DeckDTO AddDeck(DeckDTO deck);
+        void DeleteDeck(int deckId);
         List<DeckDTO> GetUserDecks(string userName);
         List<DeckDTO> GetPublicDecks();
-        Deck GetDeckById(int id, string? UserName = null);
-        void UpdateDeck(Deck deck);
+        DeckDTO GetDeckById(int id);
+        void UpdateDeck(DeckDTO deck);
     }
 }
