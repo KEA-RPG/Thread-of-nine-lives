@@ -15,9 +15,15 @@ namespace Infrastructure.Persistance.Relational.Configurations
             builder.HasOne(c => c.User)
                    .WithMany(u => u.Comments)
                    .HasForeignKey(c => c.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete on User
+                   .OnDelete(DeleteBehavior.Restrict);  
+                                                        
+            builder.HasOne(c => c.Deck)
+                   .WithMany(d => d.Comments)
+                   .HasForeignKey(c => c.UserId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
-           
+
+
         }
     }
 }
