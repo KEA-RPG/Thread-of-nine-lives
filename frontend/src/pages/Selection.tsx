@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../services/apiClient';
 
 const SelectionPage = () => {
     const [enemyId, setEnemyId] = useState('');
@@ -8,15 +9,10 @@ const SelectionPage = () => {
 
     const initializeGameState = async () => {
         try {
-            const response = await fetch(`http://localhost:5281/init-game-state?enemyId=${enemyId}&playerId=${playerId}`, {
-                method: 'POST',
+            await apiClient.post(`/init-game-state`, null, {
+                params: { enemyId, playerId }, // Axios supports passing query parameters
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to initialize game state');
-            }
-
-            await response.json();
             console.log("Game initialized");
 
             // Navigate to CombatPage after initialization

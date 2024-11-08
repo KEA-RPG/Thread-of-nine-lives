@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import apiClient from '../services/apiClient';
 
 interface Card {
     id: number;
@@ -18,11 +19,8 @@ const CombatPage = () => {
     useEffect(() => {
         const fetchGameState = async () => {
             try {
-                const response = await fetch('http://localhost:5281/game-state');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch game state');
-                }
-                const data = await response.json();
+                const response = await apiClient.get('/game-state');
+                const data = response.data;
                 setEnemyName(data.enemyDTO.name);
                 setEnemyHealth(data.enemyDTO.health);
                 setPlayerHealth(data.playerDTO.health);
@@ -33,11 +31,8 @@ const CombatPage = () => {
 
         const fetchCards = async () => {
             try {
-                const response = await fetch('http://localhost:5281/cards');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch cards');
-                }
-                const data = await response.json();
+                const response = await apiClient.get('/cards');
+                const data = response.data;
                 setCards(data);
             } catch (error) {
                 console.error('Error fetching cards:', error);
@@ -58,19 +53,8 @@ const CombatPage = () => {
                 value: card.attack
             };
 
-            const response = await fetch('http://localhost:5281/combat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(action),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            
-            const updatedState = await response.json();
+            const response = await apiClient.post('/combat', action);             
+            const updatedState = response.data;
             setEnemyHealth(updatedState.enemyDTO.health);
 
             const newUsedAttacks = [...usedAttacks];
@@ -93,19 +77,8 @@ const CombatPage = () => {
                 type: 'END_TURN',
             };
 
-            const response = await fetch('http://localhost:5281/combat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(action),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const updatedState = await response.json();
+            const response = await apiClient.post('/combat', action);
+            const updatedState = response.data;
             setPlayerHealth(updatedState.playerDTO.health);
 
             setUsedAttacks([false, false, false, false, false]);
