@@ -9,6 +9,12 @@ namespace Infrastructure.Persistance.Relational.Configurations
         public void Configure(EntityTypeBuilder<Deck> builder)
         {
             builder.Property(b => b.IsPublic).HasDefaultValue(false);
+
+
+            // Configure relationship with Deck entity
+            builder.HasMany(c => c.Comments)
+                   .WithOne(d => d.Deck);
+                   
         }
     }
 }
