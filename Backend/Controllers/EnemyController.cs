@@ -1,6 +1,5 @@
 ﻿using Backend.Services;
-using Domain.Entities;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using Domain.DTOs;
 
 namespace Backend.Controllers
 {
@@ -8,51 +7,53 @@ namespace Backend.Controllers
     {
         public static void MapEnemyEndpoint(this WebApplication app)
         {
-            //Get all enemies
+            // Get all enemies
             app.MapGet("/enemies", (IEnemyService enemyService) =>
             {
-                return enemyService.GetAllEnemies();
-            });
+                var enemyDTOs = enemyService.GetAllEnemies();
+                return enemyDTOs;
+            });//.RequireAuthorization(policy => policy.RequireRole("Admin"));
 
-            //Get enemy by id
+            // Get enemy by id
             app.MapGet("/enemies/{id}", (IEnemyService enemyService, int id) =>
             {
-                return enemyService.GetEnemyById(id);
+                var enemyDTO = enemyService.GetEnemyById(id);
+                if (enemyDTO == null)
+                {
+                    return Results.NotFound();
+                }
+                return Results.Ok(enemyDTO);
             });
 
-            //Delete enemy
+            // Create enemy
+            app.MapPost("/enemies", (IEnemyService enemyService, EnemyDTO enemyDTO) =>
+            {
+                var createdEnemyDTO = enemyService.CreateEnemy(enemyDTO);
+                return Results.Created($"/enemies/{createdEnemyDTO.Id}", createdEnemyDTO);
+            });
+
+            // Put enemy
+            app.MapPut("/enemies", (IEnemyService enemyService, EnemyDTO enemyDTO) =>
+            {
+                var updatedEnemyDTO = enemyService.UpdateEnemy(enemyDTO);
+                if (updatedEnemyDTO == null)
+                {
+                    return Results.NotFound();
+                }
+                return Results.Ok(updatedEnemyDTO);
+            });
+
+            // Delete enemy
             app.MapDelete("/enemies/{id}", (IEnemyService enemyService, int id) =>
             {
-                var dbEnemy = enemyService.GetEnemyById(id);
-                if (dbEnemy == null)
+                var enemyDTO = enemyService.GetEnemyById(id);
+                if (enemyDTO == null)
                 {
                     return Results.NotFound();
                 }
                 enemyService.DeleteEnemy(id);
                 return Results.Ok();
             });
-
-            //Create enemy
-            app.MapPost("/enemies", (IEnemyService enemyService, Enemy enemy) =>
-            {
-                enemyService.CreateEnemy(enemy);
-                return Results.Created($"/enemies/{enemy.Id}", enemy);
-            });
-
-            //Update enemy
-            app.MapPut("/enemies", (IEnemyService enemyService, Enemy enemy) => {
-
-                var dbEnemy = enemyService.GetEnemyById(enemy.Id);
-
-                if (dbEnemy == null)
-                {
-                    return Results.NotFound();
-                }
-
-                enemyService.UpdateEnemy(enemy);
-                return Results.Ok(enemy);
-            });
         }
     }
 }
-

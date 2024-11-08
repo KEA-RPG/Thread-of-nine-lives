@@ -1,43 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { MoonIcon } from '@chakra-ui/icons';
-import NavBar from "./NavBar"
-import useUser from '../hooks/useUser';
-
+import { useUserContext } from './UserContext';
 
 const Header: React.FC = () => {
-  const { user, loginAsUser, loginAsAdmin, logout } = useUser();
+  const { role, logout } = useUserContext();
+  const [userRole, setUserRole] = useState(role);
 
-  return <HStack justifyContent="space-between">
-    <a href={user?.loggedIn ? "/menu" : "/"}>
-      <HStack spacing={2}>
-        <MoonIcon />
-        <Text>Thread of Nine Lives</Text>
-      </HStack>
-    </a>
+  useEffect(() => {
+    setUserRole(role); // Update local state when role changes
+  }, [role]);
 
-
-    <Spacer />
-    <HStack spacing={4}>
-      {!user && (
-        <>
-          <Button onClick={loginAsUser}>Login as User</Button>
-          <Button onClick={loginAsAdmin}>Login as Admin</Button>
-        </>
-      )}
-      {user && user.loggedIn && (
+  const buttonMenu = () => {
+    if (userRole === "admin") {
+      return (
         <>
           <Button onClick={logout}>Logout</Button>
-          {user.isAdmin ? (
-            <Button>Admin Dashboard</Button>
-          ) : (
-            <Button>User Profile</Button>
-          )}
+          <Button>Admin Dashboard</Button>
         </>
-      )}
-      <NavBar />
+      );
+    } else if (userRole === "player") {
+      return (
+        <Link href="/logout">
+          <Button>Logout</Button>
+        </Link>
+      );
+    }
+    return null; // Show nothing if role is undefined
+  };
+
+  return (
+    <HStack justifyContent="space-between" h={12}>
+      <a href={userRole ? "/menu" : "/"}>
+        <HStack spacing={2}>
+          <MoonIcon />
+          <Text>Thread of Nine Lives</Text>
+        </HStack>
+      </a>
+
+      <Spacer />
+      <HStack spacing={4} mr={4}>
+        {buttonMenu()}
+      </HStack>
     </HStack>
-  </HStack>
+  );
 };
 
 export default Header;
