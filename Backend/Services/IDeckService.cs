@@ -7,7 +7,7 @@ namespace Backend.Services
         DeckDTO GetDeckById(int id);
         List<DeckDTO> GetUserDecks(string userName);
         DeckDTO CreateDeck(DeckDTO deck);
-        DeckDTO UpdateDeck(DeckDTO deck, string? Role = null, string? UserName = null);
+        DeckDTO UpdateDeck(DeckDTO deck);
         List<DeckDTO> GetPublicDecks();
         void DeleteDeck(int id);
     }
