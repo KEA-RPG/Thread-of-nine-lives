@@ -83,5 +83,18 @@ namespace Backend.Repositories
 
             return _context.Decks.Where(deck => deck.User == user).Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
+
+
+        public void AddComment(Comment comment)
+        {
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+        }
+
+        public List<Comment> GetCommentsByDeckId(int deckId)
+        {
+            return _context.Comments.Where(comment => comment.DeckId == deckId).ToList();
+        }
+
     }
 }

@@ -61,5 +61,17 @@ namespace Backend.Services
             return _deckRepository.GetPublicDecks();
         }
 
+        public void AddComment(CommentDTO commentDto)
+        {
+            var comment = CommentDTO.ToEntity(commentDto);
+            _deckRepository.AddComment(comment);
+        }
+
+        public List<CommentDTO> GetCommentsByDeckId(int deckId)
+        {
+            var comments = _deckRepository.GetCommentsByDeckId(deckId);
+            return comments.Select(comment => CommentDTO.FromEntity(comment)).ToList();
+        }
+
     }
 }
