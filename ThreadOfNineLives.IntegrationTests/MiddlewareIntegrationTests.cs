@@ -25,10 +25,10 @@ namespace ThreadOfNineLives.IntegrationTests
                 builder.ConfigureServices(services =>
                 {
                     // Remove the existing IUserRepository registration if any
-                    var userDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IUserRepository));
-                    if (userDescriptor != null)
+                    var userDescriptors = services.Where(d => d.ServiceType == typeof(IUserRepository)).ToList();
+                    foreach (var descriptor in userDescriptors)
                     {
-                        services.Remove(userDescriptor);
+                        services.Remove(descriptor);
                     }
 
                     // Create a mock IUserRepository
@@ -56,10 +56,10 @@ namespace ThreadOfNineLives.IntegrationTests
                     services.AddScoped(_ => mockUserRepository.Object);
 
                     // Remove the existing IEnemyRepository registration if any
-                    var enemyDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IEnemyRepository));
-                    if (enemyDescriptor != null)
+                    var enemyDescriptors = services.Where(d => d.ServiceType == typeof(IEnemyRepository)).ToList();
+                    foreach (var descriptor in enemyDescriptors)
                     {
-                        services.Remove(enemyDescriptor);
+                        services.Remove(descriptor);
                     }
 
                     // Create a mock IEnemyRepository
