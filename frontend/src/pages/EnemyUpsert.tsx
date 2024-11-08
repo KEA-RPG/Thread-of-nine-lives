@@ -53,8 +53,8 @@ const EnemyUpsert = () => {
                             type="text"
                             name="Health"
                             placeholder="Health"
-                            value={enemy.health}
-                            onChange={(health) => setEnemy({ ...enemy, health })}
+                            value={enemy.health.toString()}
+                            onChange={(health) => setEnemy({ ...enemy, health: Number(health) })}
                         />
 
                         <InputFieldElement

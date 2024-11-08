@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../services/apiClient';
+import { initGame, StateGameInit } from '../hooks/useGame';
 
 const SelectionPage = () => {
     const [enemyId, setEnemyId] = useState('');
@@ -9,9 +9,8 @@ const SelectionPage = () => {
 
     const initializeGameState = async () => {
         try {
-            await apiClient.post(`/init-game-state`, null, {
-                params: { enemyId, playerId }, // Axios supports passing query parameters
-            });
+            await initGame( { playerId: Number(playerId), enemyId: Number(enemyId) } as StateGameInit
+            );
 
             console.log("Game initialized");
 

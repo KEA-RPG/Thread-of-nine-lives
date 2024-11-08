@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
-import apiClient from '../services/apiClient';
-
-interface Card {
-    id: number;
-    name: string;
-    attack: number;
-  }
+import { Card, useCards } from '../hooks/useCard';
+import { useCombat, gameState, GameAction } from '../hooks/useGame';
 
 const CombatPage = () => {
-    const [enemyName, setEnemyName] = useState(null);
-    const [enemyHealth, setEnemyHealth] = useState(null);
-    const [playerHealth, setPlayerHealth] = useState(null);
+    const [enemyName, setEnemyName] = useState("");
+    const [enemyHealth, setEnemyHealth] = useState(0);
+    const [playerHealth, setPlayerHealth] = useState(0);
     const [loading, setLoading] = useState(false);
     const [currentTurn, setCurrentTurn] = useState("PLAYER");
     const [usedAttacks, setUsedAttacks] = useState([false, false, false, false, false]);
@@ -19,11 +14,12 @@ const CombatPage = () => {
     useEffect(() => {
         const fetchGameState = async () => {
             try {
-                const response = await apiClient.get('/game-state');
-                const data = response.data;
+                const { data } = await gameState();
+                if (data !== undefined) {
                 setEnemyName(data.enemyDTO.name);
                 setEnemyHealth(data.enemyDTO.health);
                 setPlayerHealth(data.playerDTO.health);
+                }
             } catch (error) {
                 console.error('Error fetching game state:', error);
             }
@@ -31,9 +27,10 @@ const CombatPage = () => {
 
         const fetchCards = async () => {
             try {
-                const response = await apiClient.get('/cards');
-                const data = response.data;
-                setCards(data);
+                const {data} = await useCards();
+                if (data) {
+                    setCards(data);
+                }
             } catch (error) {
                 console.error('Error fetching cards:', error);
             }
@@ -48,14 +45,16 @@ const CombatPage = () => {
         setLoading(true);
         try {
             const card = cards[index];
-            const action = {
+            const action : GameAction = {
                 type: 'ATTACK',
                 value: card.attack
             };
 
-            const response = await apiClient.post('/combat', action);             
+            const response = await useCombat(action);             
             const updatedState = response.data;
+            if (updatedState !== undefined) {
             setEnemyHealth(updatedState.enemyDTO.health);
+            }
 
             const newUsedAttacks = [...usedAttacks];
             newUsedAttacks[index] = true;
@@ -73,14 +72,15 @@ const CombatPage = () => {
 
         setLoading(true);
         try {
-            const action = {
+            const action : GameAction = {
                 type: 'END_TURN',
             };
 
-            const response = await apiClient.post('/combat', action);
+            const response = await useCombat(action);
             const updatedState = response.data;
+            if (updatedState !== undefined) {
             setPlayerHealth(updatedState.playerDTO.health);
-
+            }
             setUsedAttacks([false, false, false, false, false]);
             setCurrentTurn("ENEMY");
 
