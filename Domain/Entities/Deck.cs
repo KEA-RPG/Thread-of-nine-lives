@@ -21,18 +21,21 @@ namespace Domain.Entities
 
         public static Deck FromDTO(DeckDTO deckDto)
         {
-            return new Deck
+            var deck = new Deck
             {
                 Id = deckDto.Id,
                 UserId = deckDto.UserId,
                 Name = deckDto.Name,
-                DeckCards = deckDto.Cards.Select(card => new DeckCard
-                {
-                    CardId = card.Id
-                }).ToList(),
                 IsPublic = deckDto.IsPublic,
                 Comments = deckDto.Comments.Select(commentDto => CommentDTO.ToEntity(commentDto)).ToList()
             };
+            deck.DeckCards = deckDto.Cards.Select(card => new DeckCard
+            {
+                CardId = card.Id,
+                Deck = deck
+            }).ToList();
+
+            return deck;
         }
     }
 }

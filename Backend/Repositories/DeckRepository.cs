@@ -2,6 +2,7 @@
 using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 namespace Backend.Repositories
 {
@@ -19,6 +20,7 @@ namespace Backend.Repositories
         public DeckDTO AddDeck(DeckDTO deck)
         {
             var dbDeck = Deck.FromDTO(deck);
+            dbDeck.Comments = new List<Comment>(); //TODO: ensuring that comments are not pre-set in the deck create
             _context.Decks.Add(dbDeck);
             _context.SaveChanges();
 
