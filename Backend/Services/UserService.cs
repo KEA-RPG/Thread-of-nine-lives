@@ -22,6 +22,11 @@ namespace Backend.Services
             return UserDTO.FromUser(user);
         }
 
+        public int GetUserIdByUserName(string username)
+        {
+            return _userRepository.GetUserByUsername(username).Id;
+        }
+
         public void CreateUser(Credentials credentials)
         {
             var user = new User
