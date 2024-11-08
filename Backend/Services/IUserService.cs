@@ -8,6 +8,7 @@ namespace Backend.Services
     {
         UserDTO GetUserByUsername(string username);
         void CreateUser(Credentials credentials);
+        int GetUserIdByUserName(string username);
 
         bool ValidateUserCredentials(string username, string password);
     }
