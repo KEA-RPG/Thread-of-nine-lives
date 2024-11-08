@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
@@ -14,7 +12,7 @@ namespace Domain.DTOs
         public string Name { get; set; }
         public List<CardDTO> Cards { get; set; }
         public bool IsPublic { get; set; }
-
+        public List<CommentDTO> Comments { get; set; } = new List<CommentDTO>();
 
         public static DeckDTO FromEntity(Deck deck)
         {
@@ -24,11 +22,9 @@ namespace Domain.DTOs
                 UserId = deck.UserId,
                 Name = deck.Name,
                 Cards = deck.DeckCards.Select(dc => CardDTO.FromEntity(dc.Card)).ToList(),
-                IsPublic = deck.IsPublic
+                IsPublic = deck.IsPublic,
+                Comments = deck.Comments.Select(comment => CommentDTO.FromEntity(comment)).ToList()
             };
         }
-
-
-
     }
 }

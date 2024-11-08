@@ -10,5 +10,9 @@ namespace Backend.Services
         DeckDTO UpdateDeck(DeckDTO deck);
         List<DeckDTO> GetPublicDecks();
         void DeleteDeck(int id);
+
+        void AddComment(CommentDTO commentDto);
+        List<CommentDTO> GetCommentsByDeckId(int deckId);
+
     }
 }
