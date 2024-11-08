@@ -29,7 +29,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // UserContext provider component
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [role, setRole] = useState<string>();
+  const [role, setRole] = useState<string>("");
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
   const [username, setUsername] = useState<string>();
   const navigate = useNavigate();
@@ -37,7 +37,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (token) {
       const decodedToken = jwtDecode<JwtToken>(token);
-      setRole(decodedToken.role?.toLowerCase());
+      if (decodedToken !== null && decodedToken.role) {
+      setRole(decodedToken.role.toLowerCase());
+      }
       setUsername(decodedToken.name);
     }
   }, [token]);
