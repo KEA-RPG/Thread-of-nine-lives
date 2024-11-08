@@ -9,10 +9,6 @@ namespace Backend.Extensions
         /// </summary>
         /// <param name="context">The HttpContext containing the user principal.</param>
         /// <returns>The username if present; otherwise, null.</returns>
-        /*public static string GetUserName(this HttpContext context)
-        {
-            return context.User?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name)?.Value;
-        }*/
 
         public static string GetUserName(this HttpContext context)
         {
