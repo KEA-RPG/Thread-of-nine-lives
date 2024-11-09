@@ -2,6 +2,7 @@
 using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 namespace Backend.Repositories
 {
@@ -19,6 +20,7 @@ namespace Backend.Repositories
         public DeckDTO AddDeck(DeckDTO deck)
         {
             var dbDeck = Deck.FromDTO(deck);
+            dbDeck.Comments = new List<Comment>(); //TODO: ensuring that comments are not pre-set in the deck create
             _context.Decks.Add(dbDeck);
             _context.SaveChanges();
 
@@ -83,5 +85,18 @@ namespace Backend.Repositories
 
             return _context.Decks.Where(deck => deck.User == user).Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
+
+
+        public void AddComment(Comment comment)
+        {
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+        }
+
+        public List<Comment> GetCommentsByDeckId(int deckId)
+        {
+            return _context.Comments.Where(comment => comment.DeckId == deckId).ToList();
+        }
+
     }
 }

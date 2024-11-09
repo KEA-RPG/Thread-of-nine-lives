@@ -9,6 +9,9 @@ namespace Infrastructure.Persistance.Relational.Configurations
         public void Configure(EntityTypeBuilder<Deck> builder)
         {
             builder.Property(b => b.IsPublic).HasDefaultValue(false);
+
+
+                   
         }
     }
 }
