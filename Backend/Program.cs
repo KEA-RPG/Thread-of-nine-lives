@@ -50,8 +50,6 @@ builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IPlayerService, PlayerService>();
-builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IDeckRepository, DeckRepository>();
 builder.Services.AddScoped<IDeckService, DeckService>();
 
@@ -76,7 +74,6 @@ CardController.MapCardEndpoint(app);
 AuthController.MapAuthEndpoints(app);
 EnemyController.MapEnemyEndpoint(app);
 StateController.MapStateEndpoints(app);
-PlayerController.MapPlayerEndpoints(app);
 DeckController.MapDeckEndpoint(app);
 
 app.UseAuthentication();
