@@ -3,13 +3,13 @@ using Domain.Entities;
 
 namespace Backend.Services
 {
-    public class State
+    public class CombatService : ICombatService
     {
         public List<GameAction> GameActions { get; set; }
         public PlayerDTO PlayerDTO { get; }
         public EnemyDTO EnemyDTO { get; }
 
-        public State(PlayerDTO playerDTO, EnemyDTO enemyDTO)
+        public CombatService(PlayerDTO playerDTO, EnemyDTO enemyDTO)
         {
             GameActions = new List<GameAction>();
             PlayerDTO = playerDTO;

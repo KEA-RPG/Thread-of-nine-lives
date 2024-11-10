@@ -23,7 +23,7 @@ namespace UnitTests
             // Arrange
             var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy();
-            var state = new State(playerDTO, enemyDTO);
+            var state = new StateService(playerDTO, enemyDTO);
             var gameAction = new GameAction { Type = "ATTACK", Value = 10 };
 
             // Act
@@ -39,7 +39,7 @@ namespace UnitTests
             // Arrange
             var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy(5);
-            var state = new State(playerDTO, enemyDTO);
+            var state = new StateService(playerDTO, enemyDTO);
             var gameAction = new GameAction { Type = "ATTACK", Value = 10 };
 
             // Act
@@ -55,7 +55,7 @@ namespace UnitTests
             // Arrange
             var playerDTO = CreateTestPlayer();
             var enemyDTO = CreateTestEnemy();
-            var state = new State(playerDTO, enemyDTO);
+            var state = new StateService(playerDTO, enemyDTO);
             var gameAction = new GameAction { Type = "END_TURN", Value = 0 };
 
             // Act
@@ -71,7 +71,7 @@ namespace UnitTests
             // Arrange
             var playerDTO = CreateTestPlayer(3);
             var enemyDTO = CreateTestEnemy();
-            var state = new State(playerDTO, enemyDTO);
+            var state = new StateService(playerDTO, enemyDTO);
 
             // Act
             state.ProcessAction(new GameAction { Type = "END_TURN", Value = 0 });

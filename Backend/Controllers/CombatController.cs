@@ -1,4 +1,5 @@
-﻿using Backend.Services;
+﻿using Backend.Models;
+using Backend.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,9 +7,9 @@ using System.Numerics;
 
 namespace Backend.Controllers
 {
-    public static class StateController
+    public static class CombatController
     {
-        private static State gameState;
+        private static CombatService gameState;
 
         public static void MapStateEndpoints(this WebApplication app)
         {
@@ -24,32 +25,24 @@ namespace Backend.Controllers
                 return Results.Ok(gameState);
             });
 
-            app.MapPost("/init-game-state", (IEnemyService enemyService, IPlayerService playerService, HttpContext httpContext) =>
+            app.MapPost("/init-game-state", (IEnemyService enemyService, IPlayerService playerService, StateGameInit stateGameInit) =>
             {
-                // Retrieve enemyId and playerId from the query parameters
-                var enemyIdStr = httpContext.Request.Query["enemyId"];
-                var playerIdStr = httpContext.Request.Query["playerId"];
-
-                if (!int.TryParse(enemyIdStr, out var enemyId) || !int.TryParse(playerIdStr, out var playerId))
-                {
-                    return Results.BadRequest("Invalid enemyId or playerId.");
-                }
 
                 // Fetch enemy and player using the IDs from the query parameters
-                var enemyDTO = enemyService.GetEnemyById(enemyId);
+                var enemyDTO = enemyService.GetEnemyById(stateGameInit.EnemyId);
                 if (enemyDTO == null)
                 {
                     return Results.NotFound("Enemy not found.");
                 }
 
-                var playerDTO = playerService.GetPlayerById(playerId);
+                var playerDTO = playerService.GetPlayerById(stateGameInit.PlayerId);
                 if (playerDTO == null)
                 {
                     return Results.NotFound("Player not found.");
                 }
 
                 // Initialize the game state with the player and enemy data
-                gameState = new State(playerDTO, enemyDTO);
+                gameState = new StateService(playerDTO, enemyDTO);
 
                 return Results.Ok(gameState);
             });
