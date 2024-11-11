@@ -1,11 +1,11 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Backend.Repositories
 {
     public interface ICombatRepository
     {
-        public Fight GetFightById(int id);
-        public void AddFight(Fight fight);
-        public void InsertAction(GameAction gameAction);
+        public FightDTO GetFightById(int id);
+        public FightDTO AddFight(FightDTO fight);
+        public void InsertAction(GameActionDTO gameAction);
     }
 }

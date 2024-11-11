@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Persistance.Relational;
+using Domain.DTOs;
 using Domain.Entities;
-
 
 namespace Backend.Repositories
 {
@@ -13,20 +13,28 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public Fight GetFightById(int id)
+        public FightDTO GetFightById(int id)
         {
-            return _context.Fights.Find(id);
+            var dbFight = _context.Fights.FirstOrDefault(f => f.Id == id);
+
+            var fight = FightDTO.FromEntity(dbFight);
+
+            return fight;
         }
 
-        public void AddFight(Fight fight)
+        public FightDTO AddFight(FightDTO fight)
         {
-            _context.Fights.Add(fight);
+            var dbFight = Fight.FromDTO(fight);
+            _context.Fights.Add(dbFight);
             _context.SaveChanges();
+
+            return GetFightById(dbFight.Id);
         }
 
-        public void InsertAction(GameAction gameAction)
+        public void InsertAction(GameActionDTO gameAction)
         {
-            _context.GameActions.Add(gameAction);
+            var dbGameAction = GameAction.FromDTO(gameAction);
+            _context.GameActions.Add(dbGameAction);
             _context.SaveChanges();
         }
     }
