@@ -1,44 +1,51 @@
-import { Box, HStack, VStack, Image, Button, useToast, Spinner } from "@chakra-ui/react";
+import { Box, HStack, VStack, Image, Button, useToast } from "@chakra-ui/react";
 import InputFieldElement from "../components/InputFieldElement";
-import { Card, postCard, putCard, useCard } from "../hooks/useCard";
+import { Card, postCard, putCard } from "../hooks/useCard";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-
-const CardUpsert = () => {
-    const param = useParams().cardId;
-    const value = param !== undefined && !isNaN(Number(param)) ? Number(param) : null;
+interface Props {
+    cardModel?: Card;
+}
+const CardUpsert = ({ cardModel }: Props) => {
     const navigate = useNavigate();
     const toast = useToast()
 
-    if (value === null) {
-        return <Spinner />;
-    }
+    const [card, setCard] = useState<Card>(cardModel ?? {
+        name: '',
+        description: '',
+        attack: 0,
+        defence: 0,
+        cost: 0,
+        imagePath: ''
+    });
+    const handleUpsert = async () => {
+        try {
+            const isNewCard = card.id === undefined;
+            const result = isNewCard 
+                ? await postCard(card)
+                : await putCard(card.id!, card);
 
-    const { data, isLoading } = useCard(value);
-    if (data === undefined || isLoading) {
-        return <Spinner />;
-    }
-    const [card, setCard] = useState<Card>(data);
+            if (result.error) {
+                toast({
+                    description: `Error: Failed to ${isNewCard ? 'save' : 'update'} card`,
+                    status: "error",
+                });
+                return;
+            }
 
+            toast({
+                description: `Card ${isNewCard ? 'created' : 'updated'} successfully`,
+                status: "success",
+            });
 
-    const handleUpsert = () => {
-        let toastMessage = "";
-        if (card.id === undefined) {
-            postCard(card);
-            toastMessage = "Card created";
+            navigate('/admin/cards');
+        } catch (error) {
+            toast({
+                description: "Error: Failed to save card",
+                status: "error",
+            });
         }
-        else {
-            putCard(card.id, card);
-            toastMessage = "Card updated";
-        }
-        toast({
-            description: toastMessage,
-            status: "success",
-        })
-        navigate('/admin/cards');
-
-
     }
 
     return (

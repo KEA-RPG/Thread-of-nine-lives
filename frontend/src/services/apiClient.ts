@@ -1,15 +1,15 @@
 // apiCaller.ts
 import axios, { AxiosInstance } from 'axios';
+import { useEffect, useState } from 'react';
 export interface Response<T> {
   data: T | undefined;
   error: string | null;
-  isLoading: boolean;
 }
 
-class ApiCaller {
+class ApiClient {
   public apiClient: AxiosInstance | undefined;
 
-  public getClient() : AxiosInstance {
+  private getClient(): AxiosInstance {
     if (!this.apiClient) {
       this.apiClient = axios.create({
         baseURL: "https://localhost:7195/",
@@ -19,7 +19,6 @@ class ApiCaller {
         }
       });
     }
-    console.log(this.getToken());
     return this.apiClient;
   }
 
@@ -34,63 +33,53 @@ class ApiCaller {
   }
 
   get<T>(url: string): Response<T> {
-    let data: T | undefined;
-    let error: string | null = null;
-    let isLoading = true;
+    const [data, setData] = useState<T>();
+    const [error, setError] = useState("");
 
-    this.getClient().get<T>(`${url}`, {
-      headers: this.getHeaders()
-    })
-      .then((response) => data = response.data)
-      .catch((response) => error = response.message)
-      .finally(() => isLoading = false);
+    useEffect(() => {
+      this.getClient().get<T>(`${url}`, {
+        headers: this.getHeaders()
+      }).then((response) => setData(response.data))
+        .catch((response) => setError(response.message))
+    }, []);
 
-    return { data, error, isLoading };
+    return { data, error };
   }
 
-  post<TBody,TReturn>(url: string, body: TBody ): Response<TReturn> {
-    let data: TReturn | undefined;
-    let error: string | null = null;
-    let isLoading = true;
-
-    this.getClient().post<TReturn>(`${url}`,body, {
-      headers: this.getHeaders()
-    })
-      .then((response) => data = response.data)
-      .catch((response) => error = response.message)
-      .finally(() => isLoading = false);
-
-    return { data, error, isLoading };
+  async post<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
+    try {
+      const response = await this.getClient().post<TReturn>(`${url}`, body, {
+        headers: this.getHeaders()
+      });
+      return { data: response.data, error: "" };
+    } catch (error: any) {
+      return { data: undefined, error: error.message };
+    }
   }
 
-  put<TBody,TReturn>(url: string, body: TBody ): Response<TReturn> {
-    let data: TReturn | undefined;
-    let error: string | null = null;
-    let isLoading = true;
-
-    this.getClient().put<TReturn>(`${url}`,body, {
-      headers: this.getHeaders()
-    })
-      .then((response) => data = response.data)
-      .catch((response) => error = response.message)
-      .finally(() => isLoading = false);
-
-    return { data, error, isLoading };
+  // put method
+  async put<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
+    try {
+      const response = await this.getClient().put<TReturn>(`${url}`, body, {
+        headers: this.getHeaders()
+      });
+      return { data: response.data, error: "" };
+    } catch (error: any) {
+      return { data: undefined, error: error.message };
+    }
   }
 
   delete<T>(url: string): Response<T> {
-    let data: T | undefined;
-    let error: string | null = null;
-    let isLoading = true;
+    const [data, setData] = useState<T>();
+    const [error, setError] = useState("");
 
     this.getClient().delete<T>(`${url}`, {
       headers: this.getHeaders()
-    })
-      .then((response) => data = response.data)
-      .catch((response) => error = response.message)
-      .finally(() => isLoading = false);
+    }).then((response) => setData(response.data))
+      .catch((response) => setError(response.message));
 
-    return { data, error, isLoading };
+
+    return { data, error };
   }
 
   setToken(token: string) {
@@ -105,4 +94,4 @@ class ApiCaller {
   }
 }
 
-export default ApiCaller;
+export default ApiClient;

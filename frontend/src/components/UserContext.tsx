@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from 'jwt-decode';
 import { Response } from '../services/apiClient';
-import { Credentials, Token, login,signUp } from "../hooks/useUser";
+import { Credentials, Token, login, signUp } from "../hooks/useUser";
 
 interface UserContextType {
   token: string | null;
   username: string | null;
-  handleLogin: (credentials: Credentials) => Response<Token>;
+  handleLogin: (credentials: Credentials) => Promise<Response<Token>>;
   logout: () => void;
-  handleSignUp: (credentials: Credentials) => Response<string>;
+  handleSignUp: (credentials: Credentials) => Promise<Response<string>>;
   requireLogin: (role: string) => void;
   role: string | null;
 }
@@ -41,13 +41,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const setRole = (role: string) => localStorage.setItem("role", role);
   const setUsername = (username: string) => localStorage.setItem("username", username);
 
-  const handleLogin = (credentials: Credentials): Response<Token> => {
-    const loggedInUser = login(credentials);
-    if (loggedInUser?.data) {
-      setToken(loggedInUser.data.token)
-      const decodedToken: JwtToken = jwtDecode(loggedInUser.data.token);
+  const handleLogin = async (credentials: Credentials): Promise<Response<Token>> => {
+    const result = await login(credentials);
+    if (result.data) {
+      setToken(result.data.token)
+      const decodedToken: JwtToken = jwtDecode(result.data.token);
       if (decodedToken.role) {
-        setToken(loggedInUser.data.token);
+        setToken(result.data.token);
         setRole(decodedToken.role.toLowerCase());
         setUsername(decodedToken.sub);
         navigate('/menu');
@@ -56,7 +56,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     else {
       console.error('Login failed: result is undefined');
     }
-    return loggedInUser;
+    return result;
   };
 
   const logout = () => {
@@ -67,13 +67,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     navigate('/');
   };
 
-  const handleSignUp = (credentials: Credentials): Response<string> => {
-    const signedUpUser = signUp(credentials);
-    return signedUpUser;
+  const  handleSignUp = async (credentials: Credentials): Promise<Response<string>> => {
+    const result = await signUp(credentials);
+    return  result;
   }
   const requireLogin = (requiredRole: string) => {
     const role = getRole();
-    const token = getToken(); 
+    const token = getToken();
     if (!token) {
       console.error('No token found, redirecting to login');
       navigate('/login');
@@ -99,7 +99,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     [getToken(), getUsername(), getRole()]
   );
   return (
-    
+
     <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>

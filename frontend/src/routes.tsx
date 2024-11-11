@@ -11,6 +11,8 @@ import GuestLayout from "./layouts/GuestLayout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import AdminLayout from "./layouts/Adminlayout.tsx";
 import CardUpsert from "./pages/CardUpsert.tsx";
+import CardUpdate from "./pages/CardUpdate.tsx";
+import CardCreate from "./pages/CardCreate.tsx";
 
 const router = createBrowserRouter([
   {
@@ -84,7 +86,7 @@ const router = createBrowserRouter([
         path: "/admin/cards/:cardId",
         element: (
           <AdminLayout header="Card Manager">
-            <CardUpsert />
+            <CardUpdate />
           </AdminLayout>
         ),
       },
@@ -92,7 +94,7 @@ const router = createBrowserRouter([
         path: "/admin/cards/create",
         element: (
           <AdminLayout header="Card Manager">
-            <CardUpsert />
+            <CardCreate />
           </AdminLayout>
         ),
       },
