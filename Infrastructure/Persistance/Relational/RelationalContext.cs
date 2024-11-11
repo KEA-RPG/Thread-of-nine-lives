@@ -26,7 +26,6 @@ namespace Infrastructure.Persistance.Relational
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Fight> Fights { get; set; }
-        public DbSet<Player> Players { get; set; }
         public DbSet<GameAction> GameActions { get; set; }
     }
 }
