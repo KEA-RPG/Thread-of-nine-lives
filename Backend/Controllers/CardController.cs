@@ -1,4 +1,5 @@
-﻿using Backend.Services;
+﻿using Backend.SecurityLogic;
+using Backend.Services;
 using Domain.DTOs;
 using Domain.Entities; //TODO: Change to correct namespace(DTO)
 
@@ -14,7 +15,8 @@ namespace Backend.Controllers
             app.MapGet("/cards", (ICardService cardService) =>
             {
                 var cards = cardService.GetAllCards();
-                return cards;
+                var sanitizedCards = Sanitizer.Sanitize(cards);
+                return sanitizedCards;
             });
 
             //Get card by id

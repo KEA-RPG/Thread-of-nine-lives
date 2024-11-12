@@ -1,4 +1,5 @@
 ﻿using Backend.Extensions;
+using Backend.SecurityLogic;
 using Backend.Services;
 using Domain.DTOs;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -126,15 +127,26 @@ namespace Backend.Controllers
             app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto) =>
             {
                 commentDto.DeckId = deckId;
-                deckService.AddComment(commentDto);
-                return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
+
+                // Sanitize the commentDto before adding it
+                var sanitizedComment = Sanitizer.Sanitize(commentDto);
+
+                deckService.AddComment(sanitizedComment);
+
+                return Results.Created($"/decks/{deckId}/comments/{sanitizedComment.Id}", sanitizedComment);
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
+
 
 
             // Get all comments for a specific deck
             app.MapGet("/decks/{deckId}/comments", (IDeckService deckService, int deckId) =>
             {
-                return Results.Ok(deckService.GetCommentsByDeckId(deckId));
+                var comments = deckService.GetCommentsByDeckId(deckId);
+
+                // Sanitize the comments before returning them
+                var sanitizedComments = Sanitizer.Sanitize(comments);
+
+                return Results.Ok(sanitizedComments);
             });
 
         }
