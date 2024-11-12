@@ -7,12 +7,12 @@ import { useUserContext } from '../components/UserContext'; // Assuming you're h
 const Login = () => {
   const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
   const [error, setError] = useState<boolean>(false);
-  const { login } = useUserContext();
+  const { handleLogin } = useUserContext();
 
-  const handleLogin = async () => {
+  const submitLogin = async () => {
     setError(false);
-    const test = await login(credentials);
-    if (test.error) {
+    const result = await handleLogin(credentials);
+    if (result.error) {
       setError(true);
     };
   }
@@ -35,7 +35,7 @@ const Login = () => {
             placeholder="Password"
             onChange={(password) => setCredentials({ ...credentials, password: password })}
           />
-          <Button variant="solid" colorScheme="blue" mt={3} onClick={handleLogin} >
+          <Button variant="solid" colorScheme="blue" mt={3} onClick={submitLogin} >
             Sign in
           </Button>
           <Box h={2}>

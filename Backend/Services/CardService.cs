@@ -65,7 +65,7 @@ namespace Backend.Services
             existingCard.Name = cardDTO.Name;
             existingCard.Description = cardDTO.Description;
             existingCard.Attack = cardDTO.Attack;
-            existingCard.Defense = cardDTO.Defense;
+            existingCard.Defence = cardDTO.Defence;
             existingCard.Cost = cardDTO.Cost;
             existingCard.ImagePath = cardDTO.ImagePath;
 

@@ -58,15 +58,15 @@ namespace Backend.Controllers
             }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Update card
-            app.MapPut("/cards", (ICardService cardService, CardDTO cardDTO) => {
+            app.MapPut("/cards/{id}", (ICardService cardService,int id, CardDTO cardDTO) => {
 
-                var existingCard = cardService.GetCardById(cardDTO.Id);
+                var existingCard = cardService.GetCardById(id);
 
                 if(existingCard == null)
                 {
                     return Results.NotFound();
                 }
-
+                cardDTO.Id = id;
                 var updateCardDTO = cardService.UpdateCard(cardDTO);
 
                 return Results.Ok(updateCardDTO);

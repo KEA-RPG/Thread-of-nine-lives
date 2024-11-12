@@ -42,7 +42,7 @@ namespace UnitTests
                 ImagePath = "Image 1",
                 Cost = 1,
                 Attack = 1,
-                Defense = 1
+                Defence = 1
             };
 
             mockCardRepository.Setup(repo => repo.AddCard(It.IsAny<Card>()));

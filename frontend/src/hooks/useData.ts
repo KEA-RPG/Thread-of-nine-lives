@@ -1,9 +1,9 @@
 import useApiClient from "../services/apiClient";
 
-
 const apiClient = new useApiClient();
 const useGet = <T>(endpoint: string) => {
-    return apiClient.get<T>(endpoint);
+    let data = apiClient.get<T>(endpoint);
+    return data;
 }
 
 const usePost = <TBody, TReturn>(endpoint: string, body: TBody) => {
