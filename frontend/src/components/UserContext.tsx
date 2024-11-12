@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from 'jwt-decode';
@@ -61,15 +61,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    setToken("");
-    setRole("");
-    setUsername("");
-    navigate('/');
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+    useEffect(() => {
+      navigate('/');
+    }, [])
+
   };
 
-  const  handleSignUp = async (credentials: Credentials): Promise<Response<string>> => {
+  const handleSignUp = async (credentials: Credentials): Promise<Response<string>> => {
     const result = await signUp(credentials);
-    return  result;
+    return result;
   }
   const requireLogin = (requiredRole: string) => {
     const role = getRole();
