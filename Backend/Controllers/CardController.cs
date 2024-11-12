@@ -15,8 +15,7 @@ namespace Backend.Controllers
             app.MapGet("/cards", (ICardService cardService) =>
             {
                 var cards = cardService.GetAllCards();
-                var sanitizedCards = Sanitizer.Sanitize(cards);
-                return sanitizedCards;
+                return cards;
             });
 
             //Get card by id
