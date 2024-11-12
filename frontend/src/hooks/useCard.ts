@@ -1,12 +1,19 @@
-import { useGet } from "./useData";
+import ApiClient from "../services/apiClient";
 
 export interface Card {
-    id: number;
+    id?: number;
     name: string;
+    description: string;
     attack: number;
+    defence: number;
+    cost: number;
+    imagePath: string;
 }
+const apiClient = new ApiClient();
 
-const useCards = () => useGet<Card[]>(`/cards`)
+const useCards = () => apiClient.get<Card[]>(`/cards`);
+const useCard = (id: number) => apiClient.get<Card>(`/cards/${id}`)
+const postCard = (car: Card) => apiClient.post<Card, Card>(`/cards`, car);
+const putCard = (id: number, card: Card) => apiClient.put<Card, Card>(`/cards/${id}`, card);
 
-
-export { useCards };
+export { useCards, useCard, postCard, putCard };

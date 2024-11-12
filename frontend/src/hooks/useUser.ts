@@ -6,8 +6,8 @@ export interface Credentials {
     username: string;
     password: string;
 }
-const useLogin = (credentials: Credentials) => usePost<Credentials, Token>(`/auth/login`, credentials);
-const useSignUp = (credentials: Credentials) => usePost<Credentials, string/*no return data*/>(`/auth/signup`, credentials);
+const login = (credentials: Credentials) => usePost<Credentials, Token>(`/auth/login`, credentials);
+const signUp = (credentials: Credentials) => usePost<Credentials, string/*no return data*/>(`/auth/signup`, credentials);
 
 
-export { useLogin, useSignUp };
+export { login, signUp };

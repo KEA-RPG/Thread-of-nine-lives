@@ -12,21 +12,17 @@ const DeckManager = () => {
 
     const condensedDeck: { [key: number]: CardNumber } = {};
     const getGroupedDeck = () => {
-        for (let index = 0; index < cardDeck.length; index++) {
-            const element = cardDeck[index];
+        for (const element of cardDeck) {
             if (condensedDeck[element.id] === undefined) {
                 condensedDeck[element.id] = { card: element, count: 1 };
-            }
-            else {
+            } else {
                 condensedDeck[element.id].count++;
             }
         }
         return (
             <>
                 {Object.keys(condensedDeck).length === 0 ? (
-                    <>
-                        <Heading>No cards added</Heading>
-                    </>
+                    <Heading>No cards added</Heading>
                 ) : (
                     <SimpleGrid gap="10px" templateRows="repeat(auto-fill, 20px)" w="100%" p="10px" >
                         {Object.entries(condensedDeck).map(([key, value]) => (
