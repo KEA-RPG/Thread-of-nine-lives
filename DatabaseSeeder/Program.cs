@@ -35,53 +35,6 @@ namespace DataSeeder
                 context.Database.EnsureCreated();
 
                 // Seed data
-                if (!context.Cards.Any())
-                {
-                    var cards = GenerateCards();
-                    context.Cards.AddRange(cards); //TODO: Make sure it gets added to the correct table
-                    context.SaveChanges();
-                }
-
-                //Enemy
-                if (!context.Enemies.Any())
-                {
-                    var enemies = GenerateEnemies();
-                    context.Enemies.AddRange(enemies);
-                    context.SaveChanges();
-                }
-
-                if (!context.Decks.Any())
-                {
-                    List<Deck> decks = GenerateDecks();
-
-
-                    //This is a tests to see how the json file should look like
-                    foreach (var deck in decks)
-                    {
-                        deck.DeckCards = new List<DeckCard>
-                            {
-                                new DeckCard
-                                {
-                                    DeckId = deck.Id,
-                                    CardId = 1,
-                                    Deck = deck,
-                                    Card = new Card{
-                                        Id = 1,
-                                        Name = "First Battle",
-                                        Description = "It's this little fellas first battle! He can aid in hitting, but have not yet learned to defend himself",
-                                        Attack = 3,
-                                        Defence =  0,
-                                        Cost = 0,
-                                        ImagePath = "1.jpg"
-                                    }
-                                }
-                            };
-                    }
-
-                    context.Decks.AddRange(decks);
-                    context.SaveChanges();
-                }
-
                 if (!context.Users.Any())
                 {
                     List<User> users = GenerateUsers();
@@ -95,6 +48,73 @@ namespace DataSeeder
                     context.Users.AddRange(users);
                     context.SaveChanges();
                 }
+
+
+                if (!context.Cards.Any())
+                {
+                    var cards = GenerateCards();
+                    context.Cards.AddRange(cards);
+                    context.SaveChanges();
+                }
+
+                //Enemy
+                if (!context.Enemies.Any())
+                {
+                    var enemies = GenerateEnemies();
+                    context.Enemies.AddRange(enemies);
+                    context.SaveChanges();
+                }
+
+
+                //Tag fat i det der allerede bliver oprettet fra Cards.json
+                if (!context.Decks.Any())
+                {
+                    //List<Deck> decks = GenerateDecks();
+
+                    Random random = new Random();
+
+                    //Sætter maksimal mængde af kort der eksistere i databasen
+                    var amountOfCards = context.Cards.Count();
+
+                    //Henter alle kort der eksistere i databasen
+                    var existingCards = context.Cards.ToList();
+
+                    //Array til at holde Id'er på kort
+                    int[] cardIdRange = new int[amountOfCards];
+
+                    //Tilføjer alle id'er til arrayet
+                    foreach (var cardId in existingCards)
+                    {
+                        cardIdRange = cardIdRange.Append(cardId.Id).ToArray();
+                    }
+
+
+                    
+
+                    //Single Deck with a single card
+                    var decks = new Deck
+                    {
+                        UserId = 133,
+                        Name = "First Deck",
+                        IsPublic = true
+                    };
+
+                    decks.DeckCards = new List<DeckCard>
+                    {
+                        new DeckCard
+                        {
+                            DeckId = decks.Id,
+                            CardId = 1012
+                        }
+                    };
+
+
+
+                    context.Decks.AddRange(decks);
+                    context.SaveChanges();
+                }
+
+
             }
         }
 

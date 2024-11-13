@@ -21,9 +21,6 @@ namespace Infrastructure.Persistance.Relational.Configurations
                    .WithMany(d => d.Comments)
                    .HasForeignKey(c => c.UserId)
                    .OnDelete(DeleteBehavior.Restrict);
-
-
-
         }
     }
 }
