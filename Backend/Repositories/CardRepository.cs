@@ -1,4 +1,5 @@
 ﻿
+using Domain.DTOs;
 using Domain.Entities;
 using Infrastructure.Persistance.Relational;
 
@@ -40,5 +41,6 @@ namespace Backend.Repositories
             _context.Cards.Update(card);
             _context.SaveChanges();
         }
+
     }
 }

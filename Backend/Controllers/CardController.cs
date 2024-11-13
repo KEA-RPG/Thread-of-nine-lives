@@ -1,4 +1,5 @@
 ﻿using Backend.Services;
+using Domain.DTOs;
 using Domain.Entities; //TODO: Change to correct namespace(DTO)
 
 namespace Backend.Controllers
@@ -9,62 +10,67 @@ namespace Backend.Controllers
         public static void MapCardEndpoint(this WebApplication app)
         {
             //Get all cards
+            //Tænker det skal være muligt for alle at se eksisterende kort, regardless af roller
             app.MapGet("/cards", (ICardService cardService) =>
             {
-                System.Diagnostics.Debug.WriteLine("This is a debug message.");
-                Console.WriteLine("Hello World!");
-                return cardService.GetAllCards();
+                var cards = cardService.GetAllCards();
+                return cards;
             });
 
             //Get card by id
+            //Samme årsag som ovenstående
             app.MapGet("/cards/{id}", (ICardService cardService, int id) =>
             {
-                return cardService.GetCardById(id);
+                var cardDTO = cardService.GetCardById(id);
+                return cardDTO;
             });
 
             //Delete card
             app.MapDelete("/cards/{id}", (ICardService cardService, int id) =>
             {
-                try
-                {
-                    cardService.DeleteCard(id);
-                    return Results.NoContent();
-                }
-                catch(KeyNotFoundException)
+                var cardDTO = cardService.GetCardById(id);
+
+                if (cardDTO == null)
                 {
                     return Results.NotFound();
                 }
-                catch 
+                else
                 {
-                    return Results.StatusCode(500);
+                    try
+                    {
+                        cardService.DeleteCard(id);
+                        return Results.NoContent();
+                    }
+                    catch (Exception e)
+                    {
+                        return Results.BadRequest(e.Message);
+                    }
                 }
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Create card
-            app.MapPost("/cards", (ICardService cardService, Card card) =>
+            app.MapPost("/cards", (ICardService cardService, CardDTO cardDTO) =>
             {
-                cardService.CreateCard(card);
-                return Results.Created($"/cards/{card.Id}", card);
-            });
+                var createdCardDTO = cardService.CreateCard(cardDTO);
+
+                return Results.Created($"/cards/{cardDTO.Id}", createdCardDTO);
+
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Update card
-            app.MapPut("/cards", (ICardService cardService, Card card) => {
+            app.MapPut("/cards/{id}", (ICardService cardService,int id, CardDTO cardDTO) => {
 
-                var dbCard = cardService.GetCardById(card.Id);
+                var existingCard = cardService.GetCardById(id);
 
-                if (dbCard == null)
+                if(existingCard == null)
                 {
                     return Results.NotFound();
                 }
+                cardDTO.Id = id;
+                var updateCardDTO = cardService.UpdateCard(cardDTO);
 
-                cardService.UpdateCard(card);
-                return Results.Ok(card);
-            });
-
-
-
-
-
+                return Results.Ok(updateCardDTO);
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
         }
     }
 }

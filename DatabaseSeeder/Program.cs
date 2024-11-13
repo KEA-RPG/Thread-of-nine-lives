@@ -52,6 +52,14 @@ namespace DataSeeder
                     context.Enemies.AddRange(enemies);
                     context.SaveChanges();
                 }
+
+                if (!context.Decks.Any())
+                {
+                    var decks = GenerateDecks();
+                    context.Decks.AddRange(decks);
+                    context.SaveChanges();
+                }
+
             }
         }
 
@@ -65,6 +73,12 @@ namespace DataSeeder
         {
             var cards = Reader<List<Card>>("Cards.json");
             return cards;
+        }
+
+        private static List<Deck> GenerateDecks()
+        {
+            var decks = Reader<List<Deck>>("Decks.json");
+            return decks;
         }
 
         private static T Reader<T>(string filePath)
