@@ -4,13 +4,21 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-
 namespace Backend.SecurityLogic
 {
     public static class Sanitizer
     {
-        private static readonly Regex ScriptTagRegex = new Regex("<.*?script.*?>.*?</.*?script.*?>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private static readonly Regex HtmlTagRegex = new Regex("<.*?>", RegexOptions.IgnoreCase);
+        private static readonly Regex ScriptTagRegex = new Regex(
+            "<.*?script.*?>.*?</.*?script.*?>",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline,
+            TimeSpan.FromSeconds(1)
+        );
+
+        private static readonly Regex HtmlTagRegex = new Regex(
+            "<.*?>",
+            RegexOptions.IgnoreCase,
+            TimeSpan.FromSeconds(1)
+        );
 
         public static T Sanitize<T>(T obj)
         {
