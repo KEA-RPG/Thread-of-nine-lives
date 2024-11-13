@@ -1,5 +1,5 @@
 import { Button, VStack, Box } from "@chakra-ui/react";
-import { useState} from "react";
+import { useState } from "react";
 import ListItem from "./Listitems";
 
 type Item = {
@@ -7,15 +7,14 @@ type Item = {
 };
 
 const ListLayout = () => {
-    const [items, setItems] = useState<Item[]>([]);
 
+    const [items, setItems] = useState<Item[]>([]);
     const handleAddItem = () => {
         setItems((prevItems) => [
             ...prevItems,
             { id: prevItems.length + 1 },
         ]);
     };
-
     return (
         <VStack spacing={4} p={6} bg="gray.300" align="stretch">
             {items.map((item) => (

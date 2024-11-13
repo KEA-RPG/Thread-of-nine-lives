@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Image, Button, Card, CardBody, Stack, CardFooter, Text, Link, Box } from '@chakra-ui/react'
-import { useToast } from '@chakra-ui/react'
+import { Image, Button, Card, CardBody, Stack, CardFooter, Text, Link, Box, useToast } from '@chakra-ui/react'
 import InputFieldElement from '../components/InputFieldElement';
 import { Credentials } from '../hooks/useUser';
 import { useUserContext } from '../components/UserContext';
@@ -9,11 +8,11 @@ const SignUp = () => {
   const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
   const [repeatPassword, setRepeatPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const { signUp } = useUserContext();
+  const { handleSignUp } = useUserContext();
   const toast = useToast()
 
 
-  const handleSignUp = async () => {
+  const submitSignUp = async () => {
 
     setError('');
 
@@ -21,7 +20,7 @@ const SignUp = () => {
       setError('Passwords do not match');
       return;
     }
-    var result = await signUp(credentials);
+    const result = await handleSignUp(credentials);
     if (result.error) {
       setError(result.error);
     }
@@ -59,7 +58,7 @@ const SignUp = () => {
           placeholder="Repeat Password"
           onChange={(password) => setRepeatPassword(password)}
         />
-        <Button variant="solid" colorScheme="blue" mt={3} onClick={handleSignUp} >
+        <Button variant="solid" colorScheme="blue" mt={3} onClick={submitSignUp} >
           Sign up
         </Button>
         <Box h={2}>
