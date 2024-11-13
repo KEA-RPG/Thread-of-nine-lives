@@ -1,12 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Domain.Entities;
-using Infrastructure.Persistance.Relational;
-using Microsoft.Extensions.Configuration;
+﻿using Domain.Entities;
 using Infrastructure.Persistance;
+using Infrastructure.Persistance.Relational;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
-using System;
 
 
 namespace DataSeeder
@@ -55,11 +52,49 @@ namespace DataSeeder
 
                 if (!context.Decks.Any())
                 {
-                    var decks = GenerateDecks();
+                    List<Deck> decks = GenerateDecks();
+
+
+                    //This is a tests to see how the json file should look like
+                    foreach (var deck in decks)
+                    {
+                        deck.DeckCards = new List<DeckCard>
+                            {
+                                new DeckCard
+                                {
+                                    DeckId = deck.Id,
+                                    CardId = 1,
+                                    Deck = deck,
+                                    Card = new Card{
+                                        Id = 1,
+                                        Name = "First Battle",
+                                        Description = "It's this little fellas first battle! He can aid in hitting, but have not yet learned to defend himself",
+                                        Attack = 3,
+                                        Defence =  0,
+                                        Cost = 0,
+                                        ImagePath = "1.jpg"
+                                    }
+                                }
+                            };
+                    }
+
                     context.Decks.AddRange(decks);
                     context.SaveChanges();
                 }
 
+                if (!context.Users.Any())
+                {
+                    List<User> users = GenerateUsers();
+
+                    //Encrypt the passwords
+                    foreach (var user in users)
+                    {
+                        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+                    }
+
+                    context.Users.AddRange(users);
+                    context.SaveChanges();
+                }
             }
         }
 
@@ -79,6 +114,12 @@ namespace DataSeeder
         {
             var decks = Reader<List<Deck>>("Decks.json");
             return decks;
+        }
+
+        private static List<User> GenerateUsers()
+        {
+            var users = Reader<List<User>>("Users.json");
+            return users;
         }
 
         private static T Reader<T>(string filePath)
