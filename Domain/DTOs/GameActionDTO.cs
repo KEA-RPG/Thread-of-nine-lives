@@ -18,7 +18,6 @@ namespace Domain.DTOs
                 FightId = gameAction.FightId,
                 Type = gameAction.Type,
                 Value = gameAction.Value,
-                CardId = gameAction.CardId,
             };
         }
     }

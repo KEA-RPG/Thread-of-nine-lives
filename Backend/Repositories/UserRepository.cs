@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.DTOs;
 using Infrastructure.Persistance.Relational;
 
 namespace Backend.Repositories
@@ -38,6 +39,13 @@ namespace Backend.Repositories
         {
             _context.Users.Update(user);
             _context.SaveChanges();
+        }
+
+        public UserDTO GetUserById(int id)
+        {
+            var dbUser = _context.Users.FirstOrDefault(u => u.Id == id);
+            var user = UserDTO.FromEntity(dbUser);
+            return user;
         }
     }
 }

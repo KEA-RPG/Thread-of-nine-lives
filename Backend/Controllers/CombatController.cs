@@ -1,6 +1,7 @@
 ﻿using Backend.Models;
 using Backend.Services;
-using Domain.Entities;
+using Domain.DTOs;
+using Backend.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Numerics;
@@ -9,53 +10,27 @@ namespace Backend.Controllers
 {
     public static class CombatController
     {
-        private static CombatService gameState;
 
-        public static void MapStateEndpoints(this WebApplication app)
+        public static void MapCombatEndpoints(this WebApplication app)
         {
-            app.MapPost("/combat", (GameAction gameAction) =>
+            app.MapPost("/combat/{id}/action", (ICombatService combatService, GameActionDTO gameAction, State state) =>
             {
                 if (gameAction == null || string.IsNullOrEmpty(gameAction.Type))
                 {
                     return Results.BadRequest("Invalid action.");
                 }
+                var updatedState = combatService.ProcessAction(gameAction, state);
 
-                gameState.ProcessAction(gameAction);
-
-                return Results.Ok(gameState);
+                return Results.Ok(updatedState);
             });
 
-            app.MapPost("/init-game-state", (IEnemyService enemyService, IPlayerService playerService, StateGameInit stateGameInit) =>
+            app.MapPost("/combat/initialize", (ICombatService combatService, StateGameInit stateGameInit) =>
             {
+                var state = combatService.GetInitState(stateGameInit);
 
-                // Fetch enemy and player using the IDs from the query parameters
-                var enemyDTO = enemyService.GetEnemyById(stateGameInit.EnemyId);
-                if (enemyDTO == null)
-                {
-                    return Results.NotFound("Enemy not found.");
-                }
-
-                var playerDTO = playerService.GetPlayerById(stateGameInit.PlayerId);
-                if (playerDTO == null)
-                {
-                    return Results.NotFound("Player not found.");
-                }
-
-                // Initialize the game state with the player and enemy data
-                gameState = new StateService(playerDTO, enemyDTO);
-
-                return Results.Ok(gameState);
+                return Results.Ok(state);
             });
 
-            app.MapGet("/game-state", (IEnemyService enemyService, IPlayerService playerService) =>
-            {
-                if (gameState == null)
-                {
-                    return Results.NotFound("Game state has not been initialized.");
-                }
-
-                return Results.Ok(gameState);
-            });
         }
     }
 }

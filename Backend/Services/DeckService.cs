@@ -61,5 +61,39 @@ namespace Backend.Services
             return _deckRepository.GetPublicDecks();
         }
 
+        public void AddComment(CommentDTO commentDto)
+        {
+            // Check if the deck exists before adding a comment
+            var deck = _deckRepository.GetDeckById(commentDto.DeckId);
+            if (deck == null)
+            {
+                throw new KeyNotFoundException($"Deck with ID {commentDto.DeckId} was not found.");
+            }
+
+            var comment = CommentDTO.ToEntity(commentDto);
+            _deckRepository.AddComment(comment);
+        }
+
+        public List<CommentDTO> GetCommentsByDeckId(int deckId)
+        {
+            // Check if the deck exists before attempting to retrieve comments
+            var deck = _deckRepository.GetDeckById(deckId);
+            if (deck == null)
+            {
+                throw new KeyNotFoundException($"Deck with ID {deckId} was not found.");
+            }
+
+            // Retrieve comments
+            var comments = _deckRepository.GetCommentsByDeckId(deckId);
+            if (comments == null || !comments.Any())
+            {
+                throw new Exception($"No comments found for Deck with ID {deckId}.");
+            }
+
+            return comments.Select(comment => CommentDTO.FromEntity(comment)).ToList();
+        }
+
+
+
     }
 }

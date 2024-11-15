@@ -18,7 +18,7 @@ namespace Domain.Entities
 
         public int Attack { get; set; }
 
-        public int Defense { get; set; }
+        public int Defence { get; set; }
 
         public int Cost { get; set; }
 
@@ -40,7 +40,7 @@ namespace Domain.Entities
                 Name = cardDTO.Name,
                 Description = cardDTO.Description,
                 Attack = cardDTO.Attack,
-                Defense = cardDTO.Defense,
+                Defence = cardDTO.Defence,
                 Cost = cardDTO.Cost,
                 ImagePath = cardDTO.ImagePath
             };

@@ -1,55 +1,54 @@
-﻿using Domain.DTOs;
-using Domain.Entities;
+﻿using Backend.Models;
+using Domain.DTOs;
+using Backend.Repositories;
+using Backend.Helpers;
 
 namespace Backend.Services
 {
     public class CombatService : ICombatService
     {
-        public List<GameAction> GameActions { get; set; }
-        public PlayerDTO PlayerDTO { get; }
-        public EnemyDTO EnemyDTO { get; }
+        private readonly ICombatRepository _combatRepository;
 
-        public CombatService(PlayerDTO playerDTO, EnemyDTO enemyDTO)
+        private readonly IEnemyRepository _enemyRepository;
+
+        private readonly IUserRepository _userRepository;
+
+        private readonly StateFactory stateFactory = new StateFactory();
+
+        public CombatService(ICombatRepository combatRepository)
         {
-            GameActions = new List<GameAction>();
-            PlayerDTO = playerDTO;
-            EnemyDTO = enemyDTO;
+            _combatRepository = combatRepository;
         }
 
-        public void ProcessAction(GameAction gameAction)
+        public State GetInitState(StateGameInit stateGameInit)
         {
-            GameActions.Add(gameAction);
-            UpdateGameState(gameAction);
-        }
+            var enemy  = _enemyRepository.GetEnemyById(stateGameInit.EnemyId);
+            var user = _userRepository.GetUserById(stateGameInit.UserId);
 
-        public void UpdateGameState(GameAction gameAction)
-        {
-            if (gameAction.Type == "ATTACK")
+            if (enemy == null || user == null)
             {
-                EnemyDTO.Health -= gameAction.Value;
-                if (EnemyDTO.Health <= 0)
-                {
-                    EnemyDTO.Health = 0;
-                }
-            } 
-            else if (gameAction.Type == "END_TURN")
-            {
-                PerformEnemyTurn();
-            }
-            
-        }
-
-        private void PerformEnemyTurn()
-        {
-            int enemyAttackValue = 5;
-            PlayerDTO.Health -= enemyAttackValue;
-            if (PlayerDTO.Health < 0)
-            {
-                PlayerDTO.Health = 0;
+                return null;
             }
 
+            FightDTO fight = new FightDTO
+            {
+                UserId = stateGameInit.UserId,
+                Enemy = EnemyDTO.FromEntity(enemy)
+            };
+
+            var addedFight = _combatRepository.AddFight(fight);
+
+            var state = stateFactory.CreateInitState();
+
+            return state;
+        }
+
+        public State ProcessAction(GameActionDTO gameAction, State state)
+        {
+            _combatRepository.InsertAction(gameAction);
+            return stateFactory.ProcessAction(gameAction, state);
         }
 
     }
-    
+
 }

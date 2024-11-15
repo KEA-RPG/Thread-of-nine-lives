@@ -1,18 +1,18 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from 'jwt-decode';
 import { Response } from '../services/apiClient';
-import { Credentials, Token, useLogin, useSignUp } from "../hooks/useUser";
+import { Credentials, Token, login, signUp } from "../hooks/useUser";
 
 interface UserContextType {
-  token?: string;
-  username?: string;
-  login: (credentials: Credentials) => Promise<Response<Token>>;
+  token: string | null;
+  username: string | null;
+  handleLogin: (credentials: Credentials) => Promise<Response<Token>>;
   logout: () => void;
-  signUp: (credentials: Credentials) => Promise<Response<string>>;
+  handleSignUp: (credentials: Credentials) => Promise<Response<string>>;
   requireLogin: (role: string) => void;
-  role?: string;
+  role: string | null;
 }
 interface JwtToken {
   sub: string;
@@ -29,51 +29,53 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // UserContext provider component
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [role, setRole] = useState<string>();
-  const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
-  const [username, setUsername] = useState<string>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      const decodedToken = jwtDecode<JwtToken>(token);
-      setRole(decodedToken.role?.toLowerCase());
-      setUsername(decodedToken.name);
-    }
-  }, [token]);
+  // Helper functions to get values from local storage
+  const getToken = (): string | null => localStorage.getItem("token");
+  const getRole = (): string | null => localStorage.getItem("role");
+  const getUsername = (): string | null => localStorage.getItem("username");
 
-  const login = async (credentials: Credentials): Promise<Response<Token>> => {
-    const loggedInUser = await useLogin(credentials);
+  // Function to set values directly in local storage
+  const setToken = (token: string) => localStorage.setItem("token", token);
+  const setRole = (role: string) => localStorage.setItem("role", role);
+  const setUsername = (username: string) => localStorage.setItem("username", username);
 
-    if (loggedInUser && loggedInUser.data) {
-      setToken(loggedInUser.data.token)
-      const decodedToken = jwtDecode(loggedInUser.data.token) as JwtToken;
+  const handleLogin = async (credentials: Credentials): Promise<Response<Token>> => {
+    const result = await login(credentials);
+    if (result.data) {
+      setToken(result.data.token)
+      const decodedToken: JwtToken = jwtDecode(result.data.token);
       if (decodedToken.role) {
-        localStorage.setItem("token", loggedInUser.data.token);
+        setToken(result.data.token);
         setRole(decodedToken.role.toLowerCase());
-        setUsername(decodedToken.name);
+        setUsername(decodedToken.sub);
         navigate('/menu');
       }
     }
     else {
       console.error('Login failed: result is undefined');
     }
-    return loggedInUser;
+    return result;
   };
 
   const logout = () => {
     localStorage.removeItem("token");
-    setToken("");
-    setRole("");
-    setUsername("");
-    navigate('/');
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+    useEffect(() => {
+      navigate('/');
+    }, [])
+
   };
 
-  const signUp = async (credentials: Credentials): Promise<Response<string>> => {
-    const signedUpUser = await useSignUp(credentials);
-    return signedUpUser;
+  const handleSignUp = async (credentials: Credentials): Promise<Response<string>> => {
+    const result = await signUp(credentials);
+    return result;
   }
   const requireLogin = (requiredRole: string) => {
+    const role = getRole();
+    const token = getToken();
     if (!token) {
       console.error('No token found, redirecting to login');
       navigate('/login');
@@ -86,8 +88,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.error('Invalid role specified, role not found');
     }
   }
+  const contextValue = useMemo(
+    () => ({
+      token: getToken(),
+      username: getUsername(),
+      handleLogin,
+      logout,
+      handleSignUp,
+      requireLogin,
+      role: getRole(),
+    }),
+    [getToken(), getUsername(), getRole()]
+  );
   return (
-    <UserContext.Provider value={{ token, username, login, logout, signUp, requireLogin, role }}>
+
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   );

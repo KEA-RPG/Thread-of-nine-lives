@@ -1,11 +1,12 @@
 ﻿using Domain.Entities;
+using Domain.DTOs;
 
 namespace Domain.DTOs
 {
     public class FightDTO
     {
         public int Id { get; set; }
-        public required int EnemyId { get; set; }
+        public required EnemyDTO Enemy { get; set; }
         public required int UserId { get; set; }
 
         public static FightDTO FromEntity(Fight fight)
@@ -13,7 +14,7 @@ namespace Domain.DTOs
             return new FightDTO
             {
                 Id = fight.Id,
-                EnemyId = fight.EnemyId,
+                Enemy = EnemyDTO.FromEntity(fight.Enemy),
                 UserId = fight.UserId
             };
         }

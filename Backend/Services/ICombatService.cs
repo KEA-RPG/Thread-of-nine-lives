@@ -1,10 +1,12 @@
-﻿using Domain.Entities;
+﻿using Backend.Models;
+using Domain.DTOs;
+using Domain.Entities;
 
 namespace Backend.Services
 {
     public interface ICombatService
     {
-        void ProcessAction(GameAction gameAction);
-        void UpdateGameState(GameAction gameAction);
+        State GetInitState(StateGameInit stateGameInit);
+        State ProcessAction(GameActionDTO gameAction, State state);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 
 namespace Backend.Repositories
 {
@@ -6,5 +7,6 @@ namespace Backend.Repositories
     {
         User GetUserByUsername(string username);
         void CreateUser(User user);
+        UserDTO GetUserById(int id);
     }
 }

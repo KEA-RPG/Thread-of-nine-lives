@@ -8,7 +8,6 @@ namespace Domain.Entities
         public int FightId { get; set; }
         public string Type { get; set; }
         public int Value { get; set; }
-        public int? CardId { get; set; }
 
         public GameAction() { }
 
@@ -20,7 +19,6 @@ namespace Domain.Entities
                 FightId = gameActionDTO.FightId,
                 Type = gameActionDTO.Type,
                 Value = gameActionDTO.Value,
-                CardId = gameActionDTO.CardId,
             };
         }
     }
