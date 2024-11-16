@@ -49,10 +49,9 @@ namespace UnitTests
             Assert.DoesNotContain("</b>", sanitizedComment.Text);
             Assert.Contains("This is a comment.", sanitizedComment.Text);
         }
-    }
 
-    public class DeckControllerTests
-    {
+
+
         [Fact]
         public void PostComment_ValidComment_ShouldSanitizeAndAddComment()
         {

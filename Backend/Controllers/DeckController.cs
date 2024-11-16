@@ -127,13 +127,8 @@ namespace Backend.Controllers
             app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto) =>
             {
                 commentDto.DeckId = deckId;
-
-                // Sanitize the commentDto before adding it
-                var sanitizedComment = Sanitizer.Sanitize(commentDto);
-
-                deckService.AddComment(sanitizedComment);
-
-                return Results.Created($"/decks/{deckId}/comments/{sanitizedComment.Id}", sanitizedComment);
+                deckService.AddComment(commentDto);
+                return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
 
@@ -142,11 +137,7 @@ namespace Backend.Controllers
             app.MapGet("/decks/{deckId}/comments", (IDeckService deckService, int deckId) =>
             {
                 var comments = deckService.GetCommentsByDeckId(deckId);
-
-                // Sanitize the comments before returning them
-                var sanitizedComments = Sanitizer.Sanitize(comments);
-
-                return Results.Ok(sanitizedComments);
+                return Results.Ok(comments);
             });
 
         }
