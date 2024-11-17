@@ -25,7 +25,6 @@ namespace Infrastructure.Persistance.Relational
             new DeckCardConfiguration().Configure(modelBuilder.Entity<DeckCard>());
             new DeckConfiguration().Configure(modelBuilder.Entity<Deck>());
             new CommentConfiguration().Configure(modelBuilder.Entity<Comment>());
-            new FightConfiguration().Configure(modelBuilder.Entity<Fight>());
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Fight> Fights { get; set; }

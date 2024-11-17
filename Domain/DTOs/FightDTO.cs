@@ -7,7 +7,8 @@ namespace Domain.DTOs
     {
         public int Id { get; set; }
         public EnemyDTO Enemy { get; set; }
-        public required int UserId { get; set; }
+        public int EnemyId { get; set; }
+        public int UserId { get; set; }
         public List<GameActionDTO> GameActions { get; set; }
 
         public static FightDTO FromEntity(Fight fight)
@@ -15,7 +16,8 @@ namespace Domain.DTOs
             return new FightDTO
             {
                 Id = fight.Id,
-                Enemy = EnemyDTO.FromEntity(fight.Enemy),
+                Enemy = fight.Enemy != null ? EnemyDTO.FromEntity(fight.Enemy) : null,
+                EnemyId = fight.EnemyId,
                 UserId = fight.UserId
             };
         }

@@ -5,6 +5,7 @@ using Backend.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Numerics;
+using System.CodeDom;
 
 namespace Backend.Controllers
 {
@@ -13,17 +14,17 @@ namespace Backend.Controllers
 
         public static void MapCombatEndpoints(this WebApplication app)
         {
-            app.MapPost("/combat/{id}/action", (ICombatService combatService,int id, GameActionDTO gameAction) =>
+            app.MapPost("/combat/{id}/action", (ICombatService combatService,int id, GameActionDTO action) =>
             {
-                gameAction.FightId = id;
-                var updatedState = combatService.ProcessAction(gameAction);
+                action.FightId = id;
+                var state = combatService.GetProcessedState(id, action);
 
-                return Results.Ok(updatedState);
+                return Results.Ok(state);
             });
 
             app.MapPost("/combat/initialize", (ICombatService combatService, StateGameInit stateGameInit) =>
             {
-                var state = combatService.GetInitState(stateGameInit);
+                var state = combatService.GetInitialState(stateGameInit);
 
                 return Results.Ok(state);
             });

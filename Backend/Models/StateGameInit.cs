@@ -2,8 +2,8 @@
 {
     public class StateGameInit
     {
-        public int EnemyId { get; set; }
-        public int UserId { get; set; }
+        public required int EnemyId { get; set; }
+        public required int UserId { get; set; }
         
     }
 }

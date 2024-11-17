@@ -15,14 +15,12 @@ namespace Backend.Repositories
         }
 
         public FightDTO GetFightById(int id)
-        {
-            
+        {            
             var dbFight = _context.Fights.Include(g => g.GameActions).FirstOrDefault(f => f.Id == id);
-
-            var dbGameActions = _context.GameActions.Where(g => g.FightId == dbFight.Id).ToList();
-            dbFight.GameActions = dbGameActions;
-
             var dbEnemy = _context.Enemies.FirstOrDefault(e => e.Id == dbFight.EnemyId);
+            var dbGameActions = _context.GameActions.Where(g => g.FightId == dbFight.Id).ToList();
+
+            dbFight.GameActions = dbGameActions;
             dbFight.Enemy = dbEnemy;
 
             var fight = FightDTO.FromEntity(dbFight);

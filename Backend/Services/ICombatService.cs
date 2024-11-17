@@ -6,7 +6,7 @@ namespace Backend.Services
 {
     public interface ICombatService
     {
-        State GetInitState(StateGameInit stateGameInit);
-        State ProcessAction(GameActionDTO gameAction);
+        State GetInitialState(StateGameInit stateGameInit);
+        State GetProcessedState(int fightID, GameActionDTO action);
     }
 }

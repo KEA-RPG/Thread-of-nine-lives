@@ -2,6 +2,7 @@
 using Domain.DTOs;
 using Backend.Repositories;
 using Backend.Helpers;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Backend.Services
 {
@@ -22,49 +23,56 @@ namespace Backend.Services
             _userRepository = userRepository;
         }
 
-        public State GetInitState(StateGameInit stateGameInit)
+        public State GetInitialState(StateGameInit stateGameInit)
         {
-            if (stateGameInit == null || stateGameInit.EnemyId == null || stateGameInit.UserId == null)
+            if (stateGameInit == null)
             {
-                throw new ArgumentNullException("stateGameInit, EnemyId, or UserId is null");
+                throw new ArgumentNullException(nameof(stateGameInit), "StateGameInit cannot be null.");
             }
 
-            var enemy  = _enemyRepository.GetEnemyById(stateGameInit.EnemyId);
+            var enemy = _enemyRepository.GetEnemyById(stateGameInit.EnemyId);
             var user = _userRepository.GetUserById(stateGameInit.UserId);
 
-            if (enemy == null || user == null)
+            if (enemy == null)
             {
-                return null;
+                throw new KeyNotFoundException($"Enemy with ID {stateGameInit.EnemyId} not found.");
             }
 
-            FightDTO fight = new FightDTO
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with ID {stateGameInit.UserId} not found.");
+            }
+
+            var fight = new FightDTO
             {
                 UserId = stateGameInit.UserId,
-                Enemy = EnemyDTO.FromEntity(enemy)
+                EnemyId = stateGameInit.EnemyId
             };
 
             var addedFight = _combatRepository.AddFight(fight);
-
-            var state = stateFactory.CreateInitState(addedFight);
+            var state = stateFactory.CreateState(addedFight);
 
             return state;
+
         }
 
-        public State ProcessAction(GameActionDTO gameAction)
+        public State GetProcessedState(int fightID, GameActionDTO action)
         {
-            if (gameAction != null)
+            if (action == null)
             {
-                _combatRepository.InsertAction(gameAction);
+                throw new ArgumentNullException(nameof(action));
+            }
+            var fight = _combatRepository.GetFightById(fightID);
+            if (fight == null)
+            {
+                throw new KeyNotFoundException($"Fight with ID {fightID} not found.");
             }
 
-            var fight = _combatRepository.GetFightById(gameAction.FightId);
-            var state = stateFactory.CreateInitState(fight);
+            _combatRepository.InsertAction(action);
 
-            foreach (var action in state.GameActions)
-            {
-                state = stateFactory.ProcessAction(state);
-            }
-
+            //getting refreshed fight
+            fight = _combatRepository.GetFightById(fightID);
+            var state = stateFactory.CreateState(fight);
             return state;
         }
 

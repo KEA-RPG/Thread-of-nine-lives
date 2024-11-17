@@ -19,7 +19,7 @@ namespace Domain.Entities
             {
                 Id = fight.Id,
                 GameActions = fight.GameActions.Select(GameAction.FromDTO).ToList(),
-                EnemyId = fight.Enemy.Id,
+                EnemyId = fight.EnemyId,
                 UserId = fight.UserId
             };
         }

@@ -5,10 +5,14 @@ namespace Backend.Helpers
 {
     public class StateFactory
     {
-        public State CreateInitState(FightDTO fight)
+        public State CreateState(FightDTO fight)
         {
             int playerHealth = 25;
             int enemyHealth = 50;
+            if (fight.Enemy != null)
+            {
+                enemyHealth = fight.Enemy.Health;
+            }
             State state = new State
             {
                 FightId = fight.Id,
@@ -17,22 +21,24 @@ namespace Backend.Helpers
                 EnemyHealth = enemyHealth
             };
 
+            state = ProcessAction(state, fight.GameActions);
+
             return state;
         }
 
-        public State ProcessAction (State state)
+        private State ProcessAction(State state, List<GameActionDTO> actions)
         {
             if (state.GameActions != null)
             {
-                foreach (var gameAction in state.GameActions)
+                foreach (var action in actions)
                 {
-                    if (gameAction.Type == "ATTACK")
+                    if (action.Type == "ATTACK")
                     {
-                        state = PerformPlayerAttack(state);
+                        state = PerformPlayerAttack(state, action);
                     }
-                    else if (gameAction.Type == "END_TURN")
+                    else if (action.Type == "END_TURN")
                     {
-                        state = PerformEnemyTurn(state);
+                        state = PerformEnemyTurn(state, action);
                     }
                 }
             }
@@ -40,9 +46,9 @@ namespace Backend.Helpers
             return state;
         }
 
-        private State PerformPlayerAttack(State state)
+        private State PerformPlayerAttack(State state, GameActionDTO action)
         {
-            state.EnemyHealth -= 10;
+            state.EnemyHealth -= action.Value;
             if (state.EnemyHealth <= 0)
             {
                 state.EnemyHealth = 0;
@@ -51,10 +57,9 @@ namespace Backend.Helpers
             return state;
         }
 
-        private State PerformEnemyTurn(State state)
+        private State PerformEnemyTurn(State state, GameActionDTO action)
         {
-            int enemyAttackValue = 5;
-            state.PlayerHealth -= enemyAttackValue;
+            state.PlayerHealth -= action.Value;
             if (state.PlayerHealth < 0)
             {
                 state.PlayerHealth = 0;
