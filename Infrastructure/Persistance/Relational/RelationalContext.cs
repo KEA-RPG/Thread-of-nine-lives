@@ -20,15 +20,16 @@ namespace Infrastructure.Persistance.Relational
         public DbSet<DeckCard> DeckCards { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Fight> Fights { get; set; }
+        public DbSet<GameAction> GameActions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new DeckCardConfiguration().Configure(modelBuilder.Entity<DeckCard>());
-            new DeckConfiguration().Configure(modelBuilder.Entity<Deck>());
-            new CommentConfiguration().Configure(modelBuilder.Entity<Comment>());
-            new UserConfiguration().Configure(modelBuilder.Entity<User>());
+            modelBuilder.ApplyConfiguration(new DeckCardConfiguration());
+            modelBuilder.ApplyConfiguration(new DeckConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new FightConfiguration());
         }
-        public DbSet<Fight> Fights { get; set; }
-        public DbSet<GameAction> GameActions { get; set; }
     }
 }
