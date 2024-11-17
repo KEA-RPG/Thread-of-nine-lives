@@ -59,9 +59,6 @@ namespace Backend
             builder.Services.AddScoped<IDeckService, DeckService>();
 
 
-
-
-
             builder.Services.AddScoped<IEnemyService, EnemyService>();
             builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
