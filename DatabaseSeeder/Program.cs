@@ -37,6 +37,7 @@ namespace DataSeeder
                 context.Database.EnsureCreated();
 
                 // Seed data
+                //User
                 if (!context.Users.Any())
                 {
                     List<User> users = GenerateUsers();
@@ -51,7 +52,7 @@ namespace DataSeeder
                     context.SaveChanges();
                 }
 
-
+                //Card
                 if (!context.Cards.Any())
                 {
                     var cards = GenerateCards();
@@ -67,8 +68,7 @@ namespace DataSeeder
                     context.SaveChanges();
                 }
 
-
-                //Tag fat i det der allerede bliver oprettet fra Cards.json
+                //Deck
                 if (!context.Decks.Any())
                 {
 
@@ -84,7 +84,8 @@ namespace DataSeeder
                         var selectedCardIds = new HashSet<int>();
                         while (chosenCards.Count < 5)
                         {
-                            var chosenCardId = random.Next(0, existingCards.Count);
+                            int randomNum = random.Next(0, existingCards.Count);
+                            var chosenCardId = randomNum;
                             var card = existingCards[chosenCardId];
 
                             if (selectedCardIds.Add(card.Id)) // Add only if not already in the set
@@ -94,7 +95,8 @@ namespace DataSeeder
                         }
 
                         // Pick a random user
-                        var chosenUserId = existingUsers[random.Next(0, existingUsers.Count)].Id;
+                        int randomId = random.Next(0, existingUsers.Count);
+                        var chosenUserId = existingUsers[randomId].Id;
 
                         // Create a new deck
                         var decks = new Deck
