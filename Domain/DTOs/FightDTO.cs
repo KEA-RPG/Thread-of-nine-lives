@@ -6,8 +6,9 @@ namespace Domain.DTOs
     public class FightDTO
     {
         public int Id { get; set; }
-        public required EnemyDTO Enemy { get; set; }
+        public EnemyDTO Enemy { get; set; }
         public required int UserId { get; set; }
+        public List<GameActionDTO> GameActions { get; set; }
 
         public static FightDTO FromEntity(Fight fight)
         {

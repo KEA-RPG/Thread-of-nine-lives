@@ -9,6 +9,7 @@ namespace Domain.Entities
         public Enemy Enemy { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
+        public List<GameAction> GameActions { get; set; }
 
         public Fight() { }
 
@@ -17,6 +18,7 @@ namespace Domain.Entities
             return new Fight
             {
                 Id = fight.Id,
+                GameActions = fight.GameActions.Select(GameAction.FromDTO).ToList(),
                 EnemyId = fight.Enemy.Id,
                 UserId = fight.UserId
             };

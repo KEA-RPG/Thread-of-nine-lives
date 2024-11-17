@@ -4,6 +4,7 @@ using Infrastructure.Persistance.Relational;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RelationalContext))]
-    partial class RelationalContextModelSnapshot : ModelSnapshot
+    [Migration("20241115122937_addedFightAndEveyrOtherChange")]
+    partial class addedFightAndEveyrOtherChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,8 +196,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FightId");
-
                     b.ToTable("GameActions");
                 });
 
@@ -275,29 +276,20 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Fight", b =>
                 {
                     b.HasOne("Domain.Entities.Enemy", "Enemy")
-                        .WithMany("Fights")
+                        .WithMany()
                         .HasForeignKey("EnemyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Fights")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Enemy");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.GameAction", b =>
-                {
-                    b.HasOne("Domain.Entities.Fight", null)
-                        .WithMany("GameActions")
-                        .HasForeignKey("FightId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
@@ -312,21 +304,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("DeckCards");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Enemy", b =>
-                {
-                    b.Navigation("Fights");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Fight", b =>
-                {
-                    b.Navigation("GameActions");
-                });
-
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Fights");
                 });
 #pragma warning restore 612, 618
         }

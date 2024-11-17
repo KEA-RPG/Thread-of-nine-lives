@@ -44,7 +44,7 @@ namespace Backend.Repositories
         public UserDTO GetUserById(int id)
         {
             var dbUser = _context.Users.FirstOrDefault(u => u.Id == id);
-            var user = UserDTO.FromEntity(dbUser);
+            var user = UserDTO.FromUser(dbUser);
             return user;
         }
     }

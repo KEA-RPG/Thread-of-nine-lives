@@ -6,12 +6,14 @@ namespace Backend.Models
     public class State
     {
         
-        public List<GameAction> GameActions { get; set; }
+        public List<GameActionDTO> GameActions { get; set; }
         public int PlayerHealth { set;  get; }
         public int EnemyHealth { set;  get; }
+        public int FightId { get; set; }
 
-        public State(int playerHealth, int enemyHealth)
+        public State(int playerHealth, int enemyHealth, int fightId)
         {
+            FightId = fightId;
             PlayerHealth = playerHealth;
             EnemyHealth = enemyHealth;
         }

@@ -13,13 +13,10 @@ namespace Backend.Controllers
 
         public static void MapCombatEndpoints(this WebApplication app)
         {
-            app.MapPost("/combat/{id}/action", (ICombatService combatService, GameActionDTO gameAction, State state) =>
+            app.MapPost("/combat/{id}/action", (ICombatService combatService,int id, GameActionDTO gameAction) =>
             {
-                if (gameAction == null || string.IsNullOrEmpty(gameAction.Type))
-                {
-                    return Results.BadRequest("Invalid action.");
-                }
-                var updatedState = combatService.ProcessAction(gameAction, state);
+                gameAction.FightId = id;
+                var updatedState = combatService.ProcessAction(gameAction);
 
                 return Results.Ok(updatedState);
             });

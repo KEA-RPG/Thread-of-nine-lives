@@ -8,7 +8,6 @@ namespace Domain.DTOs
         public int FightId { get; set; }
         public string Type { get; set; }
         public int Value { get; set; }
-        public int? CardId { get; set; }
 
         public static GameActionDTO FromEntity(GameAction gameAction) 
         {

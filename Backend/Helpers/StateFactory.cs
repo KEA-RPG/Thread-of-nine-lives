@@ -1,18 +1,18 @@
 ﻿using Backend.Models;
 using Domain.DTOs;
-using Domain.Entities;
 
 namespace Backend.Helpers
 {
     public class StateFactory
     {
-        public State CreateInitState()
+        public State CreateInitState(FightDTO fight)
         {
             int playerHealth = 25;
             int enemyHealth = 50;
             State state = new State
             {
-                GameActions = new List<GameAction>(),
+                FightId = fight.Id,
+                GameActions = fight.GameActions,
                 PlayerHealth = playerHealth,
                 EnemyHealth = enemyHealth
             };
@@ -20,29 +20,38 @@ namespace Backend.Helpers
             return state;
         }
 
-        public State ProcessAction (GameActionDTO gameAction, State state)
+        public State ProcessAction (State state)
         {
-            if (gameAction.Type == "ATTACK")
+            if (state.GameActions != null)
             {
-                PerformPlayerAttack(state);
+                foreach (var gameAction in state.GameActions)
+                {
+                    if (gameAction.Type == "ATTACK")
+                    {
+                        state = PerformPlayerAttack(state);
+                    }
+                    else if (gameAction.Type == "END_TURN")
+                    {
+                        state = PerformEnemyTurn(state);
+                    }
+                }
             }
-            else if (gameAction.Type == "END_TURN")
-            {
-                PerformEnemyTurn(state);
-            }
+
             return state;
         }
 
-        private static void PerformPlayerAttack(State state)
+        private State PerformPlayerAttack(State state)
         {
             state.EnemyHealth -= 10;
             if (state.EnemyHealth <= 0)
             {
                 state.EnemyHealth = 0;
             }
+
+            return state;
         }
 
-        private static void PerformEnemyTurn(State state)
+        private State PerformEnemyTurn(State state)
         {
             int enemyAttackValue = 5;
             state.PlayerHealth -= enemyAttackValue;
@@ -50,7 +59,7 @@ namespace Backend.Helpers
             {
                 state.PlayerHealth = 0;
             }
-
+            return state;
         }
     }
 }
