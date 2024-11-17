@@ -1,4 +1,5 @@
-﻿using Backend.Services;
+﻿using Backend.SecurityLogic;
+using Backend.Services;
 using Domain.DTOs;
 using Domain.Entities; //TODO: Change to correct namespace(DTO)
 
