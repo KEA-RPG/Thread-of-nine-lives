@@ -1,6 +1,6 @@
 import { Box, HStack, VStack, Image, Button } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { Enemy, useEnemy, usePostEnemy, usePutEnemy } from "../hooks/useEnemy";
+import { Enemy, postEnemy, putEnemy, useEnemy } from "../hooks/useEnemy";
 import { useState, useEffect } from "react";
 import InputFieldElement from "../components/InputFieldElement";
 
@@ -12,27 +12,22 @@ const EnemyUpsert = () => {
 
 
     useEffect(() => {
-        const fetchEnemyData = async () => {
-            if (value !== null) {
-                const enemyData = await useEnemy(value);
-                if (enemyData.data) {
-                    setEnemy(enemyData.data);
-                }
+        if (value !== null) {
+            const enemyData = useEnemy(value);
+            if (enemyData.data) {
+                setEnemy(enemyData.data);
             }
-        };
-    
-        fetchEnemyData();
+        }
     }, []);
 
 
 
-    const handleUpsert = () => { 
-        //TODO: Implement the handleUpsert function in the useEnemies class, this is ass and i cant get it to work
+    const handleUpsert = () => {
         if (enemy.id === undefined) {
-            usePostEnemy(enemy);
+            postEnemy(enemy);
         }
         else {
-            usePutEnemy(enemy.id, enemy);
+            putEnemy(enemy.id, enemy);
         }
     }
 
@@ -84,9 +79,6 @@ const EnemyUpsert = () => {
                 <Button colorScheme="orange" onClick={handleUpsert}>
                     {param === undefined ? "Create" : "Update"}
                 </Button>
-                <div>
-                    {JSON.stringify(enemy)}
-                </div>
             </VStack>
         </Box>
     );

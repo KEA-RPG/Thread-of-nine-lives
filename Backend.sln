@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F7A6262-ED52-4609-829F-B6D1838805AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadOfNineLives.IntegrationTests", "ThreadOfNineLives.IntegartionTests\ThreadOfNineLives.IntegrationTests.csproj", "{BCAE4207-D1D4-44B8-8B71-0F3A97DA6636}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadOfNineLives.IntegrationTests", "ThreadOfNineLives.IntegrationTests\ThreadOfNineLives.IntegrationTests.csproj", "{BCAE4207-D1D4-44B8-8B71-0F3A97DA6636}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseSeeder", "DatabaseSeeder\DatabaseSeeder.csproj", "{1C63C8B2-3655-4740-BB24-42AD1C1186A1}"
 EndProject

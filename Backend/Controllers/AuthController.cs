@@ -115,6 +115,7 @@ namespace Backend.Controllers
                 return Results.BadRequest("Token is invalid or has no jti.");
             });
 
+
         }
     }
 }

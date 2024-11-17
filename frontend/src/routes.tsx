@@ -13,6 +13,9 @@ import SignUp from "./pages/SignUp.tsx";
 import GuestLayout from "./layouts/GuestLayout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import AdminLayout from "./layouts/Adminlayout.tsx";
+import CardUpsert from "./pages/CardUpsert.tsx";
+import CardUpdate from "./pages/CardUpdate.tsx";
+import CardCreate from "./pages/CardCreate.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +25,7 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <PlayerLayout header="Log in">
-            <CenterNavigation/>
+            <CenterNavigation />
           </PlayerLayout>
         ),
       },
@@ -30,15 +33,15 @@ const router = createBrowserRouter([
         path: "/login",
         element: (
           <GuestLayout header="Log in">
-            <Login/>
+            <Login />
           </GuestLayout>
         ),
-      },      
+      },
       {
         path: "/logout",
         element: (
           <GuestLayout header="Log in">
-            <Logout/>
+            <Logout />
           </GuestLayout>
         ),
       },
@@ -46,7 +49,7 @@ const router = createBrowserRouter([
         path: "/signup",
         element: (
           <GuestLayout header="Sign up">
-            <SignUp/>
+            <SignUp />
           </GuestLayout>
         ),
       },
@@ -86,7 +89,15 @@ const router = createBrowserRouter([
         path: "/admin/cards/:cardId",
         element: (
           <AdminLayout header="Card Manager">
-            <CenterNavigation />
+            <CardUpdate />
+          </AdminLayout>
+        ),
+      },
+      {
+        path: "/admin/cards/create",
+        element: (
+          <AdminLayout header="Card Manager">
+            <CardCreate />
           </AdminLayout>
         ),
       },

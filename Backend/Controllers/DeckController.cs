@@ -56,6 +56,7 @@ namespace Backend.Controllers
                 return Results.Unauthorized();
             });
 
+            
             //Delete deck
             app.MapDelete("/decks/{id}", (IDeckService deckService, int id) =>
             {
@@ -119,6 +120,23 @@ namespace Backend.Controllers
                 }
                 return Results.Unauthorized();
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal opdateres offentlige free decks
+
+
+            // Add a comment to a deck
+            app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto) =>
+            {
+                commentDto.DeckId = deckId;
+                deckService.AddComment(commentDto);
+                return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
+
+
+            // Get all comments for a specific deck
+            app.MapGet("/decks/{deckId}/comments", (IDeckService deckService, int deckId) =>
+            {
+                return Results.Ok(deckService.GetCommentsByDeckId(deckId));
+            });
+
         }
     }
 }
