@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RelationalContext))]
-    [Migration("20241117103352_AddDeckIdIndexToComments")]
-    partial class AddDeckIdIndexToComments
+    [Migration("20241117115257_UpdateUsernameColumnLength")]
+    partial class UpdateUsernameColumnLength
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
