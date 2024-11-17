@@ -19,14 +19,15 @@ namespace Infrastructure.Persistance.Relational
         public DbSet<Deck> Decks { get; set; }
         public DbSet<DeckCard> DeckCards { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new DeckCardConfiguration().Configure(modelBuilder.Entity<DeckCard>());
             new DeckConfiguration().Configure(modelBuilder.Entity<Deck>());
             new CommentConfiguration().Configure(modelBuilder.Entity<Comment>());
+            new UserConfiguration().Configure(modelBuilder.Entity<User>());
         }
-        public DbSet<User> Users { get; set; }
         public DbSet<Fight> Fights { get; set; }
         public DbSet<GameAction> GameActions { get; set; }
     }
