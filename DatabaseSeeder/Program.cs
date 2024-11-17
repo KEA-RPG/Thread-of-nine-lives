@@ -11,6 +11,8 @@ namespace DataSeeder
 
     public class Program
     {
+        static Random random = new Random();
+
         public static void Main(string[] args)
         {
             var builder = Host.CreateDefaultBuilder(args)
@@ -69,53 +71,74 @@ namespace DataSeeder
                 //Tag fat i det der allerede bliver oprettet fra Cards.json
                 if (!context.Decks.Any())
                 {
-                    //List<Deck> decks = GenerateDecks();
 
-                    Random random = new Random();
-
-                    //Sætter maksimal mængde af kort der eksistere i databasen
-                    var amountOfCards = context.Cards.Count();
-
-                    //Henter alle kort der eksistere i databasen
+                    // Fetch all cards and users from the database
                     var existingCards = context.Cards.ToList();
+                    var existingUsers = context.Users.ToList();
 
-                    //Array til at holde Id'er på kort
-                    int[] cardIdRange = new int[amountOfCards];
-
-                    //Tilføjer alle id'er til arrayet
-                    foreach (var cardId in existingCards)
+                    for (int i = 0; i < 50; i++)
                     {
-                        cardIdRange = cardIdRange.Append(cardId.Id).ToArray();
+                        var chosenCards = new List<Card>();
+
+                        // Select 5 random cards for this deck, ensuring no duplicates
+                        var selectedCardIds = new HashSet<int>();
+                        while (chosenCards.Count < 5)
+                        {
+                            var chosenCardId = random.Next(0, existingCards.Count);
+                            var card = existingCards[chosenCardId];
+
+                            if (selectedCardIds.Add(card.Id)) // Add only if not already in the set
+                            {
+                                chosenCards.Add(card);
+                            }
+                        }
+
+                        // Pick a random user
+                        var chosenUserId = existingUsers[random.Next(0, existingUsers.Count)].Id;
+
+                        // Create a new deck
+                        var decks = new Deck
+                        {
+                            UserId = chosenUserId,
+                            Name = GenerateDeckName(),
+                            IsPublic = DeckIsPublic(chosenUserId),
+                            DeckCards = new List<DeckCard>()
+                        };
+
+                        // Add unique cards to the deck
+                        foreach (var card in chosenCards)
+                        {
+                            decks.DeckCards.Add(new DeckCard
+                            {
+                                DeckId = decks.Id, // DeckId will be assigned after SaveChanges
+                                CardId = card.Id
+                            });
+                        }
+
+                        context.Decks.Add(decks);
                     }
 
+                    context.SaveChanges(); // Save all changes at once
 
-                    
-
-                    //Single Deck with a single card
-                    var decks = new Deck
-                    {
-                        UserId = 133,
-                        Name = "First Deck",
-                        IsPublic = true
-                    };
-
-                    decks.DeckCards = new List<DeckCard>
-                    {
-                        new DeckCard
-                        {
-                            DeckId = decks.Id,
-                            CardId = 1012
-                        }
-                    };
-
-
-
-                    context.Decks.AddRange(decks);
-                    context.SaveChanges();
                 }
-
-
             }
+        }
+
+
+        private static string GenerateDeckName()
+        {
+            string[] firstPart = { "Super", "Mega", "Fire", "Water", "Test", "Meta", "Fun", "Tutorial" };
+            string[] secondPart = { "Deck", "Combo", "Build", "List", "Collection", "Pile", "Stack", "Pack" };
+
+            return $"{firstPart[random.Next(firstPart.Length)]} {secondPart[random.Next(secondPart.Length)]}";
+        }
+
+        private static bool DeckIsPublic(int num)
+        {
+            //Sætter public baseret på UserID
+            bool IsPublic = num % 2 == 0;
+
+            return IsPublic;
         }
 
         private static List<Enemy> GenerateEnemies()
@@ -128,12 +151,6 @@ namespace DataSeeder
         {
             var cards = Reader<List<Card>>("Cards.json");
             return cards;
-        }
-
-        private static List<Deck> GenerateDecks()
-        {
-            var decks = Reader<List<Deck>>("Decks.json");
-            return decks;
         }
 
         private static List<User> GenerateUsers()
