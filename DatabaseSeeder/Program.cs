@@ -11,7 +11,7 @@ namespace DataSeeder
 
     public class Program
     {
-        static Random random = new Random();
+        private static readonly ThreadLocal<Random> threadRandom = new(() => new Random()); //Bruger kun en tråd til at generere random tal
 
         public static void Main(string[] args)
         {
@@ -84,8 +84,7 @@ namespace DataSeeder
                         var selectedCardIds = new HashSet<int>();
                         while (chosenCards.Count < 5)
                         {
-                            int randomNum = random.Next(0, existingCards.Count);
-                            var chosenCardId = randomNum;
+                            var chosenCardId = GetRandomNumber(0, existingCards.Count);
                             var card = existingCards[chosenCardId];
 
                             if (selectedCardIds.Add(card.Id)) // Add only if not already in the set
@@ -95,8 +94,7 @@ namespace DataSeeder
                         }
 
                         // Pick a random user
-                        int randomId = random.Next(0, existingUsers.Count);
-                        var chosenUserId = existingUsers[randomId].Id;
+                        var chosenUserId = existingUsers[GetRandomNumber(0, existingUsers.Count)].Id;
 
                         // Create a new deck
                         var decks = new Deck
@@ -132,7 +130,7 @@ namespace DataSeeder
             string[] firstPart = { "Super", "Mega", "Fire", "Water", "Test", "Meta", "Fun", "Tutorial" };
             string[] secondPart = { "Deck", "Combo", "Build", "List", "Collection", "Pile", "Stack", "Pack" };
 
-            return $"{firstPart[random.Next(firstPart.Length)]} {secondPart[random.Next(secondPart.Length)]}";
+            return $"{firstPart[GetRandomNumber(0, firstPart.Length)]} {secondPart[GetRandomNumber(0, secondPart.Length)]}";
         }
 
         private static bool DeckIsPublic(int num)
@@ -142,6 +140,12 @@ namespace DataSeeder
 
             return IsPublic;
         }
+
+        private static int GetRandomNumber(int min, int max)
+        {
+            return threadRandom.Value.Next(min, max);
+        }
+
 
         private static List<Enemy> GenerateEnemies()
         {
