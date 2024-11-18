@@ -12,7 +12,7 @@ namespace Domain.DTOs
         public UserDTO() { }
 
         // Static method to create UserDTO from a User object
-        public static UserDTO FromUser(User user)
+        public static UserDTO FromEntity(User user)
         {
             return new UserDTO
             {
