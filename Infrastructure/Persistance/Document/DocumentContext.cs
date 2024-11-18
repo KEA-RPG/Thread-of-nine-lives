@@ -13,11 +13,17 @@ namespace Infrastructure.Persistance.Document
     public class DocumentContext : DbContext
     {
         private readonly IMongoDatabase _database;
+        private readonly MongoClient _client;
 
         public DocumentContext(string connectionstring, string dbname)
         {
-            var client = new MongoClient(connectionstring);
-            _database = client.GetDatabase(dbname);
+            _client = new MongoClient(connectionstring);
+            _database = _client.GetDatabase(dbname);
+        }
+
+        public MongoClient GetClient()
+        {
+            return _client;
         }
 
         // Add collections as properties
