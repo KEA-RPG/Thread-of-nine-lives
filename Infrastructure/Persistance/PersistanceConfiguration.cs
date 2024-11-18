@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistance.Relational;
 using System.Reflection;
+using Infrastructure.Persistance.Document;
+using Microsoft.Extensions.Options;
 
 
 namespace Infrastructure.Persistance
@@ -24,16 +26,27 @@ namespace Infrastructure.Persistance
             var connectionString = configuration.GetConnectionString(dbString);
 
             services.AddDbContext<RelationalContext>(options =>
+            {
                 options.UseSqlServer(connectionString,
-                b => b.MigrationsAssembly("Infrastructure")));
+                b => b.MigrationsAssembly("Infrastructure"));
+            });
 
+            services.AddSingleton<DocumentContext>(options =>
+            {
+                var settings = configuration.GetSection("ConnectionStrings:MongoDB");
+                var connectionString = settings.GetSection("Connectionstring").Value;
+                var databaseName = settings.GetSection("DatabaseName").Value;
+
+                return new DocumentContext(connectionString, databaseName);
+            });
         }
     }
 
     public enum dbtype
     {
         DefaultConnection,
+        Relational,
         MongoDB,
-        GraphDB
+        Neo4j
     }
 }
