@@ -23,6 +23,10 @@ namespace Infrastructure.Persistance.Relational.Configurations
                    .OnDelete(DeleteBehavior.Restrict);
 
 
+            // Create index on DeckId with included columns
+            builder.HasIndex(c => c.DeckId)
+                   .HasDatabaseName("idx_deck_id")
+                   .IncludeProperties(c => new { c.Text, c.CreatedAt, c.UserId });
 
         }
     }
