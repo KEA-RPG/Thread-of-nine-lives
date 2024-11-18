@@ -24,9 +24,10 @@ using (var scope = host.Services.CreateScope())
     var mongoContext = services.GetRequiredService<DocumentContext>();
     Console.WriteLine("Setup of databases complete");
     var cards = relationalContext.Cards.ToList();
-    var decks = relationalContext.Decks.Include(x => x.DeckCards).ThenInclude(x => x.Card).ToList();
+    var decks = relationalContext.Decks.Include(x => x.DeckCards).ThenInclude(x => x.Card).Include(x=> x.Comments).ToList();
     var enemies = relationalContext.Enemies.ToList();
     var users = relationalContext.Users.ToList();
+    var fights = relationalContext.Fights.Include(x=> x.GameActions).Include(x=> x.Enemy).ToList();
     Console.WriteLine("Extrtracted data from relational database");
 
     //map to mongo models (dtos)
@@ -34,6 +35,7 @@ using (var scope = host.Services.CreateScope())
     var mongoDecks = decks.Select(x => DeckDTO.FromEntity(x));
     var mongoEnemies = enemies.Select(x => EnemyDTO.FromEntity(x));
     var mongoUsers = users.Select(x => UserDTO.FromEntity(x));
+    var mongoFights = fights.Select(x => FightDTO.FromEntity(x));
     Console.WriteLine("Mapped data to mongoDB data");
 
     Console.WriteLine("Clearing out old database..");
@@ -81,6 +83,17 @@ using (var scope = host.Services.CreateScope())
     {
         Console.WriteLine("No user data to insert into mongoDB.");
     }
+
+    if (mongoFights?.Any() == true)
+    {
+        Console.WriteLine("Inserting fight data into mongoDB...");
+        mongoContext.Fights().InsertMany(mongoFights);
+    }
+    else
+    {
+        Console.WriteLine("No fight data to insert into mongoDB.");
+    }
+
 
     // Wait for all tasks to complete
     Console.WriteLine("All insert operations completed successfully.");
