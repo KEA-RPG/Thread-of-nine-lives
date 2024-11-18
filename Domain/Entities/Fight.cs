@@ -9,7 +9,7 @@ namespace Domain.Entities
         public Enemy Enemy { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
-        public List<GameAction> GameActions { get; set; }
+        public List<GameAction> GameActions { get; set; } = new List<GameAction>();
 
 
         public static Fight FromDTO(FightDTO fight)
