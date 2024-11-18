@@ -1,4 +1,4 @@
-using Backend.Repositories;
+using Backend.Repositories.Interfaces;
 using Backend.Services;
 using Domain.DTOs;
 using Domain.Entities;

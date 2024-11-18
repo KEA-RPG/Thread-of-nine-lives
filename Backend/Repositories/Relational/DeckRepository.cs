@@ -3,8 +3,9 @@ using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Xml;
+using Backend.Repositories.Interfaces;
 
-namespace Backend.Repositories
+namespace Backend.Repositories.Relational
 {
     //Recieves DTO looks for Entities
     //Sends DTO's back

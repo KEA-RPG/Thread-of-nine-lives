@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Xunit;
 using Moq;
 using Backend.Services;
-using Backend.Repositories;
 using Domain.DTOs;
 using Domain.Entities;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Tests
 {

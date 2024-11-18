@@ -1,7 +1,7 @@
-﻿using Backend.Repositories;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.DTOs;
 using Backend.SecurityLogic;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {

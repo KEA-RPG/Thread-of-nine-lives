@@ -1,7 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
 
-namespace Backend.Repositories
+namespace Backend.Repositories.Interfaces
 {
     public interface IDeckRepository
     {

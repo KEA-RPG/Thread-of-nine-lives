@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Entities.Mongo;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
@@ -48,6 +49,10 @@ namespace Infrastructure.Persistance.Document
         public IMongoCollection<FightDTO> Fights()
         {
             return GetCollection<FightDTO>("fights");
+        }
+        public IMongoCollection<Counter> Counters()
+        {
+            return GetCollection<Counter>("counters");
         }
 
 

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistance.Document;
+using Domain.Entities.Mongo;
 
 Console.WriteLine("Starting mongoDB migration");
 var builder = Host.CreateDefaultBuilder(args)
@@ -94,8 +95,35 @@ using (var scope = host.Services.CreateScope())
         Console.WriteLine("No fight data to insert into mongoDB.");
     }
 
-
-    // Wait for all tasks to complete
     Console.WriteLine("All insert operations completed successfully.");
+    Console.WriteLine("Setting counters for collections...");
+
+    mongoContext.Counters().InsertOne(new Counter()
+    {
+        Identifier = "cards",
+        Count = cards.Max(x => x.Id)
+    });
+    mongoContext.Counters().InsertOne(new Counter()
+    {
+        Identifier = "decks",
+        Count = decks.Max(x => x.Id)
+    });
+    mongoContext.Counters().InsertOne(new Counter()
+    {
+        Identifier = "enemies",
+        Count = enemies.Max(x => x.Id)
+    });
+    mongoContext.Counters().InsertOne(new Counter()
+    {
+        Identifier = "fights",
+        Count = fights.Max(x => x.Id)
+    });
+    mongoContext.Counters().InsertOne(new Counter()
+    {
+        Identifier = "users",
+        Count = users.Max(x => x.Id)
+    });
+
+    Console.WriteLine("Counters set!");
 
 }

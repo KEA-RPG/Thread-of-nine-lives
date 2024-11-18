@@ -1,13 +1,13 @@
 ﻿using Xunit;
 using Moq;
 using Backend.Services;
-using Backend.Repositories;
 using Domain.Entities;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Collections.Generic;
 using System.Linq;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Tests.Services
 {

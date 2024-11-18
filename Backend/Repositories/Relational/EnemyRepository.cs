@@ -1,7 +1,8 @@
 ﻿using Infrastructure.Persistance.Relational;
 using Domain.Entities;
+using Backend.Repositories.Interfaces;
 
-namespace Backend.Repositories
+namespace Backend.Repositories.Relational
 {
     public class EnemyRepository : IEnemyRepository
     {

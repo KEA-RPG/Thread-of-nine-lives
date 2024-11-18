@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.DTOs;
-using Backend.Repositories;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {

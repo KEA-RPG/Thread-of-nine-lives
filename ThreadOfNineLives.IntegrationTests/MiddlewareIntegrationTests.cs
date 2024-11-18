@@ -1,5 +1,4 @@
 ﻿using Moq;
-using Backend.Repositories;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Newtonsoft.Json;
 using System.Linq;
+using Backend.Repositories.Interfaces;
 
 namespace ThreadOfNineLives.IntegrationTests
 {

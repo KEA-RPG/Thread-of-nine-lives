@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
-using Backend.Repositories;
 using Backend.Models;
 using Domain.DTOs;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {

@@ -1,10 +1,10 @@
 ﻿using Backend.Services;
-using Backend.Repositories;
 using Backend.Models;
 using Domain.Entities;
 using Domain.DTOs;
 using Moq;
 using Xunit;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Tests.Services
 {

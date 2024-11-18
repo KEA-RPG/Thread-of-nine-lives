@@ -1,8 +1,9 @@
 ﻿using Domain.Entities;
 using Domain.DTOs;
 using Infrastructure.Persistance.Relational;
+using Backend.Repositories.Interfaces;
 
-namespace Backend.Repositories
+namespace Backend.Repositories.Relational
 {
     public class UserRepository : IUserRepository
     {
