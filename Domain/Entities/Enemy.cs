@@ -8,6 +8,7 @@ namespace Domain.Entities
         public string Name { get; set; }
         public int Health { get; set; }
         public string ImagePath { get; set; }
+        public List<Fight> Fights { get; set; }
 
         public Enemy() { }
 

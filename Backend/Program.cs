@@ -59,6 +59,12 @@ namespace Backend
             builder.Services.AddScoped<IDeckService, DeckService>();
 
 
+            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
+            builder.Services.AddScoped<ICombatService, CombatService>();
+
+
+
+
             builder.Services.AddScoped<IEnemyService, EnemyService>();
             builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
@@ -78,6 +84,8 @@ namespace Backend
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+
+            app.MapCombatEndpoints();
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistance.Relational.Configurations
 {
-    class DeckConfiguration
+    class DeckConfiguration : IEntityTypeConfiguration<Deck>
     {
         public void Configure(EntityTypeBuilder<Deck> builder)
         {
