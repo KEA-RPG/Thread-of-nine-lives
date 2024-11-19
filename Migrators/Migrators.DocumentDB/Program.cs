@@ -25,10 +25,10 @@ using (var scope = host.Services.CreateScope())
     var mongoContext = services.GetRequiredService<DocumentContext>();
     Console.WriteLine("Setup of databases complete");
     var cards = relationalContext.Cards.ToList();
-    var decks = relationalContext.Decks.Include(x => x.DeckCards).ThenInclude(x => x.Card).Include(x=> x.Comments).ToList();
+    var decks = relationalContext.Decks.Include(x => x.DeckCards).ThenInclude(x => x.Card).Include(x => x.Comments).ToList();
     var enemies = relationalContext.Enemies.ToList();
     var users = relationalContext.Users.ToList();
-    var fights = relationalContext.Fights.Include(x=> x.GameActions).Include(x=> x.Enemy).ToList();
+    var fights = relationalContext.Fights.Include(x => x.GameActions).Include(x => x.Enemy).ToList();
     Console.WriteLine("Extrtracted data from relational database");
 
     //map to mongo models (dtos)
@@ -101,27 +101,27 @@ using (var scope = host.Services.CreateScope())
     mongoContext.Counters().InsertOne(new Counter()
     {
         Identifier = "cards",
-        Count = cards.Max(x => x.Id)
+        Count = cards.Any() ? cards.Max(x => x.Id) : 1
     });
     mongoContext.Counters().InsertOne(new Counter()
     {
         Identifier = "decks",
-        Count = decks.Max(x => x.Id)
+        Count = decks.Any() ? decks.Max(x => x.Id) : 1
     });
     mongoContext.Counters().InsertOne(new Counter()
     {
         Identifier = "enemies",
-        Count = enemies.Max(x => x.Id)
+        Count = enemies.Any() ? enemies.Max(x => x.Id) : 1
     });
     mongoContext.Counters().InsertOne(new Counter()
     {
         Identifier = "fights",
-        Count = fights.Max(x => x.Id)
+        Count = fights.Any() ? fights.Max(x => x.Id) : 1
     });
     mongoContext.Counters().InsertOne(new Counter()
     {
         Identifier = "users",
-        Count = users.Max(x => x.Id)
+        Count = users.Any() ? users.Max(x => x.Id) : 1
     });
 
     Console.WriteLine("Counters set!");
