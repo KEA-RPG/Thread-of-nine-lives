@@ -45,6 +45,7 @@ namespace Backend.Repositories.Relational
             var dbDeck = _context.Decks.
                 Include(deck => deck.DeckCards).
                 ThenInclude(deckCard => deckCard.Card).
+                Include(deck => deck.User).
                 FirstOrDefault(deck => deck.Id == id);
 
             var deck = DeckDTO.FromEntity(dbDeck);
@@ -76,7 +77,11 @@ namespace Backend.Repositories.Relational
 
         public List<DeckDTO> GetPublicDecks()
         {
-            return _context.Decks.Where(deck => deck.IsPublic).Select(deck => DeckDTO.FromEntity(deck)).ToList();
+            return _context.Decks
+                .Include(deck => deck.DeckCards)
+                .ThenInclude(deckCard => deckCard)
+                .Where(deck => deck.IsPublic)
+                .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
 
         public List<DeckDTO> GetUserDecks(string userName)
@@ -84,19 +89,22 @@ namespace Backend.Repositories.Relational
             var user = _context.Users.FirstOrDefault(u => u.Username == userName);
             if (user == null) return null;
 
-            return _context.Decks.Where(deck => deck.User == user).Select(deck => DeckDTO.FromEntity(deck)).ToList();
+            return _context.Decks.Include(x=> x.User)
+                .Where(deck => deck.User == user)
+                .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
 
 
-        public void AddComment(Comment comment)
+        public void AddComment(CommentDTO comment)
         {
-            _context.Comments.Add(comment);
+            var commentDB =CommentDTO.ToEntity(comment);
+            _context.Comments.Add(commentDB);
             _context.SaveChanges();
         }
 
-        public List<Comment> GetCommentsByDeckId(int deckId)
+        public List<CommentDTO> GetCommentsByDeckId(int deckId)
         {
-            return _context.Comments.Where(comment => comment.DeckId == deckId).ToList();
+            return _context.Comments.Where(comment => comment.DeckId == deckId).Select(x=> CommentDTO.FromEntity(x)).ToList();
         }
 
     }

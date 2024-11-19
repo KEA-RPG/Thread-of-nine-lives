@@ -18,7 +18,7 @@ namespace Backend.Repositories.Document
 
         public CardDTO AddCard(CardDTO card)
         {
-            var id = GetAutoIncrementedId("card");
+            var id = _context.GetAutoIncrementedId("card");
             card.Id = id;
 
             _context.Cards().InsertOne(card);
@@ -45,27 +45,8 @@ namespace Backend.Repositories.Document
 
         public CardDTO GetCardById(int id)
         {
-            var filter = Builders<CardDTO>.Filter.Eq(c => c.Id, id);
-            return _context.Cards().Find(filter).FirstOrDefault();
+            return _context.Cards().Find(x => x.Id == id).FirstOrDefault();
         }
-        private int GetAutoIncrementedId(string name)
-        {
-            // Ensure you use `FindOneAndUpdate` for atomicity
-            var filter = Builders<Counter>.Filter.Eq(x => x.Identifier, name);
-            var update = Builders<Counter>.Update.Inc(x => x.Count, 1);
 
-            var options = new FindOneAndUpdateOptions<Counter>
-            {
-                ReturnDocument = ReturnDocument.After, 
-                IsUpsert = true                       
-            };
-
-            var updatedCounter = _context.Counters().FindOneAndUpdate(filter, update, options);
-
-            if (updatedCounter == null)
-                throw new Exception("Failed to update or retrieve the counter document.");
-
-            return updatedCounter.Count;
-        }
     }
 }

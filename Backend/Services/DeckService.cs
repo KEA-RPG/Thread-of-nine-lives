@@ -74,8 +74,7 @@ namespace Backend.Services
                 throw new KeyNotFoundException($"Deck with ID {sanitizedComment.DeckId} was not found.");
             }
 
-            var comment = CommentDTO.ToEntity(sanitizedComment);
-            _deckRepository.AddComment(comment);
+            _deckRepository.AddComment(sanitizedComment);
         }
 
         public List<CommentDTO> GetCommentsByDeckId(int deckId)
@@ -94,7 +93,7 @@ namespace Backend.Services
                 throw new Exception($"No comments found for Deck with ID {deckId}.");
             }
 
-            var sanitizedComments = Sanitizer.Sanitize(comments.Select(CommentDTO.FromEntity).ToList());
+            var sanitizedComments = Sanitizer.Sanitize(comments.ToList());
             return sanitizedComments;
         }
 

@@ -1,13 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Entities.Mongo;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persistance.Document
 {
@@ -60,5 +54,25 @@ namespace Infrastructure.Persistance.Document
         {
             return _database.GetCollection<T>(collectionName);
         }
+
+        public int GetAutoIncrementedId(string name)
+        {
+            var filter = Builders<Counter>.Filter.Eq(x => x.Identifier, name);
+            var update = Builders<Counter>.Update.Inc(x => x.Count, 1);
+
+            var options = new FindOneAndUpdateOptions<Counter>
+            {
+                ReturnDocument = ReturnDocument.After,
+                IsUpsert = true
+            };
+
+            var updatedCounter = Counters().FindOneAndUpdate(filter, update, options);
+
+            if (updatedCounter == null)
+                throw new Exception("Failed to update or retrieve the counter document.");
+
+            return updatedCounter.Count;
+        }
+
     }
 }

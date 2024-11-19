@@ -15,6 +15,7 @@ var builder = Host.CreateDefaultBuilder(args)
 });
 
 
+
 var host = builder.Build();
 using (var scope = host.Services.CreateScope())
 {
@@ -25,7 +26,9 @@ using (var scope = host.Services.CreateScope())
     var mongoContext = services.GetRequiredService<DocumentContext>();
     Console.WriteLine("Setup of databases complete");
     var cards = relationalContext.Cards.ToList();
-    var decks = relationalContext.Decks.Include(x => x.DeckCards).ThenInclude(x => x.Card).Include(x => x.Comments).ToList();
+    var decks = relationalContext.Decks.Include(x => x.DeckCards).ThenInclude(x => x.Card)
+        .Include(x => x.Comments)
+        .Include(x=> x.User).ToList();
     var enemies = relationalContext.Enemies.ToList();
     var users = relationalContext.Users.ToList();
     var fights = relationalContext.Fights.Include(x => x.GameActions).Include(x => x.Enemy).ToList();
