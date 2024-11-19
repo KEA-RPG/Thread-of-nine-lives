@@ -45,6 +45,12 @@ namespace Infrastructure.Persistance.Document
             return GetCollection<EnemyDTO>("enemies");
         }
 
+        public IMongoCollection<FightDTO> Fights()
+        {
+            return GetCollection<FightDTO>("fights");
+        }
+
+
         private IMongoCollection<T> GetCollection<T>(string collectionName)
         {
             return _database.GetCollection<T>(collectionName);
