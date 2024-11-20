@@ -7,6 +7,12 @@
   },
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "DefaultConnection": "Server=127.0.0.1,1433;Database=KeaRpg;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;"
+    "DefaultConnection": "Server=127.0.0.1,1433;Database=KeaRpg;User Id=ServiceUserLogin;Password=fghHFDJ/%&4657;TrustServerCertificate=True;",
+    "MongoDB": {
+      "ConnectionString": "mongodb://root:example@127.0.0.1:27017/",
+      "DatabaseName": "KeaRpg"
+    },
+    "Neo4j": ""
+
   }
 }

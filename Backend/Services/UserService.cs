@@ -19,7 +19,7 @@ namespace Backend.Services
             var user = _userRepository.GetUserByUsername(username);
             if (user == null)
                 return null;
-            return UserDTO.FromUser(user);
+            return UserDTO.FromEntity(user);
         }
 
         public int GetUserIdByUserName(string username)

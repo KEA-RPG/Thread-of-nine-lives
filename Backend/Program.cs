@@ -59,6 +59,9 @@ namespace Backend
             builder.Services.AddScoped<IDeckService, DeckService>();
 
 
+            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
+            builder.Services.AddScoped<ICombatService, CombatService>();
+
 
 
 
@@ -81,6 +84,8 @@ namespace Backend
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+
+            app.MapCombatEndpoints();
 
             app.UseAuthentication();
             app.UseAuthorization();

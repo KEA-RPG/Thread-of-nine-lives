@@ -14,6 +14,7 @@ namespace Domain.Entities
         public string Role { get; set; }
 
         public List<Comment> Comments { get; set; }
+        public List<Fight> Fights { get; set; }
 
         public User() { }
 
