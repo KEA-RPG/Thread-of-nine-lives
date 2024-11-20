@@ -1,10 +1,11 @@
 import ApiClient from "../services/apiClient";
+import { Card } from "./useCard";
 
 export interface Deck {
     id?: number;
     name: string;
     userId: number;
-    Decks: Deck[];
+    cards: Card[];
     isPublic: boolean;
     comments: Comment[];
 }
@@ -24,6 +25,6 @@ const useDeckComments = (id: number) => apiClient.get<Comment[]>(`/decks/${id}/c
 const postComment = (comment: Comment, id: number) => apiClient.post<Comment, Deck>(`/decks/${id}/comments`, comment);
 const postDeck = (Deck: Deck) => apiClient.post<Deck, Deck>(`/decks`, Deck);
 const deleteDeck = (id: number) => apiClient.delete<Deck>(`/decks/${id}`);
-const updateDeck = (id: number, Deck: Deck) => apiClient.put<Deck, Deck>(`/decks/${id}`, Deck);
+const putDeck = (id: number, Deck: Deck) => apiClient.put<Deck, Deck>(`/decks/${id}`, Deck);
 
-export { useUserDecks, usePublicDecks, useDeck, useDeckComments, postComment, deleteDeck, postDeck, updateDeck }
+export { useUserDecks, usePublicDecks, useDeck, useDeckComments, postComment, deleteDeck, postDeck, putDeck }
