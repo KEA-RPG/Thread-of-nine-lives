@@ -33,9 +33,10 @@ namespace Backend.Repositories.Relational
             return _context.Users.ToList();
         }
 
-        public User GetUserByUsername(string username)
+        public UserDTO GetUserByUsername(string username)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username);
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            return UserDTO.FromEntity(user);
         }
 
         public void UpdateUser(User user)

@@ -17,9 +17,7 @@ namespace Backend.Services
         public UserDTO GetUserByUsername(string username)
         {
             var user = _userRepository.GetUserByUsername(username);
-            if (user == null)
-                return null;
-            return UserDTO.FromEntity(user);
+            return user;
         }
 
         public int GetUserIdByUserName(string username)
@@ -29,10 +27,10 @@ namespace Backend.Services
 
         public void CreateUser(Credentials credentials)
         {
-            var user = new User
+            var user = new UserDTO
             {
                 Username = credentials.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(credentials.Password),
+                Password = BCrypt.Net.BCrypt.HashPassword(credentials.Password),
                 Role = "Player" // Automatically set to "Player"; admin roles are assigned in the database.
             };
 
@@ -45,7 +43,7 @@ namespace Backend.Services
             var user = _userRepository.GetUserByUsername(username);
 
             // Check if user exists and if the password matches
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 return true;
             }
@@ -53,7 +51,7 @@ namespace Backend.Services
             return false;
 
 
-           
+
         }
     }
 }

@@ -25,7 +25,8 @@ namespace Domain.Entities
             {
                 Id = user.Id,
                 Username = user.Username,
-                Role = user.Role
+                Role = user.Role,
+                PasswordHash = user.Password //assume its been hashed here
             };
         }
     }
