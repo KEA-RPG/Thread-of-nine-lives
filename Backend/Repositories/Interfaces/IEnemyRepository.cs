@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 
 
 
@@ -6,10 +7,10 @@ namespace Backend.Repositories.Interfaces
 {
     public interface IEnemyRepository
     {
-        public void AddEnemy(Enemy enemy);
-        public void DeleteEnemy(Enemy enemy);
-        public void UpdateEnemy(Enemy enemy);
-        public List<Enemy> GetAllEnemies();
-        public Enemy GetEnemyById(int id);
+        public void AddEnemy(EnemyDTO enemy);
+        public void DeleteEnemy(EnemyDTO enemy);
+        public void UpdateEnemy(EnemyDTO enemy);
+        public List<EnemyDTO> GetAllEnemies();
+        public EnemyDTO GetEnemyById(int id);
     }
 }

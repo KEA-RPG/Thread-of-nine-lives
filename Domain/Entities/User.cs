@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,15 @@ namespace Domain.Entities
 
         public User() { }
 
-
+        public static User FromDTO(UserDTO user)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role
+            };
+        }
     }
-    
+
 }

@@ -14,15 +14,17 @@ namespace Backend.Repositories.Relational
             _context = context;
         }
 
-        public void CreateUser(User user)
+        public void CreateUser(UserDTO user)
         {
-            _context.Users.Add(user);
+            var userDb = User.FromDTO(user);
+            _context.Users.Add(userDb);
             _context.SaveChanges();
         }
 
-        public void DeleteUser(User user)
+        public void DeleteUser(UserDTO user)
         {
-            _context.Users.Remove(user);
+            var userDB = _context.Users.First(u => u.Id == user.Id);
+            _context.Users.Remove(userDB);
             _context.SaveChanges();
         }
 

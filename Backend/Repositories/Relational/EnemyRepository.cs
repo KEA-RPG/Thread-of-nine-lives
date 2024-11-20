@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Persistance.Relational;
 using Domain.Entities;
 using Backend.Repositories.Interfaces;
+using Domain.DTOs;
 
 namespace Backend.Repositories.Relational
 {
@@ -13,31 +14,38 @@ namespace Backend.Repositories.Relational
             _context = context;
         }
 
-        public void AddEnemy(Enemy enemy)
+        public void AddEnemy(EnemyDTO enemy)
         {
-            _context.Enemies.Add(enemy);
+            var dbEnemy = Enemy.FromDTO(enemy);
+            _context.Enemies.Add(dbEnemy);
             _context.SaveChanges();
         }
 
-        public void DeleteEnemy(Enemy enemy)
+        public void DeleteEnemy(EnemyDTO enemy)
         {
-            _context.Enemies.Remove(enemy);
+            var dbEnemy = Enemy.FromDTO(enemy);
+            _context.Enemies.Remove(dbEnemy);
             _context.SaveChanges();
         }
 
-        public List<Enemy> GetAllEnemies()
+        public List<EnemyDTO> GetAllEnemies()
         {
-            return _context.Enemies.ToList();
+            return _context.Enemies.Select(EnemyDTO.FromEntity).ToList();
         }
 
-        public Enemy GetEnemyById(int id)
+        public EnemyDTO GetEnemyById(int id)
         {
-            return _context.Enemies.Find(id);
+            var dbEnemy = _context.Enemies.Find(id);
+            return EnemyDTO.FromEntity(dbEnemy);
         }
 
-        public void UpdateEnemy(Enemy enemy)
+        public void UpdateEnemy(EnemyDTO enemy)
         {
-            _context.Enemies.Update(enemy);
+            var enemyDB = _context.Enemies.Find(enemy.Id);
+            enemyDB.Health = enemy.Health;
+            enemyDB.Name = enemy.Name;
+            enemyDB.ImagePath = enemy.ImagePath;
+            _context.Enemies.Update(enemyDB);
             _context.SaveChanges();
         }
     }

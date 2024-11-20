@@ -5,8 +5,8 @@ namespace Backend.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        User GetUserByUsername(string username);
-        void CreateUser(User user);
+        UserDTO GetUserByUsername(string username);
+        void CreateUser(UserDTO user);
         UserDTO GetUserById(int id);
     }
 }
