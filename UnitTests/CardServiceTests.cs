@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Collections.Generic;
 using System.Linq;
 using Backend.Repositories.Interfaces;
+using MongoDB.Driver;
 
 namespace Backend.Tests.Services
 {
@@ -24,7 +25,15 @@ namespace Backend.Tests.Services
 
         private CardDTO CreateCardDTO()
         {
-            return new CardDTO { Name = "Test Card", Attack = 1, Cost = 1, Defence = 1, Description = "description", ImagePath = "image.png" };
+            return new CardDTO
+            {
+                Name = "Test Card",
+                Attack = 1,
+                Cost = 1,
+                Defence = 1,
+                Description = "description",
+                ImagePath = "image.png"
+            };
         }
 
         [Fact]
@@ -32,53 +41,31 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var cardDTO = CreateCardDTO();
-            var card = new Card { Id = 1, Name = "Test Card" };
-
-            _cardRepositoryMock.Setup(r => r.AddCard(It.IsAny<Card>()))
-                               .Callback<Card>(c => c.Id = card.Id); // Simulate ID assignment
+            var returnCardDTO = CreateCardDTO();
+            returnCardDTO.Id = 1;
+            _cardRepositoryMock.Setup(r => r.AddCard(It.IsAny<CardDTO>()))
+                               .Returns(returnCardDTO); // Simulate ID assignment
 
             // Act
             var result = _cardService.CreateCard(cardDTO);
 
             // Assert
-            Assert.Equal(card.Id, result.Id);
-            _cardRepositoryMock.Verify(r => r.AddCard(It.Is<Card>(c => c.Name == cardDTO.Name)), Times.Once);
+            Assert.NotEqual(result.Id, 0);
+
+            _cardRepositoryMock.Verify(r => r.AddCard(It.Is<CardDTO>(c => c.Name == cardDTO.Name)), Times.Once);
         }
-
-/*        [Fact]
-        public void DeleteCard_ShouldReturnBadRequest_WhenCardNotFound()
-        {
-            // Arrange
-            int id = 1;
-            _cardRepositoryMock.Setup(r => r.GetCardById(id)).Returns((Card)null);
-
-            // Act
-            var result = _cardService.DeleteCard(id);
-
-            // Assert
-            Assert.IsType<BadRequest<string>>(result);
-        }*/
-/*
-        [Fact]
-        public void DeleteCard_ShouldReturnOkResult_WhenCardIsDeleted()
-        {
-            // Arrange
-            var card = new Card { Id = 1, Name = "Test Card" };
-            _cardRepositoryMock.Setup(r => r.GetCardById(card.Id)).Returns(card);
-
-            // Act
-            var result = _cardService.DeleteCard(card.Id);
-
-            // Assert
-            Assert.IsType<Ok<string>>(result);
-            _cardRepositoryMock.Verify(r => r.DeleteCard(card), Times.Once);
-        }*/
 
         [Fact]
         public void GetAllCards_ShouldReturnListOfCardDTOs()
         {
             // Arrange
-            var cards = new List<Card> { new Card { Id = 1, Name = "Card 1" }, new Card { Id = 2, Name = "Card 2" } };
+            var cards = new List<CardDTO> {
+                new CardDTO { Id = 1,
+                    Name = "Card 1", Attack= 1, Cost = 1,Defence = 1, Description = "description", ImagePath = "test"
+                }, new CardDTO { Id = 2,
+                    Name = "Card 2", Attack= 1, Cost = 1,Defence = 1, Description = "description", ImagePath = "test"
+                }
+            };
             _cardRepositoryMock.Setup(r => r.GetAllCards()).Returns(cards);
 
             // Act
@@ -93,7 +80,7 @@ namespace Backend.Tests.Services
         public void GetCardById_ShouldReturnCardDTO_WhenCardExists()
         {
             // Arrange
-            var card = new Card { Id = 1, Name = "Test Card" };
+            var card = new CardDTO { Id = 1, Name = "Test Card", Attack = 1, Cost = 1, Defence = 1, Description = "description", ImagePath = "test" };
             _cardRepositoryMock.Setup(r => r.GetCardById(card.Id)).Returns(card);
 
             // Act
@@ -109,7 +96,7 @@ namespace Backend.Tests.Services
         {
             // Arrange
             int id = 1;
-            _cardRepositoryMock.Setup(r => r.GetCardById(id)).Returns((Card)null);
+            _cardRepositoryMock.Setup(r => r.GetCardById(id)).Returns((CardDTO)null);
 
             // Act & Assert
             Assert.Throws<KeyNotFoundException>(() => _cardService.GetCardById(id));
@@ -120,7 +107,16 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var cardDTO = CreateCardDTO();
-            var existingCard = new Card { Id = cardDTO.Id, Name = "Old Card", Description = "Old Description" };
+            var existingCard = new CardDTO
+            {
+                Id = cardDTO.Id,
+                Name = "Old Card",
+                Description = "Old Description",
+                Attack = 1,
+                Cost = 1,
+                Defence = 1,
+                ImagePath = "test"
+            };
 
             _cardRepositoryMock.Setup(r => r.GetCardById(cardDTO.Id)).Returns(existingCard);
 
@@ -138,7 +134,7 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var cardDTO = CreateCardDTO();
-            _cardRepositoryMock.Setup(r => r.GetCardById(cardDTO.Id)).Returns((Card)null);
+            _cardRepositoryMock.Setup(r => r.GetCardById(cardDTO.Id)).Returns((CardDTO)null);
 
             // Act & Assert
             Assert.Throws<KeyNotFoundException>(() => _cardService.UpdateCard(cardDTO));

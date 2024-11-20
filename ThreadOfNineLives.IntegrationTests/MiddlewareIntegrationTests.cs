@@ -10,6 +10,7 @@ using Xunit;
 using Newtonsoft.Json;
 using System.Linq;
 using Backend.Repositories.Interfaces;
+using Domain.DTOs;
 
 namespace ThreadOfNineLives.IntegrationTests
 {
@@ -36,19 +37,19 @@ namespace ThreadOfNineLives.IntegrationTests
 
                     // Setup mock behavior for the admin user
                     mockUserRepository.Setup(repo => repo.GetUserByUsername("adminUsername"))
-                        .Returns(new Domain.Entities.User
+                        .Returns(new UserDTO
                         {
                             Username = "adminUsername",
-                            PasswordHash = BCrypt.Net.BCrypt.HashPassword("adminPassword"),
+                            Password = BCrypt.Net.BCrypt.HashPassword("adminPassword"),
                             Role = "Admin"
                         });
 
                     // Setup mock behavior for the player user
                     mockUserRepository.Setup(repo => repo.GetUserByUsername("playerUsername"))
-                        .Returns(new Domain.Entities.User
+                        .Returns(new UserDTO
                         {
                             Username = "playerUsername",
-                            PasswordHash = BCrypt.Net.BCrypt.HashPassword("playerPassword"),
+                            Password = BCrypt.Net.BCrypt.HashPassword("playerPassword"),
                             Role = "Player"
                         });
 
@@ -67,23 +68,26 @@ namespace ThreadOfNineLives.IntegrationTests
 
                     // Setup mock behavior for an enemy
                     mockEnemyRepository.Setup(repo => repo.GetEnemyById(1))
-                        .Returns(new Domain.Entities.Enemy
+                        .Returns(new EnemyDTO
                         {
                             Id = 1,
                             Name = "Test Enemy",
-                            Health = 100
+                            Health = 100,
+                            ImagePath = "empty",
                         });
 
                     // Setup mock behavior for getting all enemies
                     mockEnemyRepository.Setup(repo => repo.GetAllEnemies())
-                        .Returns(new List<Domain.Entities.Enemy>
+                        .Returns(new List<EnemyDTO>
                         {
-                    new Domain.Entities.Enemy
-                    {
-                        Id = 1,
-                        Name = "Test Enemy",
-                        Health = 100
-                    }
+                            new EnemyDTO
+                            {
+                                Id = 1,
+                                Name = "Test Enemy",
+                                Health = 100,
+                                ImagePath = "empty",
+
+                            }
                         });
 
                     // Register the mock repository

@@ -7,7 +7,7 @@ namespace Backend.Repositories.Interfaces
 {
     public interface IEnemyRepository
     {
-        public void AddEnemy(EnemyDTO enemy);
+        public EnemyDTO AddEnemy(EnemyDTO enemy);
         public void DeleteEnemy(EnemyDTO enemy);
         public void UpdateEnemy(EnemyDTO enemy);
         public List<EnemyDTO> GetAllEnemies();

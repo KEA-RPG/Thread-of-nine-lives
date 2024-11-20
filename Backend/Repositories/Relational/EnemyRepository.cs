@@ -14,11 +14,12 @@ namespace Backend.Repositories.Relational
             _context = context;
         }
 
-        public void AddEnemy(EnemyDTO enemy)
+        public EnemyDTO AddEnemy(EnemyDTO enemy)
         {
             var dbEnemy = Enemy.FromDTO(enemy);
             _context.Enemies.Add(dbEnemy);
             _context.SaveChanges();
+            return GetEnemyById(dbEnemy.Id);
         }
 
         public void DeleteEnemy(EnemyDTO enemy)

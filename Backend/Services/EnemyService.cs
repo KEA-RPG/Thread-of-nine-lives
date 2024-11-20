@@ -16,14 +16,7 @@ namespace Backend.Services
         public EnemyDTO GetEnemyById(int id)
         {
             var enemy = _enemyRepository.GetEnemyById(id);
-            if (enemy != null)
-            {
-                return enemy;
-            }
-            else
-            {
-                return null;
-            }
+            return enemy;
         }
 
         public List<EnemyDTO> GetAllEnemies()
@@ -32,9 +25,10 @@ namespace Backend.Services
             return enemies.ToList();
         }
 
-        public void CreateEnemy(EnemyDTO enemyDTO)
+        public EnemyDTO CreateEnemy(EnemyDTO enemyDTO)
         {
-            _enemyRepository.AddEnemy(enemyDTO);
+            var enemy = _enemyRepository.AddEnemy(enemyDTO);
+            return enemy;
         }
 
         public EnemyDTO UpdateEnemy(EnemyDTO enemyDTO)

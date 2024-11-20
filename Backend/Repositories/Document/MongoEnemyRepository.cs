@@ -15,12 +15,13 @@ namespace Backend.Repositories.Document
             _context = context;
         }
 
-        public void AddEnemy(EnemyDTO enemy)
+        public EnemyDTO AddEnemy(EnemyDTO enemy)
         {
             var id = _context.GetAutoIncrementedId("card");
             enemy.Id = id;
 
             _context.Enemies().InsertOne(enemy);
+            return GetEnemyById(id);
         }
 
         public void DeleteEnemy(EnemyDTO enemy)

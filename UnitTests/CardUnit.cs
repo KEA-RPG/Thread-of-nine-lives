@@ -45,7 +45,7 @@ namespace UnitTests
                 Defence = 1
             };
 
-            mockCardRepository.Setup(repo => repo.AddCard(It.IsAny<Card>()));
+            mockCardRepository.Setup(repo => repo.AddCard(It.IsAny<CardDTO>()));
 
             var cardService = new CardService(mockCardRepository.Object);
 
@@ -61,14 +61,15 @@ namespace UnitTests
         {
             //Arrange
             var mockCardRepository = new Mock<ICardRepository>();
-            var card = new Card
+            var card = new CardDTO
             {
                 Id = 1,
                 Name = "Card 1",
                 Description = "Description 1",
                 ImagePath = "Image 1",
                 Cost = 1,
-                Attack = 1
+                Attack = 1,
+                Defence = 1
 
             };
             mockCardRepository.Setup(repo => repo.AddCard(card));
