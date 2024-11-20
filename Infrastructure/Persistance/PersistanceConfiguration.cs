@@ -40,6 +40,25 @@ namespace Infrastructure.Persistance
                 return new DocumentContext(connectionString, databaseName);
             });
         }
+
+        public static string GetConnectionString(dbtype dbtype)
+        {
+            var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(binpath)
+                .AddJsonFile("dbsettings.json")
+                .Build();
+
+            switch (dbtype)
+            {
+                case dbtype.Relational:
+
+                    return configuration.GetConnectionString("DefaultConnection");
+
+            }
+            return "";
+        }
     }
 
     public enum dbtype
