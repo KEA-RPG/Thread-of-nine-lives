@@ -29,7 +29,7 @@ using (var host = builder.Build())
     using (var scope = host.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
-
+        Console.WriteLine("Attempting to do database migration");
         try
         {
             var context = services.GetRequiredService<RelationalContext>();
