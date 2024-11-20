@@ -163,14 +163,17 @@ namespace Backend.Tests.Services
                 Health = 300,
                 ImagePath = "/images/troll.png"
             };
-            Enemy savedEnemy = null;
+
+            var expectedEnemy = new EnemyDTO
+            {
+                Id = 3, // Simulate the database assigned Id
+                Name = "Troll",
+                Health = 300,
+                ImagePath = "/images/troll.png"
+            };
 
             _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<EnemyDTO>()))
-                .Callback<Enemy>(enemy =>
-                {
-                    enemy.Id = 3; // Simulate database generated Id
-                    savedEnemy = enemy;
-                });
+                .Returns(expectedEnemy);
 
             // Act
             var result = _enemyService.CreateEnemy(enemyDTO);
@@ -209,14 +212,17 @@ namespace Backend.Tests.Services
                 Health = 300,
                 ImagePath = "/images/troll.png"
             };
-            EnemyDTO savedEnemy = null;
+
+            var expectedEnemy = new EnemyDTO
+            {
+                Id = 3, // Simulate the database assigned Id
+                Name = "Troll",
+                Health = 300,
+                ImagePath = "/images/troll.png"
+            };
 
             _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<EnemyDTO>()))
-                .Callback<EnemyDTO>(enemy =>
-                {
-                    enemy.Id = 3; // Simulate database generated Id
-                    savedEnemy = enemy;
-                });
+                .Returns(expectedEnemy);
 
             // Act
             var result = _enemyService.CreateEnemy(enemyDTO);
