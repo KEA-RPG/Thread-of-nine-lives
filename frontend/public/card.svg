@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300">
+  <!-- Card Background -->
+  <rect x="0" y="0" width="200" height="300" rx="15" ry="15" fill="white" stroke="black" stroke-width="2" />
+
+  <!-- Big Red Heart in the Center -->
+  <path d="M100,200
+           C 40,130 0,90 100,50
+           C 200,90 160,130 100,200
+           Z"
+        fill="red" />
+
+  <!-- Card Rank (Top Left) -->
+  <text x="20" y="40" font-size="24" fill="black" font-family="Arial" font-weight="bold">A</text>
+
+  <!-- Card Rank (Bottom Right, Rotated) -->
+  <text x="180" y="270" font-size="24" fill="black" font-family="Arial" font-weight="bold" transform="rotate(180, 180, 270)">A</text>
+</svg>
