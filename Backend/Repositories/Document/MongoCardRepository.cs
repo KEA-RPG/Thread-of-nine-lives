@@ -18,7 +18,7 @@ namespace Backend.Repositories.Document
 
         public CardDTO AddCard(CardDTO card)
         {
-            var id = _context.GetAutoIncrementedId("card");
+            var id = _context.GetAutoIncrementedId("cards");
             card.Id = id;
 
             _context.Cards().InsertOne(card);

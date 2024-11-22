@@ -17,7 +17,7 @@ namespace Backend.Repositories.Document
 
         public EnemyDTO AddEnemy(EnemyDTO enemy)
         {
-            var id = _context.GetAutoIncrementedId("card");
+            var id = _context.GetAutoIncrementedId("enemies");
             enemy.Id = id;
 
             _context.Enemies().InsertOne(enemy);
