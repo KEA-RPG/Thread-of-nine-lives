@@ -58,7 +58,7 @@ namespace Infrastructure.Migrations
                     );
 
                     -- Insert the audit record
-                    INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                    INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                     VALUES ('Cards', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -95,7 +95,7 @@ namespace Infrastructure.Migrations
                     );
 
                     -- Insert the audit record
-                    INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                    INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                     VALUES ('Cards', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -124,7 +124,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('Cards', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -157,7 +157,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Comments', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -194,7 +194,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Comments', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -223,7 +223,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('Comments', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -256,7 +256,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('DeckCards', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -293,7 +293,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('DeckCards', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -322,7 +322,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('DeckCards', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -355,7 +355,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Decks', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -392,7 +392,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Decks', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -421,7 +421,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('Decks', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -454,7 +454,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Enemies', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -491,7 +491,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Enemies', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -520,7 +520,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('Enemies', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -553,7 +553,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Fights', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -590,7 +590,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Fights', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -619,7 +619,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('Fights', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -652,7 +652,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('GameActions', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -689,7 +689,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('GameActions', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -718,7 +718,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('GameActions', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -751,7 +751,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Users', 'INSERT', @PrimaryKeyValue, NULL, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -788,7 +788,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
                 VALUES ('Users', 'UPDATE', @PrimaryKeyValue, @OldValues, @NewValues, GETDATE(), SYSTEM_USER);
                 END;
             ");
@@ -817,7 +817,7 @@ namespace Infrastructure.Migrations
                 );
 
                 -- Insert the audit record
-                INSERT INTO AuditLog (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
+                INSERT INTO AuditLogs (TableName, OperationType, PrimaryKeyValue, OldValues, NewValues, ChangeDateTime, ChangedBy)
 	            VALUES ('Users', 'DELETE', @PrimaryKeyValue, @OldValues, NULL, GETDATE(), SYSTEM_USER);
                 END;
             ");
