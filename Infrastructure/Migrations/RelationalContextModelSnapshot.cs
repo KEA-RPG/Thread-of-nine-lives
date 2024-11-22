@@ -196,7 +196,16 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Enemies");
+                    b.ToTable("Enemies", t =>
+                        {
+                            t.HasTrigger("trg_Audit_Enemies_Delete");
+
+                            t.HasTrigger("trg_Audit_Enemies_Insert");
+
+                            t.HasTrigger("trg_Audit_Enemies_Update");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Domain.Entities.Fight", b =>
