@@ -1,8 +1,9 @@
 ﻿using Domain.Entities;
 using Domain.DTOs;
 using Infrastructure.Persistance.Relational;
+using Backend.Repositories.Interfaces;
 
-namespace Backend.Repositories
+namespace Backend.Repositories.Relational
 {
     public class UserRepository : IUserRepository
     {
@@ -13,15 +14,17 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public void CreateUser(User user)
+        public void CreateUser(UserDTO user)
         {
-            _context.Users.Add(user);
+            var userDb = User.FromDTO(user);
+            _context.Users.Add(userDb);
             _context.SaveChanges();
         }
 
-        public void DeleteUser(User user)
+        public void DeleteUser(UserDTO user)
         {
-            _context.Users.Remove(user);
+            var userDB = _context.Users.First(u => u.Id == user.Id);
+            _context.Users.Remove(userDB);
             _context.SaveChanges();
         }
 
@@ -30,9 +33,10 @@ namespace Backend.Repositories
             return _context.Users.ToList();
         }
 
-        public User GetUserByUsername(string username)
+        public UserDTO GetUserByUsername(string username)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username);
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            return UserDTO.FromEntity(user);
         }
 
         public void UpdateUser(User user)

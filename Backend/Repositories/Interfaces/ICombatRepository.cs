@@ -1,6 +1,6 @@
 ﻿using Domain.DTOs;
 
-namespace Backend.Repositories
+namespace Backend.Repositories.Interfaces
 {
     public interface ICombatRepository
     {

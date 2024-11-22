@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Xunit;
 using Moq;
 using Backend.Services;
-using Backend.Repositories;
 using Domain.DTOs;
 using Domain.Entities;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Tests
 {
@@ -39,7 +39,7 @@ namespace Backend.Tests
             _deckService.AddComment(commentDto);
 
             // Assert
-            _mockDeckRepository.Verify(repo => repo.AddComment(It.Is<Comment>(c => c.Text == commentDto.Text && c.DeckId == deckId)), Times.Once);
+            _mockDeckRepository.Verify(repo => repo.AddComment(It.Is<CommentDTO>(c => c.Text == commentDto.Text && c.DeckId == deckId)), Times.Once);
         }
 
         [Fact]
@@ -47,10 +47,10 @@ namespace Backend.Tests
         {
             // Arrange
             var deckId = 1;
-            var comments = new List<Comment>
+            var comments = new List<CommentDTO>
             {
-                new Comment { Id = 1, DeckId = deckId, Text = "Awesome deck!", CreatedAt = DateTime.UtcNow },
-                new Comment { Id = 2, DeckId = deckId, Text = "Needs more work!", CreatedAt = DateTime.UtcNow }
+                new CommentDTO { Id = 1, DeckId = deckId, Text = "Awesome deck!", CreatedAt = DateTime.UtcNow },
+                new CommentDTO { Id = 2, DeckId = deckId, Text = "Needs more work!", CreatedAt = DateTime.UtcNow }
             };
 
             _mockDeckRepository.Setup(repo => repo.GetDeckById(deckId)).Returns(new DeckDTO { Id = deckId });
@@ -68,10 +68,10 @@ namespace Backend.Tests
         {
             // Arrange
             var deckId = 1;
-            var comments = new List<Comment>
+            var comments = new List<CommentDTO>
             {
-                new Comment { Id = 1, DeckId = deckId, Text = "Awesome deck!", CreatedAt = DateTime.UtcNow },
-                new Comment { Id = 2, DeckId = deckId, Text = "Needs more work!", CreatedAt = DateTime.UtcNow }
+                new CommentDTO { Id = 1, DeckId = deckId, Text = "Awesome deck!", CreatedAt = DateTime.UtcNow },
+                new CommentDTO { Id = 2, DeckId = deckId, Text = "Needs more work!", CreatedAt = DateTime.UtcNow }
             };
 
             _mockDeckRepository.Setup(repo => repo.GetDeckById(deckId)).Returns(new DeckDTO { Id = deckId });
