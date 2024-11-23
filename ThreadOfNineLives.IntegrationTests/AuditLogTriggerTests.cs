@@ -246,112 +246,88 @@ namespace ThreadOfNineLives.IntegrationTests
 
         #endregion
 
-        //#region Comment Trigger Tests
+        #region Comment Trigger Tests
 
-        //[Fact]
-        //public void Comment_Insert_ShouldLogToAuditLog()
-        //{
-        //    Arrange
-        //   var testComment = CreateTestComment();
+        [Fact]
+        public void Comment_Insert_ShouldLogToAuditLog()
+        {
+           //Arrange
+           var testComment = CreateTestComment();
 
-        //    Allow triggers to execute
-        //    Task.Delay(1000).Wait();
+            //Allow triggers to execute
+            Task.Delay(100).Wait();
 
-        //    Query the AuditLog to ensure the insert operation was logged
-        //    var auditLogEntry = _db.Set<AuditLog>()
-        //                           .Where(a => a.TableName == "Comments" && a.OperationType == "INSERT")
-        //                           .OrderByDescending(a => a.ChangeDateTime)
-        //                           .FirstOrDefault();
+            //Query the AuditLog to ensure the insert operation was logged
+            var auditLogEntry = _db.Set<AuditLog>()
+                                   .Where(a => a.TableName == "Comments" && a.OperationType == "INSERT")
+                                   .OrderByDescending(a => a.ChangeDateTime)
+                                   .FirstOrDefault();
 
-        //    Assert
-        //    Assert.NotNull(auditLogEntry);
-        //    Assert.Equal("Comments", auditLogEntry.TableName);
-        //    Assert.Equal("INSERT", auditLogEntry.OperationType);
-        //    Assert.Contains("TestComment", auditLogEntry.NewValues);
+            //Assert
+            Assert.NotNull(auditLogEntry);
+            Assert.Equal("Comments", auditLogEntry.TableName);
+            Assert.Equal("INSERT", auditLogEntry.OperationType);
+            Assert.Contains("TestComment", auditLogEntry.NewValues);
+        }
 
-        //    Cleanup
-        //   var commentsToRemove = _db.Comments.Where(c => c.Text == testComment.Text).ToList();
-        //    _db.Comments.RemoveRange(commentsToRemove);
+        [Fact]
+        public void Comment_Update_ShouldLogToAuditLog()
+        {
+            //Arrange
+            var testComment = CreateTestComment();
 
-        //    var auditLogs = _db.Set<AuditLog>()
-        //                       .Where(a => a.NewValues.Contains(testComment.Text) || a.OldValues.Contains(testComment.Text));
-        //    _db.Set<AuditLog>().RemoveRange(auditLogs);
-        //    _db.SaveChanges();
-        //}
+            _testComment = _db.Comments.FirstOrDefault(c => c.Text == "TestComment");
+            Assert.NotNull(_testComment);
 
-        //[Fact]
-        //public void Comment_Update_ShouldLogToAuditLog()
-        //{
-        //    Arrange
-        //   var testComment = CreateTestComment();
+            //Act
+            testComment.Text = "UpdatedComment";
+            _db.Comments.Update(testComment);
+            _db.SaveChanges();
 
-        //    _testComment = _db.Comments.FirstOrDefault(c => c.Text == "TestComment");
-        //    Assert.NotNull(_testComment);
+            Task.Delay(1000).Wait();
 
-        //    Act
-        //    testComment.Text = "UpdatedComment";
-        //    _db.Comments.Update(testComment);
-        //    _db.SaveChanges();
+            //Query the AuditLog to ensure the update operation was logged
+            var auditLogEntry = _db.Set<AuditLog>()
+                                   .Where(a => a.TableName == "Comments" && a.OperationType == "UPDATE")
+                                   .OrderByDescending(a => a.ChangeDateTime)
+                                   .FirstOrDefault();
 
-        //    Task.Delay(1000).Wait();
+            //Assert
+            Assert.NotNull(auditLogEntry);
+            Assert.Equal("Comments", auditLogEntry.TableName);
+            Assert.Equal("UPDATE", auditLogEntry.OperationType);
+            Assert.Contains("\"Text\":\"UpdatedComment\"", auditLogEntry.NewValues);
+        }
 
-        //    Query the AuditLog to ensure the update operation was logged
-        //    var auditLogEntry = _db.Set<AuditLog>()
-        //                           .Where(a => a.TableName == "Comments" && a.OperationType == "UPDATE")
-        //                           .OrderByDescending(a => a.ChangeDateTime)
-        //                           .FirstOrDefault();
+        [Fact]
+        public void Comment_Delete_ShouldLogToAuditLog()
+        {
+            //Arrange
+            var testComment = CreateTestComment();
 
-        //    Assert
-        //    Assert.NotNull(auditLogEntry);
-        //    Assert.Equal("Comments", auditLogEntry.TableName);
-        //    Assert.Equal("UPDATE", auditLogEntry.OperationType);
-        //    Assert.Contains("\"Text\":\"UpdatedComment\"", auditLogEntry.NewValues);
+            _testComment = _db.Comments.FirstOrDefault(c => c.Text == "TestComment");
+            Assert.NotNull(_testComment);
 
-        //    Cleanup
-        //   var commentsToRemove = _db.Comments.Where(c => c.Text == testComment.Text).ToList();
-        //    _db.Comments.RemoveRange(commentsToRemove);
+            //Act
+            _db.Comments.Remove(testComment);
+            _db.SaveChanges();
 
-        //    var auditLogs = _db.Set<AuditLog>()
-        //                       .Where(a => a.NewValues.Contains(testComment.Text) || a.OldValues.Contains(testComment.Text));
-        //    _db.Set<AuditLog>().RemoveRange(auditLogs);
-        //    _db.SaveChanges();
-        //}
+            Task.Delay(1000).Wait();
 
-        //[Fact]
-        //public void Comment_Delete_ShouldLogToAuditLog()
-        //{
-        //    Arrange
-        //   var testComment = CreateTestComment();
+            //Query the AuditLog to ensure the delete operation was logged
+            var auditLogEntry = _db.Set<AuditLog>()
+                                   .Where(a => a.TableName == "Comments" && a.OperationType == "DELETE")
+                                   .OrderByDescending(a => a.ChangeDateTime)
+                                   .FirstOrDefault();
 
-        //    _testComment = _db.Comments.FirstOrDefault(c => c.Text == "TestComment");
-        //    Assert.NotNull(_testComment);
+            //Assert
+            Assert.NotNull(auditLogEntry);
+            Assert.Equal("Comments", auditLogEntry.TableName);
+            Assert.Equal("DELETE", auditLogEntry.OperationType);
+            Assert.Contains("TestComment", auditLogEntry.OldValues);
+        }
 
-        //    Act
-        //    _db.Comments.Remove(testComment);
-        //    _db.SaveChanges();
-
-        //    Task.Delay(1000).Wait();
-
-        //    Query the AuditLog to ensure the delete operation was logged
-        //    var auditLogEntry = _db.Set<AuditLog>()
-        //                           .Where(a => a.TableName == "Comments" && a.OperationType == "DELETE")
-        //                           .OrderByDescending(a => a.ChangeDateTime)
-        //                           .FirstOrDefault();
-
-        //    Assert
-        //    Assert.NotNull(auditLogEntry);
-        //    Assert.Equal("Comments", auditLogEntry.TableName);
-        //    Assert.Equal("DELETE", auditLogEntry.OperationType);
-        //    Assert.Contains("TestComment", auditLogEntry.OldValues);
-
-        //    Cleanup
-        //   var auditLogs = _db.Set<AuditLog>()
-        //                      .Where(a => a.NewValues.Contains(testComment.Text) || a.OldValues.Contains(testComment.Text));
-        //    _db.Set<AuditLog>().RemoveRange(auditLogs);
-        //    _db.SaveChanges();
-        //}
-
-        //#endregion
+        #endregion
 
         #region DeckCard Trigger Tests
 
@@ -800,6 +776,7 @@ namespace ThreadOfNineLives.IntegrationTests
             _db.Fights.RemoveRange(_db.Fights.Where(f => f.UserId != null && f.EnemyId != null));
             _db.DeckCards.RemoveRange(_db.DeckCards.ToList());
             _db.Comments.RemoveRange(_db.Comments.Where(c => c.Text == "TestComment"));
+            _db.Comments.RemoveRange(_db.Comments.Where(c => c.Text == "UpdatedComment"));
             _db.Cards.RemoveRange(_db.Cards.Where(c => c.Name == "TestCard"));
             _db.Decks.RemoveRange(_db.Decks.Where(d => d.Name == "TestDeck"));
             _db.Enemies.RemoveRange(_db.Enemies.Where(e => e.Name == "TestEnemy"));
