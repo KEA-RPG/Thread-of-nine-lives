@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.DTOs;
-using Backend.Repositories;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {
@@ -16,31 +16,19 @@ namespace Backend.Services
         public EnemyDTO GetEnemyById(int id)
         {
             var enemy = _enemyRepository.GetEnemyById(id);
-            if (enemy != null)
-            {
-                return EnemyDTO.FromEntity(enemy);
-            }
-            else
-            {
-                return null;
-            }
+            return enemy;
         }
 
         public List<EnemyDTO> GetAllEnemies()
         {
             var enemies = _enemyRepository.GetAllEnemies();
-            return enemies.Select(EnemyDTO.FromEntity).ToList();
+            return enemies.ToList();
         }
 
         public EnemyDTO CreateEnemy(EnemyDTO enemyDTO)
         {
-            var enemy = Enemy.FromDTO(enemyDTO);
-            _enemyRepository.AddEnemy(enemy);
-
-            // Update the DTO with the generated Id from the entity
-            enemyDTO.Id = enemy.Id;
-
-            return enemyDTO;
+            var enemy = _enemyRepository.AddEnemy(enemyDTO);
+            return enemy;
         }
 
         public EnemyDTO UpdateEnemy(EnemyDTO enemyDTO)
@@ -58,7 +46,7 @@ namespace Backend.Services
 
             _enemyRepository.UpdateEnemy(existingEnemy);
 
-            return EnemyDTO.FromEntity(existingEnemy);
+            return _enemyRepository.GetEnemyById(existingEnemy.Id);
         }
 
         public void DeleteEnemy(int id)

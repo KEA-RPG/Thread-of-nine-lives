@@ -3,6 +3,7 @@ using Domain.DTOs;
 using Backend.Repositories;
 using Backend.Helpers;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {
