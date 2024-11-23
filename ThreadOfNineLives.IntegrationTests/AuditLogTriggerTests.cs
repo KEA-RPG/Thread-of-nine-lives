@@ -796,7 +796,7 @@ namespace ThreadOfNineLives.IntegrationTests
         public void Dispose()
         {
             // Remove dependent entities first to avoid foreign key issues
-            _db.GameActions.RemoveRange(_db.GameActions.Where(ga => ga.Type == "ATTACK" && ga.Value == 10));
+            _db.GameActions.RemoveRange(_db.GameActions.Where(ga => ga.Type == "TEST" && ga.Value == 10));
             _db.Fights.RemoveRange(_db.Fights.Where(f => f.UserId != null && f.EnemyId != null));
             _db.DeckCards.RemoveRange(_db.DeckCards.ToList());
             _db.Comments.RemoveRange(_db.Comments.Where(c => c.Text == "TestComment"));
