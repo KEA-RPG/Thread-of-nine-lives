@@ -7,8 +7,12 @@ namespace Domain.DTOs
     {
         public int Id { get; set; }
         public int DeckId { get; set; }
+        public int UserId { get; set; }
         public string Text { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public string Username { get; set; } //I service klassen vil denne blive sat på ud til frontend, så vi har username. På vej mod databasen skal sercice
+        //klassen finde username of populere UserId så vi kan korrekt mappe til en Comment. 
 
         public static CommentDTO FromEntity(Comment comment)
         {
@@ -16,8 +20,10 @@ namespace Domain.DTOs
             {
                 Id = comment.Id,
                 DeckId = comment.DeckId,
+                UserId = comment.UserId,
                 Text = comment.Text,
-                CreatedAt = comment.CreatedAt
+                CreatedAt = comment.CreatedAt,
+                Username = comment.User.Username
             };
         }
 
@@ -27,8 +33,9 @@ namespace Domain.DTOs
             {
                 Id = commentDto.Id,
                 DeckId = commentDto.DeckId,
+                UserId = commentDto.UserId,
                 Text = commentDto.Text,
-                CreatedAt = commentDto.CreatedAt
+                CreatedAt = DateTime.Now
             };
         }
     }

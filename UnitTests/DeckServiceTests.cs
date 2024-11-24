@@ -17,7 +17,7 @@ namespace Backend.Tests
         public DeckServiceTests()
         {
             _mockDeckRepository = new Mock<IDeckRepository>();
-            _deckService = new DeckService(_mockDeckRepository.Object);
+            //_deckService = new DeckService(_mockDeckRepository.Object);
         }
 
         [Fact]

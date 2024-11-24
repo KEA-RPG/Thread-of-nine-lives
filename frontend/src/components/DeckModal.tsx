@@ -1,5 +1,5 @@
 // DeckModal.tsx
-import React, { useState } from "react";
+import React from "react";
 import {
   Modal,
   ModalOverlay,
@@ -21,14 +21,15 @@ interface Props {
 }
 
 const DeckModal = ({ deck, isOpen, onClose, finalRef }: Props) => {
-  const [comments, setComments] = useState<Comment[]>(deck.comments || []);
-
-  const handleCommentAdded = (newComment: Comment) => {
-    setComments((prevComments) => [...prevComments, newComment]);
-  };
+  const comments = deck.comments || [];
 
   return (
-    <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose} size="lg">
+    <Modal
+      finalFocusRef={finalRef}
+      isOpen={isOpen}
+      onClose={onClose}
+      size="lg"
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Comments for {deck.name}</ModalHeader>
@@ -44,6 +45,7 @@ const DeckModal = ({ deck, isOpen, onClose, finalRef }: Props) => {
                 borderRadius="md"
               >
                 <Text fontSize="sm" color="gray.500">
+                  {comment.username} -{" "}
                   {new Date(comment.createdAt || "").toLocaleString()}
                 </Text>
                 <Text mt={2}>{comment.text}</Text>
@@ -53,8 +55,8 @@ const DeckModal = ({ deck, isOpen, onClose, finalRef }: Props) => {
             <Text>No comments available.</Text>
           )}
 
-          {/* Include the CommentForm component */}
-          <CommentForm deckId={deck.id!} onCommentAdded={handleCommentAdded} />
+          {/* Include the CommentForm component without onCommentAdded */}
+          <CommentForm deckId={deck.id!} />
         </ModalBody>
       </ModalContent>
     </Modal>

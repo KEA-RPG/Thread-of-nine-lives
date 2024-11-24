@@ -14,6 +14,7 @@ export interface Deck {
 export interface Comment {
   id?: number;
   deckId?: number;
+  username?: string | null;
   text?: string;
   createdAt?: string;
 }

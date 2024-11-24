@@ -6,6 +6,7 @@ import DeckCardSkeleton from "./DeckCardSkeleton";
 
 const DeckGrid = () => {
   const { data: decks, error } = usePublicDecks();
+  console.log('Decks:', decks);
   const skeletons = [...Array(20).keys()];
 
   return (
