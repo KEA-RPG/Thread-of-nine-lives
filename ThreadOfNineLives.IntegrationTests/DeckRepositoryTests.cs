@@ -1,4 +1,4 @@
-using Backend.Repositories;
+using Backend.Repositories.Relational;
 using Domain.DTOs;
 using Domain.Entities;
 using Infrastructure.Persistance.Relational;

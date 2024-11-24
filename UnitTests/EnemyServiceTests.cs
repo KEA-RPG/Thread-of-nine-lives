@@ -1,11 +1,11 @@
 ﻿using Xunit;
 using Moq;
 using Backend.Services;
-using Backend.Repositories;
 using Domain.Entities;
 using Domain.DTOs;
 using System.Collections.Generic;
 using System.Linq;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Tests.Services
 {
@@ -27,7 +27,8 @@ namespace Backend.Tests.Services
         {
             // Arrange
             int enemyId = 1;
-            var enemy = new Enemy { Id = enemyId };
+            var enemy = CreateEnemyDTO();
+
             _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns(enemy);
 
             // Act
@@ -42,7 +43,7 @@ namespace Backend.Tests.Services
         {
             // Arrange
             int enemyId = 1;
-            var enemy = new Enemy
+            var enemy = new EnemyDTO
             {
                 Id = enemyId,
                 Name = "Goblin",
@@ -66,7 +67,7 @@ namespace Backend.Tests.Services
         {
             // Arrange
             int enemyId = 1;
-            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((Enemy)null);
+            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((EnemyDTO)null);
 
             // Act
             var result = _enemyService.GetEnemyById(enemyId);
@@ -82,7 +83,7 @@ namespace Backend.Tests.Services
         public void GetEnemyById_NonExistingIds_ReturnsNull(int enemyId)
         {
             // Arrange
-            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((Enemy)null);
+            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((EnemyDTO)null);
 
             // Act
             var result = _enemyService.GetEnemyById(enemyId);
@@ -97,10 +98,10 @@ namespace Backend.Tests.Services
         public void GetAllEnemies_WhenEnemiesExist_ReturnsNonEmptyList()
         {
             // Arrange
-            var enemies = new List<Enemy>
+            var enemies = new List<EnemyDTO>
             {
-                new Enemy { Id = 1, Name = "Goblin", Health = 100, ImagePath = "/images/goblin.png" },
-                new Enemy { Id = 2, Name = "Orc", Health = 200, ImagePath = "/images/orc.png" }
+                new EnemyDTO { Id = 1, Name = "Goblin", Health = 100, ImagePath = "/images/goblin.png" },
+                new EnemyDTO { Id = 2, Name = "Orc", Health = 200, ImagePath = "/images/orc.png" }
             };
             _mockRepository.Setup(repo => repo.GetAllEnemies()).Returns(enemies);
 
@@ -115,7 +116,7 @@ namespace Backend.Tests.Services
         public void GetAllEnemies_WhenNoEnemiesExist_ReturnsEmptyList()
         {
             // Arrange
-            var enemies = new List<Enemy>();
+            var enemies = new List<EnemyDTO>();
             _mockRepository.Setup(repo => repo.GetAllEnemies()).Returns(enemies);
 
             // Act
@@ -133,7 +134,7 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var enemies = Enumerable.Range(1, numberOfEnemies)
-                .Select(id => new Enemy
+                .Select(id => new EnemyDTO
                 {
                     Id = id,
                     Name = $"Enemy{id}",
@@ -162,14 +163,17 @@ namespace Backend.Tests.Services
                 Health = 300,
                 ImagePath = "/images/troll.png"
             };
-            Enemy savedEnemy = null;
 
-            _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<Enemy>()))
-                .Callback<Enemy>(enemy =>
-                {
-                    enemy.Id = 3; // Simulate database generated Id
-                    savedEnemy = enemy;
-                });
+            var expectedEnemy = new EnemyDTO
+            {
+                Id = 3, // Simulate the database assigned Id
+                Name = "Troll",
+                Health = 300,
+                ImagePath = "/images/troll.png"
+            };
+
+            _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<EnemyDTO>()))
+                .Returns(expectedEnemy);
 
             // Act
             var result = _enemyService.CreateEnemy(enemyDTO);
@@ -189,13 +193,13 @@ namespace Backend.Tests.Services
                 ImagePath = "/images/troll.png"
             };
 
-            _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<Enemy>()));
+            _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<EnemyDTO>()));
 
             // Act
             _enemyService.CreateEnemy(enemyDTO);
 
             // Assert
-            _mockRepository.Verify(repo => repo.AddEnemy(It.IsAny<Enemy>()), Times.Once);
+            _mockRepository.Verify(repo => repo.AddEnemy(It.IsAny<EnemyDTO>()), Times.Once);
         }
 
         [Fact]
@@ -208,22 +212,25 @@ namespace Backend.Tests.Services
                 Health = 300,
                 ImagePath = "/images/troll.png"
             };
-            Enemy savedEnemy = null;
 
-            _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<Enemy>()))
-                .Callback<Enemy>(enemy =>
-                {
-                    enemy.Id = 3; // Simulate database generated Id
-                    savedEnemy = enemy;
-                });
+            var expectedEnemy = new EnemyDTO
+            {
+                Id = 3, // Simulate the database assigned Id
+                Name = "Troll",
+                Health = 300,
+                ImagePath = "/images/troll.png"
+            };
+
+            _mockRepository.Setup(repo => repo.AddEnemy(It.IsAny<EnemyDTO>()))
+                .Returns(expectedEnemy);
 
             // Act
-            _enemyService.CreateEnemy(enemyDTO);
+            var result = _enemyService.CreateEnemy(enemyDTO);
 
             // Assert
-            Assert.Equal("Troll", savedEnemy.Name);
-            Assert.Equal(300, savedEnemy.Health);
-            Assert.Equal("/images/troll.png", savedEnemy.ImagePath);
+            Assert.Equal("Troll", result.Name);
+            Assert.Equal(300, result.Health);
+            Assert.Equal("/images/troll.png", result.ImagePath);
         }
 
         // UpdateEnemy Tests
@@ -239,7 +246,7 @@ namespace Backend.Tests.Services
                 Health = 200,
                 ImagePath = "/images/orc.png"
             };
-            _mockRepository.Setup(repo => repo.GetEnemyById(enemyDTO.Id)).Returns((Enemy)null);
+            _mockRepository.Setup(repo => repo.GetEnemyById(enemyDTO.Id)).Returns((EnemyDTO)null);
 
             // Act
             var result = _enemyService.UpdateEnemy(enemyDTO);
@@ -259,7 +266,7 @@ namespace Backend.Tests.Services
                 Health = 500,
                 ImagePath = "/images/goblin_king.png"
             };
-            var existingEnemy = new Enemy
+            var existingEnemy = new EnemyDTO
             {
                 Id = 1,
                 Name = "Goblin",
@@ -269,12 +276,12 @@ namespace Backend.Tests.Services
             _mockRepository.Setup(repo => repo.GetEnemyById(enemyDTO.Id)).Returns(existingEnemy);
 
             // Act
-            _enemyService.UpdateEnemy(enemyDTO);
+            var result = _enemyService.UpdateEnemy(enemyDTO);
 
             // Assert
-            Assert.Equal("Goblin King", existingEnemy.Name);
-            Assert.Equal(500, existingEnemy.Health);
-            Assert.Equal("/images/goblin_king.png", existingEnemy.ImagePath);
+            Assert.Equal("Goblin King", result.Name);
+            Assert.Equal(500, result.Health);
+            Assert.Equal("/images/goblin_king.png", result.ImagePath);
         }
 
         [Fact]
@@ -288,7 +295,7 @@ namespace Backend.Tests.Services
                 Health = 500,
                 ImagePath = "/images/goblin_king.png"
             };
-            var existingEnemy = new Enemy { Id = 1 };
+            var existingEnemy = CreateEnemyDTO();
             _mockRepository.Setup(repo => repo.GetEnemyById(enemyDTO.Id)).Returns(existingEnemy);
             _mockRepository.Setup(repo => repo.UpdateEnemy(existingEnemy));
 
@@ -305,13 +312,13 @@ namespace Backend.Tests.Services
         public void DeleteEnemy_ExistingId_CallsDeleteEnemyOnce()
         {
             // Arrange
-            int enemyId = 1;
-            var existingEnemy = new Enemy { Id = enemyId };
-            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns(existingEnemy);
+            var existingEnemy = CreateEnemyDTO();
+            existingEnemy.Id = 1;
+            _mockRepository.Setup(repo => repo.GetEnemyById(existingEnemy.Id)).Returns(existingEnemy);
             _mockRepository.Setup(repo => repo.DeleteEnemy(existingEnemy));
 
             // Act
-            _enemyService.DeleteEnemy(enemyId);
+            _enemyService.DeleteEnemy(existingEnemy.Id);
 
             // Assert
             _mockRepository.Verify(repo => repo.DeleteEnemy(existingEnemy), Times.Once);
@@ -322,13 +329,23 @@ namespace Backend.Tests.Services
         {
             // Arrange
             int enemyId = 1;
-            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((Enemy)null);
+            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((EnemyDTO)null);
 
             // Act
             _enemyService.DeleteEnemy(enemyId);
 
             // Assert
-            _mockRepository.Verify(repo => repo.DeleteEnemy(It.IsAny<Enemy>()), Times.Never);
+            _mockRepository.Verify(repo => repo.DeleteEnemy(It.IsAny<EnemyDTO>()), Times.Never);
+        }
+
+        private EnemyDTO CreateEnemyDTO()
+        {
+            return new EnemyDTO()
+            {
+                Health = 100,
+                ImagePath = "test",
+                Name = "Test enemy"
+            };
         }
     }
 }

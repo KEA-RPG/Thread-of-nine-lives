@@ -1,13 +1,6 @@
 ﻿using Domain.Entities;
 using Infrastructure.Persistance.Relational.Configurations;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
 
 namespace Infrastructure.Persistance.Relational
 {
@@ -25,7 +18,6 @@ namespace Infrastructure.Persistance.Relational
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DeckCardConfiguration());
             modelBuilder.ApplyConfiguration(new DeckConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
