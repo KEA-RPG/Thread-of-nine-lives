@@ -13,6 +13,7 @@ import AdminLayout from "./layouts/Adminlayout.tsx";
 import CardUpsert from "./pages/CardUpsert.tsx";
 import CardUpdate from "./pages/CardUpdate.tsx";
 import CardCreate from "./pages/CardCreate.tsx";
+import PublicDecksPage from "./pages/PublicDecksPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -120,6 +121,14 @@ const router = createBrowserRouter([
           <AdminLayout header="Enemy Upsert">
             <EnemyUpsert />
           </AdminLayout>
+        ),
+      },
+      {
+        path: "/decks/public",
+        element: (
+          <GuestLayout header="Public Decks">
+            <PublicDecksPage />
+          </GuestLayout>
         ),
       },
 

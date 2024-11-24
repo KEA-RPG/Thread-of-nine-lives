@@ -2,7 +2,6 @@
 using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Xml;
 using Backend.Repositories.Interfaces;
 
 namespace Backend.Repositories.Relational
@@ -79,7 +78,9 @@ namespace Backend.Repositories.Relational
         {
             return _context.Decks
                 .Include(deck => deck.DeckCards)
-                .ThenInclude(deckCard => deckCard)
+                .ThenInclude(deckCard => deckCard.Card)
+                .Include(deck => deck.User)
+                .Include(deck => deck.Comments)
                 .Where(deck => deck.IsPublic)
                 .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
@@ -87,17 +88,20 @@ namespace Backend.Repositories.Relational
         public List<DeckDTO> GetUserDecks(string userName)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == userName);
-            if (user == null) return null;
+
+            if (user == null)
+            {
+                return null;
+            }
 
             return _context.Decks.Include(x=> x.User)
                 .Where(deck => deck.User == user)
                 .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
-
-
         public void AddComment(CommentDTO comment)
         {
             var commentDB =CommentDTO.ToEntity(comment);
+            
             _context.Comments.Add(commentDB);
             _context.SaveChanges();
         }
