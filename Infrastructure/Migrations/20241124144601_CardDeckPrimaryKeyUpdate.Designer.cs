@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RelationalContext))]
-    [Migration("20241120141152_Changed DeckCard composite key to one primary key")]
-    partial class ChangedDeckCardcompositekeytooneprimarykey
+    [Migration("20241124144601_CardDeckPrimaryKeyUpdate")]
+    partial class CardDeckPrimaryKeyUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
