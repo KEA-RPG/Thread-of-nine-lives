@@ -34,6 +34,7 @@ namespace Backend.Repositories.Document
 
             foreach (var deck in affectedDecks)
             {
+
                 deck.Cards = deck.Cards.Where(c => c.Id != card.Id).ToList();
 
                 // Update the Deck in the Decks collection
@@ -54,9 +55,8 @@ namespace Backend.Repositories.Document
             
             foreach (var deck in affectedDecks)
             {
-                var cardToUpdate = deck.Cards.First(c => c.Id == card.Id);
-                cardToUpdate = card;
-                
+                deck.Cards = deck.Cards.Where(c => c.Id != card.Id).ToList();
+                deck.Cards.Add(card);
                 var deckUpdateFilter = Builders<DeckDTO>.Filter.Eq(d => d.Id, deck.Id);
                 _context.Decks().ReplaceOne(deckUpdateFilter, deck);
             }

@@ -51,6 +51,22 @@ namespace ThreadOfNineLives.IntegrationTests
             //Assert
             Assert.NotEqual(initialCardName, updatedCard.Name);
         }
+        [Fact]
+        public void Delete_Card_ShouldUpdateDecks()
+        {
+            //Assign
+            CreateTemplateDecksAndCards();
+            var initialCardName = "FirstNameINTEGRATION";
+            var cardToDelete = _context.Cards().Find(x => x.Name == initialCardName).First();
+
+            //Act
+            _mongoCardRepository.DeleteCard(cardToDelete);
+            var deck = _context.Decks().Find(x => x.Name == "deck1INTEGRATION").First();
+
+            //Assert
+            Assert.False(deck.Cards.Any(x=> x.Id == cardToDelete.Id));
+
+        }
 
         public void Dispose()
         {
