@@ -4,6 +4,7 @@ using Infrastructure.Persistance.Relational;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RelationalContext))]
-    partial class RelationalContextModelSnapshot : ModelSnapshot
+    [Migration("20241124144601_CardDeckPrimaryKeyUpdate")]
+    partial class CardDeckPrimaryKeyUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,42 +24,6 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Entities.AuditLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("ChangeDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ChangedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NewValues")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OldValues")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OperationType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrimaryKeyValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TableName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AuditLogs");
-                });
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
                 {
@@ -89,16 +56,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards", t =>
-                        {
-                            t.HasTrigger("trg_Audit_Cards_Delete");
-
-                            t.HasTrigger("trg_Audit_Cards_Insert");
-
-                            t.HasTrigger("trg_Audit_Cards_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("Domain.Entities.Comment", b =>
@@ -131,16 +89,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", t =>
-                        {
-                            t.HasTrigger("trg_Audit_Comments_Delete");
-
-                            t.HasTrigger("trg_Audit_Comments_Insert");
-
-                            t.HasTrigger("trg_Audit_Comments_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Deck", b =>
@@ -175,16 +124,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("UserId"), new[] { "Name", "IsPublic" });
 
-                    b.ToTable("Decks", t =>
-                        {
-                            t.HasTrigger("trg_Audit_Decks_Delete");
-
-                            t.HasTrigger("trg_Audit_Decks_Insert");
-
-                            t.HasTrigger("trg_Audit_Decks_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("Decks");
                 });
 
             modelBuilder.Entity("Domain.Entities.DeckCard", b =>
@@ -207,16 +147,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DeckId");
 
-                    b.ToTable("DeckCards", t =>
-                        {
-                            t.HasTrigger("trg_Audit_DeckCards_Delete");
-
-                            t.HasTrigger("trg_Audit_DeckCards_Insert");
-
-                            t.HasTrigger("trg_Audit_DeckCards_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("DeckCards");
                 });
 
             modelBuilder.Entity("Domain.Entities.Enemy", b =>
@@ -240,16 +171,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Enemies", t =>
-                        {
-                            t.HasTrigger("trg_Audit_Enemies_Delete");
-
-                            t.HasTrigger("trg_Audit_Enemies_Insert");
-
-                            t.HasTrigger("trg_Audit_Enemies_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("Enemies");
                 });
 
             modelBuilder.Entity("Domain.Entities.Fight", b =>
@@ -272,16 +194,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Fights", t =>
-                        {
-                            t.HasTrigger("trg_Audit_Fights_Delete");
-
-                            t.HasTrigger("trg_Audit_Fights_Insert");
-
-                            t.HasTrigger("trg_Audit_Fights_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("Fights");
                 });
 
             modelBuilder.Entity("Domain.Entities.GameAction", b =>
@@ -306,16 +219,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("FightId");
 
-                    b.ToTable("GameActions", t =>
-                        {
-                            t.HasTrigger("trg_Audit_GameActions_Delete");
-
-                            t.HasTrigger("trg_Audit_GameActions_Insert");
-
-                            t.HasTrigger("trg_Audit_GameActions_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("GameActions");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -348,23 +252,14 @@ namespace Infrastructure.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Username"), new[] { "PasswordHash", "Role" });
 
-                    b.ToTable("Users", t =>
-                        {
-                            t.HasTrigger("trg_Audit_Users_Delete");
-
-                            t.HasTrigger("trg_Audit_Users_Insert");
-
-                            t.HasTrigger("trg_Audit_Users_Update");
-                        });
-
-                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.Comment", b =>
                 {
                     b.HasOne("Domain.Entities.Deck", "Deck")
                         .WithMany("Comments")
-                        .HasForeignKey("DeckId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
