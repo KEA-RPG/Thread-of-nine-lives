@@ -20,7 +20,6 @@ namespace Infrastructure.Persistance.Relational
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DeckCardConfiguration());
             modelBuilder.ApplyConfiguration(new DeckConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
