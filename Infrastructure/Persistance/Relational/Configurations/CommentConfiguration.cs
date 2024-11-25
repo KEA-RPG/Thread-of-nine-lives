@@ -19,7 +19,7 @@ namespace Infrastructure.Persistance.Relational.Configurations
                                                         
             builder.HasOne(c => c.Deck)
                    .WithMany(d => d.Comments)
-                   .HasForeignKey(c => c.UserId)
+                   .HasForeignKey(c => c.DeckId)
                    .OnDelete(DeleteBehavior.Restrict);
 
 
