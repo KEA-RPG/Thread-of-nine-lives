@@ -1,4 +1,3 @@
-// DeckCard.tsx
 import {
   Card,
   CardBody,

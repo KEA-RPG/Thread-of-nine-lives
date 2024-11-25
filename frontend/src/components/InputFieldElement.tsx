@@ -1,37 +1,62 @@
-import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
+import React from "react";
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 
 interface Props {
-    type: string;
-    name?: string;
-    placeholder?: string;
-    value?: string;
-    onChange?: (e: string) => void;
-    errorText?: string;
+  component?: "Input" | "Textarea" | "File";
+  type?: string;
+  name?: string;
+  placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  errorText?: string;
+  isInvalid?: boolean;
 }
 
 const InputFieldElement = (props: Props) => {
-    const { name, placeholder, type, value, onChange, errorText } = props
+  const {
+    name,
+    placeholder,
+    component = "Input",
+    type,
+    value,
+    onChange,
+    errorText,
+    isInvalid,
+  } = props;
 
+  return (
+    <FormControl isInvalid={isInvalid}>
+      {name && <FormLabel>{name}</FormLabel>}
+      {component === "File" ? (
+        <input
+          type="file"
+          onChange={(e) => onChange && onChange(e.target.value)}
+          placeholder={placeholder}
+        />
+      ) : component === "Textarea" ? (
+        <Textarea
+          value={value}
+          onChange={(e) => onChange && onChange(e.target.value)}
+          placeholder={placeholder}
+        />
+      ) : (
+        <Input
+          width={60}
+          type={type}
+          value={value}
+          onChange={(e) => onChange && onChange(e.target.value)}
+          placeholder={placeholder}
+        />
+      )}
+      {errorText && <FormErrorMessage>{errorText}</FormErrorMessage>}
+    </FormControl>
+  );
+};
 
-    const isError = value === 'error';
-    return (
-        <FormControl isInvalid={isError} >
-            <FormLabel>{name}</FormLabel>
-            {type === 'file' ? (
-                <input type={type} onChange={(e) => onChange && onChange(e.target.value)} placeholder={placeholder} />
-            ) : (
-                <Input width={60} type={type} value={value} onChange={(e) => onChange && onChange(e.target.value)} placeholder={placeholder} />
-            )}
-            {errorText ?? (
-                <>
-                    {!isError ? (null) : (
-                        <FormErrorMessage>Invalid {name}</FormErrorMessage>
-                    )}
-                </>
-            )
-            }
-        </FormControl>
-    )
-}
-
-export default InputFieldElement
+export default InputFieldElement;

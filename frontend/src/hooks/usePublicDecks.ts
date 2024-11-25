@@ -1,4 +1,3 @@
-// usePublicDecks.ts
 import { useGet, usePost } from "./useData";
 
 export interface Deck {

@@ -102,8 +102,6 @@ namespace Backend.Repositories.Relational
         public void AddComment(CommentDTO comment)
         {
             var commentDB =CommentDTO.ToEntity(comment);
-            Debug.WriteLine($"CommentDTO Details - Id: {commentDB.Id}, DeckId: {commentDB.DeckId}, UserId: {commentDB.UserId}, Text: {commentDB.Text}, CreatedAt: {commentDB.CreatedAt}");
-
             _context.Comments.Add(commentDB);
             _context.SaveChanges();
         }

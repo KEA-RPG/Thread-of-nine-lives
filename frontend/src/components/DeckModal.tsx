@@ -1,4 +1,3 @@
-// DeckModal.tsx
 import React from "react";
 import {
   Modal,

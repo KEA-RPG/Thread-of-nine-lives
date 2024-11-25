@@ -1,4 +1,3 @@
-// PublicDecksPage.tsx
 import { Outlet } from "react-router-dom";
 import { Box, Container, Heading, Text } from "@chakra-ui/react";
 import DeckGrid from "../components/DeckGrid";

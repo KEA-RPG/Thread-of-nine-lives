@@ -1,4 +1,3 @@
-// DeckGrid.tsx
 import { SimpleGrid, Text } from "@chakra-ui/react";
 import { usePublicDecks } from "../hooks/usePublicDecks";
 import DeckCard from "./DeckCard";

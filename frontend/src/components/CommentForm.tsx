@@ -1,23 +1,14 @@
-// CommentForm.tsx
 import React, { useState } from "react";
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Textarea,
-  Button,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import { Comment, postComment } from "../hooks/usePublicDecks";
 import { useUserContext } from "./UserContext";
+import InputFieldElement from "./InputFieldElement";
 
 interface CommentFormProps {
   deckId: number;
-  // Remove onCommentAdded prop since it's no longer needed
-  // onCommentAdded: (comment: Comment) => void;
 }
 
-const CommentForm: React.FC<CommentFormProps> = ({ deckId }) => {
+const CommentForm = ({ deckId }: CommentFormProps) => {
   const [commentText, setCommentText] = useState("");
   const { token, username } = useUserContext();
   const toast = useToast();
@@ -55,18 +46,13 @@ const CommentForm: React.FC<CommentFormProps> = ({ deckId }) => {
           title: "Comment Posted",
           description: "Your comment has been posted successfully.",
           status: "success",
-          duration: 5000,
           isClosable: true,
         });
-
-        // Do not call onCommentAdded, so the comment won't appear immediately
-        // onCommentAdded(response.data);
       } else if (response.error) {
         toast({
           title: "Error",
           description: response.error,
           status: "error",
-          duration: 5000,
           isClosable: true,
         });
       } else {
@@ -74,7 +60,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ deckId }) => {
           title: "Error",
           description: "An unexpected error occurred.",
           status: "error",
-          duration: 5000,
           isClosable: true,
         });
       }
@@ -84,7 +69,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ deckId }) => {
         description:
           err.message || "An error occurred while submitting your comment.",
         status: "error",
-        duration: 5000,
         isClosable: true,
       });
     }
@@ -93,13 +77,14 @@ const CommentForm: React.FC<CommentFormProps> = ({ deckId }) => {
   return (
     <Box mt={4}>
       <form onSubmit={handleSubmit}>
-        <FormControl>
-          <FormLabel>Add a Comment</FormLabel>
-        </FormControl>
-        <Textarea
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
+        <InputFieldElement
+          name="Add a Comment"
           placeholder="Enter your comment"
+          component="Textarea"
+          value={commentText}
+          onChange={setCommentText}
+          isInvalid={!commentText.trim()}
+          errorText={!commentText.trim() ? "Comment cannot be empty." : ""}
         />
         <Button mt={2} type="submit">
           Submit
