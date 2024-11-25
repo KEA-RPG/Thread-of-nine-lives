@@ -792,5 +792,6 @@ namespace ThreadOfNineLives.IntegrationTests
             _db.Set<AuditLog>().RemoveRange(auditLogsToRemove);
             _db.SaveChanges();
         }
+
     }
 }
