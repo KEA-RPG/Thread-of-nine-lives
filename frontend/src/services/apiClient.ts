@@ -1,9 +1,9 @@
 // apiCaller.ts
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
 export interface Response<T> {
   data: T | undefined;
-  error: string | null;
+  error: AxiosError | null;
 }
 
 class ApiClient {
@@ -34,13 +34,15 @@ class ApiClient {
 
   get<T>(url: string): Response<T> {
     const [data, setData] = useState<T>();
-    const [error, setError] = useState("");
+    const [error, setError] = useState(null);
 
     useEffect(() => {
       this.getClient().get<T>(`${url}`, {
         headers: this.getHeaders()
       }).then((response) => setData(response.data))
-        .catch((response) => setError(response.message))
+        .catch((response) => {
+          setError(response)
+        })
     }, []);
 
     return { data, error };
@@ -51,9 +53,9 @@ class ApiClient {
       const response = await this.getClient().post<TReturn>(`${url}`, body, {
         headers: this.getHeaders()
       });
-      return { data: response.data, error: "" };
+      return { data: response.data, error: null };
     } catch (error: any) {
-      return { data: undefined, error: error.message };
+      return { data: undefined, error: error };
     }
   }
 
@@ -63,7 +65,7 @@ class ApiClient {
       const response = await this.getClient().put<TReturn>(`${url}`, body, {
         headers: this.getHeaders()
       });
-      return { data: response.data, error: "" };
+      return { data: response.data, error: null };
     } catch (error: any) {
       return { data: undefined, error: error.message };
     }
@@ -71,12 +73,12 @@ class ApiClient {
 
   delete<T>(url: string): Response<T> {
     const [data, setData] = useState<T>();
-    const [error, setError] = useState("");
+    const [error, setError] = useState(null);
 
     this.getClient().delete<T>(`${url}`, {
       headers: this.getHeaders()
     }).then((response) => setData(response.data))
-      .catch((response) => setError(response.message));
+      .catch((response) => setError(response));
 
 
     return { data, error };
