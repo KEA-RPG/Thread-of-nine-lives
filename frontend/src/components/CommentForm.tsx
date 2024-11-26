@@ -18,7 +18,7 @@ const CommentForm = ({ deckId }: CommentFormProps) => {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); 
 
     if (!commentText.trim()) {
       toast({
