@@ -50,17 +50,15 @@ namespace Backend.Tests
             _mockDeckRepository.Setup(repo => repo.GetDeckById(deckId)).Returns(new DeckDTO { Id = deckId });
             _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns(userDto);
 
+            CommentDTO addedComment = null;
+            _mockDeckRepository
+                .Setup(repo => repo.AddComment(It.IsAny<CommentDTO>()))
+                .Callback<CommentDTO>(c => addedComment = c);
+
             // Act
             _deckService.AddComment(commentDto);
 
             // Assert
-            // Verify that AddComment was called once
-            _mockDeckRepository.Verify(repo => repo.AddComment(It.IsAny<CommentDTO>()), Times.Once);
-
-            // Get the arguments used in the AddComment invocation
-            var addedComment = _mockDeckRepository.Invocations
-                .FirstOrDefault(i => i.Method.Name == nameof(IDeckRepository.AddComment))?.Arguments[0] as CommentDTO;
-
             Assert.NotNull(addedComment);
             Assert.Equal(commentDto.Text, addedComment.Text);
             Assert.Equal(deckId, addedComment.DeckId);
