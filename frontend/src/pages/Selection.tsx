@@ -1,23 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initGame, StateGameInit } from '../hooks/useGame';
+import { useToast } from '@chakra-ui/react';
 
 const SelectionPage = () => {
     const [enemyId, setEnemyId] = useState('');
     const navigate = useNavigate();
+    const toast = useToast()
 
     const initializeGameState = async () => {
-        try {
-            await initGame( {enemyId: Number(enemyId) } as StateGameInit
-            );
 
-            console.log("Game initialized");
-
-            // Navigate to CombatPage after initialization
-            navigate('/combat');
-        } catch (error) {
-            console.error("Error initializing game state:", error);
+        const { data, error } = await initGame({ enemyId: Number(enemyId) } as StateGameInit );
+        if (data == undefined || error) {
+            toast({
+                description: `Error: Failed to create combat`,
+                status: "error",
+            });
+            return;
         }
+        console.log("Game initialized");
+
+        // Navigate to CombatPage after initialization
+        navigate('/combat/' + data.FightId);
+
     };
 
     return (
@@ -34,7 +39,7 @@ const SelectionPage = () => {
                     />
                 </label>
             </div>
-            
+
             <button onClick={initializeGameState} disabled={!enemyId}>
                 Start Game
             </button>
