@@ -54,12 +54,21 @@ namespace Backend.Tests
             _deckService.AddComment(commentDto);
 
             // Assert
-            _mockDeckRepository.Verify(repo => repo.AddComment(It.Is<CommentDTO>(c =>
-                c.Text == commentDto.Text &&
-                c.DeckId == deckId &&
-                c.UserId == user.Id &&
-                c.Username == username)), Times.Once);
+            // Verify that AddComment was called once
+            _mockDeckRepository.Verify(repo => repo.AddComment(It.IsAny<CommentDTO>()), Times.Once);
+
+            // Get the arguments used in the AddComment invocation
+            var addedComment = _mockDeckRepository.Invocations
+                .FirstOrDefault(i => i.Method.Name == nameof(IDeckRepository.AddComment))?.Arguments[0] as CommentDTO;
+
+            Assert.NotNull(addedComment);
+            Assert.Equal(commentDto.Text, addedComment.Text);
+            Assert.Equal(deckId, addedComment.DeckId);
+            Assert.Equal(user.Id, addedComment.UserId);
+            Assert.Equal(username, addedComment.Username);
         }
+
+
 
         [Fact]
         public void GetCommentsByDeckId_ShouldReturnCommentsForDeck()
