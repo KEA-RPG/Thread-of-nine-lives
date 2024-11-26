@@ -51,7 +51,6 @@ const CommentForm = ({ deckId }: CommentFormProps) => {
       } else if (response.error) {
         toast({
           title: "Error",
-          description: response.error,
           status: "error",
           isClosable: true,
         });
