@@ -82,6 +82,7 @@ namespace Backend.Repositories.Relational
                 .ThenInclude(deckCard => deckCard.Card)
                 .Include(deck => deck.User)
                 .Include(deck => deck.Comments)
+                .ThenInclude(comment => comment.User)
                 .Where(deck => deck.IsPublic)
                 .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
