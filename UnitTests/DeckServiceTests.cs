@@ -37,15 +37,13 @@ namespace Backend.Tests
                 CreatedAt = DateTime.UtcNow
             };
 
-            var user = new User
+            var userDto = new UserDTO
             {
                 Id = 2,
                 Username = username,
-                Role = "User",
-                PasswordHash = "hashed_password"
+                Password = "hashed_password", // Add the required Password property
+                Role = "User"
             };
-
-            var userDto = UserDTO.FromEntity(user);
 
             _mockDeckRepository.Setup(repo => repo.GetDeckById(deckId)).Returns(new DeckDTO { Id = deckId });
             _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns(userDto);
@@ -62,7 +60,7 @@ namespace Backend.Tests
             Assert.NotNull(addedComment);
             Assert.Equal(commentDto.Text, addedComment.Text);
             Assert.Equal(deckId, addedComment.DeckId);
-            Assert.Equal(user.Id, addedComment.UserId);
+            Assert.Equal(userDto.Id, addedComment.UserId);
             Assert.Equal(username, addedComment.Username);
         }
 
