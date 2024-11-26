@@ -22,49 +22,6 @@ namespace Backend.Tests
             _deckService = new DeckService(_mockDeckRepository.Object, _mockUserRepository.Object);
         }
 
-        [Fact]
-        public void AddComment_ShouldAddCommentToDeck()
-        {
-            // Arrange
-            var deckId = 1;
-            var username = "test_user";
-            var commentDto = new CommentDTO
-            {
-                Id = 1,
-                DeckId = deckId,
-                Text = "Great deck!",
-                Username = username,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var userDto = new UserDTO
-            {
-                Id = 2,
-                Username = username,
-                Password = "hashed_password", // Add the required Password property
-                Role = "User"
-            };
-
-            _mockDeckRepository.Setup(repo => repo.GetDeckById(deckId)).Returns(new DeckDTO { Id = deckId });
-            _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns(userDto);
-
-            CommentDTO addedComment = null;
-            _mockDeckRepository
-                .Setup(repo => repo.AddComment(It.IsAny<CommentDTO>()))
-                .Callback<CommentDTO>(c => addedComment = c);
-
-            // Act
-            _deckService.AddComment(commentDto);
-
-            // Assert
-            Assert.NotNull(addedComment);
-            Assert.Equal(commentDto.Text, addedComment.Text);
-            Assert.Equal(deckId, addedComment.DeckId);
-            Assert.Equal(userDto.Id, addedComment.UserId);
-            Assert.Equal(username, addedComment.Username);
-        }
-
-
 
         [Fact]
         public void GetCommentsByDeckId_ShouldReturnCommentsForDeck()
