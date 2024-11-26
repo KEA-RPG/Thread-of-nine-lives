@@ -11,8 +11,7 @@ namespace Domain.DTOs
         public string Text { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public string Username { get; set; } //I service klassen vil denne blive sat på ud til frontend, så vi har username. På vej mod databasen skal sercice
-        //klassen finde username of populere UserId så vi kan korrekt mappe til en Comment. 
+        public string Username { get; set; }
 
         public static CommentDTO FromEntity(Comment comment)
         {
