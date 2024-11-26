@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, HStack, Link, Spacer, Text } from '@chakra-ui/react';
 import { MoonIcon } from '@chakra-ui/icons';
 import { useUserContext } from './UserContext';
-
-const Header: React.FC = () => {
+interface Props {
+  text: string;
+}
+const Header = ({ text }: Props) => {
   const { role, logout } = useUserContext();
   const [userRole, setUserRole] = useState(role);
 
@@ -31,15 +33,16 @@ const Header: React.FC = () => {
 
   return (
     <HStack justifyContent="space-between" h={12}>
-      <a href={userRole ? "/menu" : "/"}>
-        <HStack spacing={2}>
+      <a href={userRole ? "/menu" : "/"} >
+        <HStack spacing={2} w="200px">
           <MoonIcon />
           <Text>Thread of Nine Lives</Text>
         </HStack>
       </a>
-
       <Spacer />
-      <HStack spacing={4} mr={4}>
+      <Text>{text}</Text>
+      <Spacer />
+      <HStack spacing={4} mr={4} w="200px" justifyContent="end">
         {buttonMenu()}
       </HStack>
     </HStack>

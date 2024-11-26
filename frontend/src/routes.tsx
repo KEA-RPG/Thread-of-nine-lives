@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from './App.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
-import DeckManager from './pages/DeckManager.tsx';
 import ListLayout from './components/ListLayout.tsx';
 import EnemyUpsert from './pages/EnemyUpsert.tsx';
 import Login from './pages/Login.tsx';
@@ -10,9 +9,10 @@ import SignUp from "./pages/SignUp.tsx";
 import GuestLayout from "./layouts/GuestLayout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import AdminLayout from "./layouts/Adminlayout.tsx";
-import CardUpsert from "./pages/CardUpsert.tsx";
 import CardUpdate from "./pages/CardUpdate.tsx";
 import CardCreate from "./pages/CardCreate.tsx";
+import DeckCreate from "./pages/DeckCreate.tsx";
+import DeckUpdate from "./pages/DeckUpdate.tsx";
 import PublicDecksPage from "./pages/PublicDecksPage.tsx";
 
 const router = createBrowserRouter([
@@ -68,10 +68,18 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/decks/create",
+        element: (
+          <PlayerLayout header="Deck Manager">
+            <DeckCreate />
+          </PlayerLayout>
+        ),
+      },
+      {
         path: "/decks/:deckId",
         element: (
           <PlayerLayout header="Deck Manager">
-            <DeckManager />
+            <DeckUpdate />
           </PlayerLayout>
         ),
       },
