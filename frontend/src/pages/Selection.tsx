@@ -19,10 +19,10 @@ const SelectionPage = () => {
             return;
         }
         console.log("Game initialized");
-
+        console.log(data);
+        console.log('/combat/' + data.fightId)
         // Navigate to CombatPage after initialization
-        navigate('/combat/' + data.FightId);
-
+        navigate('/combat/' + data.fightId);
     };
 
     return (

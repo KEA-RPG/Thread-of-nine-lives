@@ -1,5 +1,4 @@
 import { useGet, usePost } from "./useData";
-import { Enemy } from "./useEnemy";
 
 export interface GameAction {
     type: string;
@@ -7,9 +6,9 @@ export interface GameAction {
 }
 
 export interface State {
-    FightId: number;
-    PlayerHealth: number;
-    EnemyHealth: number;
+    fightId: number;
+    playerHealth: number;
+    enemyHealth: number;
 }
 
 export interface StateGameInit {
@@ -17,11 +16,14 @@ export interface StateGameInit {
 }
 
 // Initialize game state
-const initGame = (stateGameInit: StateGameInit) => usePost<StateGameInit, State>(`/init-game-state` , stateGameInit);
+const initGame = (stateGameInit: StateGameInit) => usePost<StateGameInit, State>(`/combat/initialize` , stateGameInit);
 
 // Combat action hook
-const useCombat = (action: GameAction) => {
-    return usePost<GameAction, State>('/combat', action);
+const useCombat = (fightId: number, action: GameAction) => {
+    return usePost<GameAction, State>(`/combat/${fightId}/action`, action);
 };
 
-export { initGame, useCombat };
+// Get game state
+const useGameState = (fightId: number) => useGet<State>(`/combat/${fightId}`);
+
+export { initGame, useCombat, useGameState };
