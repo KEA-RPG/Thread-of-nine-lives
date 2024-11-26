@@ -35,16 +35,17 @@ const Combat = ({ fightId }: CombatProps) => {
         }
     }, [enemyHealth, playerHealth, toast]);
 
-    const handleGameAction = async (actionType: string, actionValue?: number) => {
-        try {
-            const updatedState = await sendGameAction(actionType, actionValue);
+    const handleGameAction = (actionType: string, actionValue?: number) => {
+    sendGameAction(actionType, actionValue)
+        .then((updatedState) => {
             if (updatedState) {
                 setEnemyHealth(updatedState.enemyHealth);
                 setPlayerHealth(updatedState.playerHealth);
             }
-        } catch (error) {
-            toast({ description: `Failed to perform action: ${actionType}`, status: "error" });
-        }
+        })
+        .catch((error) => {
+            toast({ description: `Failed to perform action: ${actionType}`, status: error });
+        });
     };
 
     return (
