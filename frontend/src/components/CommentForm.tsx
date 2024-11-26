@@ -22,6 +22,11 @@ const CommentForm = ({ deckId }: CommentFormProps) => {
 
     if (!commentText.trim()) {
       toast({
+        title: "Error",
+        description: "Comment cannot be empty.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
       });
       return;
     }
