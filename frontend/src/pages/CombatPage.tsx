@@ -10,7 +10,6 @@ const CombatPage = () => {
 
     return (
         <div>
-            <h1>Combat Page</h1>
             <Combat fightId={fightId} />
         </div>
     );
