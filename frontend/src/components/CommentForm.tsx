@@ -83,8 +83,6 @@ const CommentForm = ({ deckId }: CommentFormProps) => {
           component="Textarea"
           value={commentText}
           onChange={setCommentText}
-          isInvalid={!commentText.trim()}
-          errorText={!commentText.trim() ? "Comment cannot be empty." : ""}
         />
         <Button mt={2} type="submit">
           Submit

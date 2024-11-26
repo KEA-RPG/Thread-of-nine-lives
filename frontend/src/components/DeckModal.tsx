@@ -54,7 +54,6 @@ const DeckModal = ({ deck, isOpen, onClose, finalRef }: Props) => {
             <Text>No comments available.</Text>
           )}
 
-          {/* Include the CommentForm component without onCommentAdded */}
           <CommentForm deckId={deck.id!} />
         </ModalBody>
       </ModalContent>
