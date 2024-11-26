@@ -6,31 +6,22 @@ export interface GameAction {
     value?: number;
 }
 
-interface player{
-    id : number;
-    health: number;
-}
-
-
-interface State {
-    playerDTO : player;
-    enemyDTO: Enemy;
+export interface State {
+    FightId: number;
+    PlayerHealth: number;
+    EnemyHealth: number;
 }
 
 export interface StateGameInit {
-    playerId: number;
     enemyId: number;
 }
 
 // Initialize game state
 const initGame = (stateGameInit: StateGameInit) => usePost<StateGameInit, State>(`/init-game-state` , stateGameInit);
 
-// Fetch current game state
-const gameState = () => useGet<State>(`/game-state`);
-
 // Combat action hook
 const useCombat = (action: GameAction) => {
     return usePost<GameAction, State>('/combat', action);
 };
 
-export { initGame, gameState, useCombat };
+export { initGame, useCombat };

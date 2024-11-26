@@ -4,12 +4,11 @@ import { initGame, StateGameInit } from '../hooks/useGame';
 
 const SelectionPage = () => {
     const [enemyId, setEnemyId] = useState('');
-    const [playerId, setPlayerId] = useState('');
     const navigate = useNavigate();
 
     const initializeGameState = async () => {
         try {
-            await initGame( { playerId: Number(playerId), enemyId: Number(enemyId) } as StateGameInit
+            await initGame( {enemyId: Number(enemyId) } as StateGameInit
             );
 
             console.log("Game initialized");
@@ -23,7 +22,7 @@ const SelectionPage = () => {
 
     return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h1>Select Enemy and Player</h1>
+            <h1>Select Enemy</h1>
             <div>
                 <label>
                     Enemy ID:
@@ -35,18 +34,8 @@ const SelectionPage = () => {
                     />
                 </label>
             </div>
-            <div>
-                <label>
-                    Player ID:
-                    <input
-                        type="number"
-                        value={playerId}
-                        onChange={(e) => setPlayerId(e.target.value)}
-                        placeholder="Enter player ID"
-                    />
-                </label>
-            </div>
-            <button onClick={initializeGameState} disabled={!enemyId || !playerId}>
+            
+            <button onClick={initializeGameState} disabled={!enemyId}>
                 Start Game
             </button>
         </div>
