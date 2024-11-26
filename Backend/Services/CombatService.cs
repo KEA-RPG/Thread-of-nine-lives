@@ -76,6 +76,17 @@ namespace Backend.Services
             return state;
         }
 
-    }
+        public State GetStateByFightId(int id)
+        {
+            var combat = _combatRepository.GetFightById(id);
+            if (combat == null)
+            {
+                throw new KeyNotFoundException($"Fight with ID {id} not found.");
+            }
 
+            var state = stateFactory.CreateState(combat);
+
+            return state;
+        }
+    }
 }

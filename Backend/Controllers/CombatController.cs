@@ -29,6 +29,12 @@ namespace Backend.Controllers
                 return Results.Ok(state);
             });
 
+            app.MapGet("/combat/{id}", (ICombatService combatService, int id) =>
+            {
+                var state = combatService.GetStateByFightId(id);
+
+                return Results.Ok(state);
+            });
         }
     }
 }
