@@ -3,7 +3,7 @@ import App from './App.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
 import ListLayout from './components/ListLayout.tsx';
 import MainLayout from './layouts/MainLayout.tsx';
-import CombatPage from "./pages/Combat.tsx";
+import CombatPage from "./pages/CombatPage.tsx";
 import SelectionPage from "./pages/Selection.tsx"
 import EnemyUpsert from './pages/EnemyUpsert.tsx';
 import Login from './pages/Login.tsx';
@@ -142,7 +142,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/combat",
+        path: "/combat/:fightId",
         element: (
           <MainLayout header="Combat">
             <CombatPage />
