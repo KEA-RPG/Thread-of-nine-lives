@@ -31,7 +31,7 @@ namespace Backend.Services
             }
 
             var enemy = _enemyRepository.GetEnemyById(stateGameInit.EnemyId);
-            var user = _userRepository.GetUserById(stateGameInit.UserId);
+            var user = _userRepository.GetUserByUsername(stateGameInit.UserName);
 
             if (enemy == null)
             {
@@ -40,12 +40,12 @@ namespace Backend.Services
 
             if (user == null)
             {
-                throw new KeyNotFoundException($"User with ID {stateGameInit.UserId} not found.");
+                throw new KeyNotFoundException($"User with username {stateGameInit.UserName} not found.");
             }
 
             var fight = new FightDTO
             {
-                UserId = stateGameInit.UserId,
+                UserId = user.Id,
                 EnemyId = stateGameInit.EnemyId
             };
 
