@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +15,20 @@ namespace Domain.Entities
         public string Role { get; set; }
 
         public List<Comment> Comments { get; set; }
+        public List<Fight> Fights { get; set; }
 
         public User() { }
 
-
+        public static User FromDTO(UserDTO user)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                PasswordHash = user.Password //assume its been hashed here
+            };
+        }
     }
-    
+
 }

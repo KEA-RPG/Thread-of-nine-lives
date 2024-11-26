@@ -1,6 +1,7 @@
-﻿using Backend.Repositories;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.DTOs;
+using Backend.SecurityLogic;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {
@@ -63,15 +64,17 @@ namespace Backend.Services
 
         public void AddComment(CommentDTO commentDto)
         {
+            // Sanitize the comment before adding
+            var sanitizedComment = Sanitizer.Sanitize(commentDto);
+
             // Check if the deck exists before adding a comment
-            var deck = _deckRepository.GetDeckById(commentDto.DeckId);
+            var deck = _deckRepository.GetDeckById(sanitizedComment.DeckId);
             if (deck == null)
             {
-                throw new KeyNotFoundException($"Deck with ID {commentDto.DeckId} was not found.");
+                throw new KeyNotFoundException($"Deck with ID {sanitizedComment.DeckId} was not found.");
             }
 
-            var comment = CommentDTO.ToEntity(commentDto);
-            _deckRepository.AddComment(comment);
+            _deckRepository.AddComment(sanitizedComment);
         }
 
         public List<CommentDTO> GetCommentsByDeckId(int deckId)
@@ -83,14 +86,15 @@ namespace Backend.Services
                 throw new KeyNotFoundException($"Deck with ID {deckId} was not found.");
             }
 
-            // Retrieve comments
+            // Retrieve and sanitize comments
             var comments = _deckRepository.GetCommentsByDeckId(deckId);
             if (comments == null || !comments.Any())
             {
                 throw new Exception($"No comments found for Deck with ID {deckId}.");
             }
 
-            return comments.Select(comment => CommentDTO.FromEntity(comment)).ToList();
+            var sanitizedComments = Sanitizer.Sanitize(comments.ToList());
+            return sanitizedComments;
         }
 
 

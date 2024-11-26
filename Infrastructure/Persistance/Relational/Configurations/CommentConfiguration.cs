@@ -19,10 +19,14 @@ namespace Infrastructure.Persistance.Relational.Configurations
                                                         
             builder.HasOne(c => c.Deck)
                    .WithMany(d => d.Comments)
-                   .HasForeignKey(c => c.UserId)
+                   .HasForeignKey(c => c.DeckId)
                    .OnDelete(DeleteBehavior.Restrict);
 
 
+            // Create index on DeckId with included columns
+            builder.HasIndex(c => c.DeckId)
+                   .HasDatabaseName("idx_deck_id")
+                   .IncludeProperties(c => new { c.Text, c.CreatedAt, c.UserId });
 
         }
     }

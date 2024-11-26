@@ -1,8 +1,7 @@
-﻿
-using Backend.Repositories;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.DTOs;
 using System.CodeDom;
+using Backend.Repositories.Interfaces;
 
 namespace Backend.Services
 {
@@ -18,10 +17,9 @@ namespace Backend.Services
 
         public CardDTO CreateCard(CardDTO cardDTO)
         {
-            var card = Card.FromDTO(cardDTO);
-            _cardRepository.AddCard(card);
+            var dbCard = _cardRepository.AddCard(cardDTO);
 
-            cardDTO.Id = card.Id;
+            cardDTO.Id = dbCard.Id;
 
             return cardDTO;
         }
@@ -36,7 +34,7 @@ namespace Backend.Services
         public List<CardDTO> GetAllCards()
         {
             var cards = _cardRepository.GetAllCards();
-            return cards.Select(CardDTO.FromEntity).ToList();
+            return cards;
         }
 
         public CardDTO GetCardById(int id)
@@ -45,7 +43,7 @@ namespace Backend.Services
             if (card != null)
             {
 
-                return CardDTO.FromEntity(card);
+                return card;
             }
             else
             {
@@ -71,7 +69,7 @@ namespace Backend.Services
 
 
             _cardRepository.UpdateCard(existingCard);
-            return CardDTO.FromEntity(existingCard);
+            return existingCard;
         }
     }
 }

@@ -1,6 +1,8 @@
 using Backend;
 using Backend.Controllers;
-using Backend.Repositories;
+using Backend.Repositories.Document;
+using Backend.Repositories.Interfaces;
+using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
@@ -57,11 +59,8 @@ namespace Backend
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IDeckRepository, DeckRepository>();
             builder.Services.AddScoped<IDeckService, DeckService>();
-
-
-
-
-
+            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
+            builder.Services.AddScoped<ICombatService, CombatService>();
             builder.Services.AddScoped<IEnemyService, EnemyService>();
             builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
@@ -81,6 +80,8 @@ namespace Backend
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+
+            app.MapCombatEndpoints();
 
             app.UseAuthentication();
             app.UseAuthorization();
