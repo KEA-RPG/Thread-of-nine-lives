@@ -16,6 +16,7 @@ import CardUpdate from "./pages/CardUpdate.tsx";
 import CardCreate from "./pages/CardCreate.tsx";
 import DeckCreate from "./pages/DeckCreate.tsx";
 import DeckUpdate from "./pages/DeckUpdate.tsx";
+import PublicDecksPage from "./pages/PublicDecksPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -133,6 +134,15 @@ const router = createBrowserRouter([
           </AdminLayout>
         ),
       },
+      {
+        path: "/decks/public",
+        element: (
+          <GuestLayout header="Public Decks">
+            <PublicDecksPage />
+          </GuestLayout>
+        ),
+      },
+
       {
         path: "/selection",
         element: (
