@@ -19,7 +19,7 @@ namespace DataSeeder
             var builder = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
+                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             });
             var host = builder.Build();
             Console.WriteLine("Builder built");

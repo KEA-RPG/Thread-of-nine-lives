@@ -69,8 +69,8 @@ namespace Backend
             builder.Services.AddCors(p => p.AddPolicy("*", b =>
             b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-
-            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
+            var hostingEnvironment = builder.Environment.EnvironmentName;
+            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
 
 
             var app = builder.Build();
