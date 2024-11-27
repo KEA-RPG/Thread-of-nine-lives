@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCombat as postCombat, useGameState } from "../hooks/useGame";
+import { postCombat, useGameState } from "../hooks/useGame";
 import { Box, Button, Text, useToast } from "@chakra-ui/react";
 
 
