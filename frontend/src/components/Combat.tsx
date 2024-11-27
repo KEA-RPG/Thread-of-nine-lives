@@ -14,6 +14,7 @@ const Combat = ({ fightId }: CombatProps) => {
     const [gameOver, setGameOver] = useState(false);
     const [resultMessage, setResultMessage] = useState("");
     const { data } = useGameState(fightId);
+    const { performAction } = useCombat(fightId);
     const toast = useToast();
 
     useEffect(() => {
@@ -41,7 +42,7 @@ const Combat = ({ fightId }: CombatProps) => {
         setLoading(true);
         try {
             const action = { type: actionType, value: actionValue };
-            const { data } = await useCombat(fightId, action);
+            const { data } = await performAction(action);
 
             if (data) {
                 setEnemyHealth(data.enemyHealth);
