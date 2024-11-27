@@ -17,6 +17,6 @@ export interface StateGameInit {
 
 const initGame = (stateGameInit: StateGameInit) => usePost<StateGameInit, State>(`/combat/initialize` , stateGameInit);
 const useGameState = (fightId: number) => useGet<State>(`/combat/${fightId}`);
-const useCombat = (fightId: number, action: GameAction) => usePost<GameAction, State>(`/combat/${fightId}/action`, action);
+const postCombat = (fightId: number, action: GameAction) => usePost<GameAction, State>(`/combat/${fightId}/action`, action);
 
-export { initGame, useCombat, useGameState };
+export { initGame, postCombat, useGameState };

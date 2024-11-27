@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCombat, useGameState } from "../hooks/useGame";
+import { useCombat as postCombat, useGameState } from "../hooks/useGame";
 import { Box, Button, Text, useToast } from "@chakra-ui/react";
 
 
@@ -39,7 +39,7 @@ const Combat = ({ fightId }: CombatProps) => {
 
         try {
             const action = { type: actionType, value: actionValue };
-            const { data, error } = await useCombat(fightId, action);
+            const { data, error } = await postCombat(fightId, action);
 
             if (error) {
                 toast({
