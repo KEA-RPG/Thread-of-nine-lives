@@ -14,7 +14,6 @@ const Combat = ({ fightId }: CombatProps) => {
     const [gameOver, setGameOver] = useState(false);
     const [resultMessage, setResultMessage] = useState("");
     const { data } = useGameState(fightId);
-    const { performAction } = useCombat(fightId);
     const toast = useToast();
 
     useEffect(() => {
@@ -37,22 +36,32 @@ const Combat = ({ fightId }: CombatProps) => {
     }, [enemyHealth, playerHealth, toast]);
 
     const sendGameAction = async (actionType: string, actionValue?: number) => {
-        if (loading) return;
 
-        setLoading(true);
         try {
             const action = { type: actionType, value: actionValue };
-            const { data } = await performAction(action);
+            const { data, error } = await useCombat(fightId, action);
 
-            if (data) {
-                setEnemyHealth(data.enemyHealth);
-                setPlayerHealth(data.playerHealth);
+            if (error) {
+                toast({
+                    description: `Error: Failed to perform action: ${actionType}`,
+                    status: "error",
+                });
+                return;
             }
-        } catch (error) {
-            toast({ description: `Failed to perform action: ${actionType} or ${actionValue}`, status: "error" });
-        } finally {
-            setLoading(false);
+
+           
+        if (data) {
+            setEnemyHealth(data.enemyHealth);
+            setPlayerHealth(data.playerHealth);
         }
+    } catch (error) {
+        toast({
+            description: `Unexpected error: Failed to perform action: ${actionType}`,
+            status: "error",
+        });
+    } finally {
+        setLoading(false);
+    }
     };
 
     return (
