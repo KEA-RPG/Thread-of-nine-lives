@@ -15,14 +15,8 @@ export interface StateGameInit {
     enemyId: number;
 }
 
-const initGame = (stateGameInit: StateGameInit) => 
-    usePost<StateGameInit, State>(`/combat/initialize` , stateGameInit);
+const initGame = (stateGameInit: StateGameInit) => usePost<StateGameInit, State>(`/combat/initialize` , stateGameInit);
 const useGameState = (fightId: number) => useGet<State>(`/combat/${fightId}`);
-
-const useCombat = (fightId: number) => {
-    const performAction = (action: GameAction) =>
-        usePost<GameAction, State>(`/combat/${fightId}/action`, action);
-    return { performAction };
-};
+const useCombat = (fightId: number, action: GameAction) => usePost<GameAction, State>(`/combat/${fightId}/action`, action);
 
 export { initGame, useCombat, useGameState };
