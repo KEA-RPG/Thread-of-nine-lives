@@ -146,7 +146,7 @@ const router = createBrowserRouter([
       {
         path: "/selection",
         element: (
-          <MainLayout header="Select Enemy and Player">
+          <MainLayout header="Select Enemy">
             <SelectionPage />
           </MainLayout>
         ),
