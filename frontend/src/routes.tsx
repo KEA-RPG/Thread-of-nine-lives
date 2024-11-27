@@ -10,7 +10,6 @@ import SignUp from "./pages/SignUp.tsx";
 import GuestLayout from "./layouts/GuestLayout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import AdminLayout from "./layouts/Adminlayout.tsx";
-import CardUpsert from "./pages/CardUpsert.tsx";
 import CardUpdate from "./pages/CardUpdate.tsx";
 import CardCreate from "./pages/CardCreate.tsx";
 

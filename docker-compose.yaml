@@ -47,7 +47,13 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@document_db:27017/
       ME_CONFIG_BASICAUTH: false
-
+  frontend:
+    container_name: 'frontend'
+    image: frontend
+    ports:
+      - "80:80"
+    restart: always
+    
 networks:
   app-network:
     driver: bridge
