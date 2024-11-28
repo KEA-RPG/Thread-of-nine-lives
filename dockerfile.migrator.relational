@@ -18,7 +18,7 @@ RUN dotnet restore "Migrator/Migrators.RelationalDB.csproj"
 
 COPY . .
 
-RUN dotnet build "Migrator/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 FROM build AS publish
