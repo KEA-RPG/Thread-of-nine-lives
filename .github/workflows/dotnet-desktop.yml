@@ -38,7 +38,7 @@ jobs:
       run: dotnet build --configuration Release
       
     - name: Execute unit tests
-      run: dotnet test UnitTests/UnitTests.csproj --no-build
+      run: dotnet test UnitTests/UnitTests.csproj
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
