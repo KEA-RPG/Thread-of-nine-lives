@@ -13,6 +13,7 @@ COPY ["Backend.sln", "./"]
 
 # Copy necessary project files for dependency restoration
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj", "Migrators.RelationalDB/"]
 
 # Restore dependencies for the DatabaseSeeder project
 RUN dotnet restore "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj"
