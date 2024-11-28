@@ -7,7 +7,7 @@ using System.Reflection;
 
 public class Program
 {
-    private static void Main(string[] args)
+    public static void Main(string[] args)
     {
         var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
