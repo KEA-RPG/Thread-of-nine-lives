@@ -22,6 +22,7 @@ namespace Backend
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
+            builder.Services.AddHealthChecks();
 
             // Add services to the container
             builder.Services.AddEndpointsApiExplorer();
@@ -80,6 +81,7 @@ namespace Backend
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+            app.MapHealthChecks("/health");
 
             app.MapCombatEndpoints();
 

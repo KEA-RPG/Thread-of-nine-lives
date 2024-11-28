@@ -164,7 +164,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       backend:
-        image: bjand49/tonl-backend
+        image: bjand49/tonl-api
         ports:
           - 5000:80  # Expose backend port
         options: >-
