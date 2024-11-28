@@ -7,26 +7,28 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Copy only the solution file
+# Copy solution and project files for dependency restoration
 COPY ["Backend.sln", "./"]
-
-# Copy necessary project files for dependency restoration
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-COPY ["Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj", "Migrator/"]
+COPY ["Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj", "Migrators/Migrators.RelationalDB/"]
 
-RUN dotnet restore "Migrator/Migrators.RelationalDB.csproj"
+# Restore dependencies
+RUN dotnet restore "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj"
 
+# Copy the rest of the source code
 COPY . .
 
+# Build the migrator project
 RUN dotnet build "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Migrator/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "Migrators.RelationalDB.dll"]
