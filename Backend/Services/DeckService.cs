@@ -2,16 +2,19 @@
 using Domain.DTOs;
 using Backend.SecurityLogic;
 using Backend.Repositories.Interfaces;
+using Backend.Repositories.Relational;
 
 namespace Backend.Services
 {
     public class DeckService : IDeckService
     {
         private readonly IDeckRepository _deckRepository;
+        private readonly IUserRepository _userRepository;
 
-        public DeckService(IDeckRepository deckRepository)
+        public DeckService(IDeckRepository deckRepository, IUserRepository userRepository)
         {
             _deckRepository = deckRepository;
+            _userRepository = userRepository;
         }
 
         public DeckDTO CreateDeck(DeckDTO deckDTO)
@@ -74,6 +77,17 @@ namespace Backend.Services
                 throw new KeyNotFoundException($"Deck with ID {sanitizedComment.DeckId} was not found.");
             }
 
+            // Check if the user exists based on the Username
+            var user = _userRepository.GetUserByUsername(sanitizedComment.Username);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with username '{sanitizedComment.Username}' was not found.");
+            }
+
+            // Set the UserId from the found user
+            sanitizedComment.UserId = user.Id;
+
+            // Add the sanitized comment
             _deckRepository.AddComment(sanitizedComment);
         }
 

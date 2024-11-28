@@ -1,8 +1,8 @@
 import { Spinner } from "@chakra-ui/react";
 import { Card, useCard } from "../hooks/useCard";
 import { useParams } from "react-router-dom";
-import CardUpsert from "./CardUpsert";
 import { useEffect, useState } from "react";
+import CardUpsert from "../components/CardUpsert";
 
 
 const CardUpdate = () => {
@@ -18,6 +18,7 @@ const CardUpdate = () => {
 
     return (
         <>
+            
             {card === undefined ? (
                 <Spinner />
             ) : (

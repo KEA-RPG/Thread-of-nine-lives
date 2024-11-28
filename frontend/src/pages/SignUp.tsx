@@ -22,7 +22,7 @@ const SignUp = () => {
     }
     const result = await handleSignUp(credentials);
     if (result.error) {
-      setError(result.error);
+      setError(result.error.message);
     }
     else {
       toast({

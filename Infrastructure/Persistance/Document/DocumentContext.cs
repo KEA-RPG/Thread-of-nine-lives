@@ -49,10 +49,14 @@ namespace Infrastructure.Persistance.Document
             return GetCollection<Counter>("counters");
         }
 
-
-        private IMongoCollection<T> GetCollection<T>(string collectionName)
+        public IMongoCollection<T> GetCollection<T>(string collectionName)
         {
             return _database.GetCollection<T>(collectionName);
+        }
+
+        public IAsyncCursor<string> GetAllCollections()
+        {
+            return _database.ListCollectionNames();
         }
 
         public int GetAutoIncrementedId(string name)
