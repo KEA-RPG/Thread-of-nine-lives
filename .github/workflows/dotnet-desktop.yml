@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: .NET Core Full Integration
 
 on:
   push:
@@ -7,42 +7,98 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
-    strategy:
-      matrix:
-        configuration: [Release]
-
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+  # Build Job
+  build_backend:
+    runs-on: ubuntu-latest
 
     env:
-      Solution_Name: Backend.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: UnitTests/UnitTests.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Solution_Name: Backend.sln
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
-    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
+    - name: Restore Dependencies
+      run:  dotnet restore 
 
-    # Execute all unit tests in the solution
+    - name: Build Solution
+      run: dotnet build --configuration Release
+      
     - name: Execute unit tests
       run: dotnet test UnitTests/UnitTests.csproj
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+    - name: Build the Docker image
+      run: docker build . --file dockerfile.api --tag thread-of-nine-lives/api
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: bjand49
+        password: ${{ secrets.DOCKER_PAT }}
+        
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: thread-of-nine-lives/api
+        
+    - name: Push Docker image
+      run: docker push thread-of-nine-lives/api
+
+      runs-on: ubuntu-latest
+      needs: [build_backend,build_seeder]
+      services:
+        mssql:
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "yourStrong(!)Password"
+          ports:
+            - 1433:1433
+          options: >-
+            --health-cmd "exit 0"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+
+      steps: 
+        - name: Download Backend Artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: backend-artifact
+
+        - name: Download Seeder Artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: seeder-artifact
+
+        - name: Setup .NET Core
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: 8.0.x
+        - name: test
+          run : ls
+
+        - name: Run Data Seeder
+          run: cd DatabaseSeeder &
+            dotnet DatabaseSeeder.dll
+
+        - name: Start Backend in Background
+          run: cd ../Backend &
+            dotnet Backend.dll &
+            sleep 2
+        - name: Install Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '20'
+            
+        - name: Install postwoman npm
+          run: npm i -g @hoppscotch/cli
+
+        - name: Test CardEndpoints
+          run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm2vovwgi002jnyzh1ixfcc9c --token ${{secrets.HOPPSCOTCHPAT}}
