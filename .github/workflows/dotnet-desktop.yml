@@ -47,5 +47,6 @@ jobs:
         file: dockerfile.api
         push: true
         tags: bjand49/tonl-api
-        cache-from: type=registry,ref=bjand49/tonl-api
-        cache-to: type=inline
+      env:
+        DOCKER_USERNAME: bjand49
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PAT }}
