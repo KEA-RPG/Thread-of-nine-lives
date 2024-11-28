@@ -6,10 +6,18 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Copy only the solution file
+COPY ["Backend.sln", "./"]
+
+# Copy necessary project files for dependency restoration
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 COPY ["Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj", "Migrator/"]
+
 RUN dotnet restore "Migrator/Migrators.RelationalDB.csproj"
+
 COPY . .
+
 RUN dotnet build "Migrator/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage

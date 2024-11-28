@@ -5,44 +5,47 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-public class Program
+namespace Migrators.RelationalDB
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(binpath)
-            .AddJsonFile("dbsettingsrelational.json")
-            .Build();
-
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-        var builder = Host.CreateDefaultBuilder(args)
-            .ConfigureServices(services =>
-            {
-                services.AddDbContext<RelationalContext>(options =>
-                {
-                    options.UseSqlServer(connectionString,
-                        b => b.MigrationsAssembly("Infrastructure"));
-                });
-            });
-
-        using (var host = builder.Build())
+        public static void Main(string[] args)
         {
-            using (var scope = host.Services.CreateScope())
+            var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(binpath)
+                .AddJsonFile("dbsettingsrelational.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            var builder = Host.CreateDefaultBuilder(args)
+                .ConfigureServices(services =>
+                {
+                    services.AddDbContext<RelationalContext>(options =>
+                    {
+                        options.UseSqlServer(connectionString,
+                            b => b.MigrationsAssembly("Infrastructure"));
+                    });
+                });
+
+            using (var host = builder.Build())
             {
-                var services = scope.ServiceProvider;
-                Console.WriteLine("Attempting to do database migration");
-                try
+                using (var scope = host.Services.CreateScope())
                 {
-                    var context = services.GetRequiredService<RelationalContext>();
-                    context.Database.Migrate();  // Apply pending migrations
-                    Console.WriteLine("Database migration completed successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+                    var services = scope.ServiceProvider;
+                    Console.WriteLine("Attempting to do database migration");
+                    try
+                    {
+                        var context = services.GetRequiredService<RelationalContext>();
+                        context.Database.Migrate();  // Apply pending migrations
+                        Console.WriteLine("Database migration completed successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+                    }
                 }
             }
         }
