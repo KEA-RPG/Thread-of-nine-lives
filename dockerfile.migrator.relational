@@ -15,18 +15,18 @@ COPY ["Backend.sln", "./"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 
 # Restore dependencies for the DatabaseSeeder project
-RUN dotnet restore "Migrators/Migrators.RelationalDB.csproj"
+RUN dotnet restore "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj"
 
 # Copy the entire source code for the required projects
 COPY . .
 
 # Build the DatabaseSeeder project
-RUN dotnet build "Migrators/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish the DatabaseSeeder project
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Migrators/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Migrators/Migrators.RelationalDB/Migrators.RelationalDB.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final runtime image
 FROM base AS final
