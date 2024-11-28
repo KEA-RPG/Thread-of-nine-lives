@@ -145,3 +145,68 @@ jobs:
 
     - name: Push Docker Image
       run: docker push bjand49/tonl-migrator-relational
+
+
+  api_test:
+    runs-on: ubuntu-latest
+    needs: [build_backend, build_seeder]
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "yourStrong(!)Password"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      backend:
+        image: bjand49/tonl-backend
+        ports:
+          - 5000:80  # Expose backend port
+        options: >-
+          --health-cmd "curl --silent --fail http://localhost:80/health || exit 1"  # Adjust health check
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      seeder:
+        image: bjand49/tonl-seeder
+        options: >-
+          --health-cmd "curl --silent --fail http://localhost:80/health || exit 1"  # Adjust health check
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run Data Seeder
+        run: |
+          docker exec -t seeder /bin/sh -c "dotnet /path/to/DatabaseSeeder.dll"
+
+      - name: Start Backend in Background
+        run: |
+          docker exec -t backend /bin/sh -c "dotnet /path/to/Backend.dll &"
+          sleep 2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install postwoman npm
+        run: npm i -g @hoppscotch/cli
+
+      - name: Test CardEndpoints
+        run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm2vovwgi002jnyzh1ixfcc9c --token ${{ secrets.HOPPSCOTCHPAT }}
+
+    
