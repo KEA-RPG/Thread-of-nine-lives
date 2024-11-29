@@ -192,12 +192,10 @@ jobs:
       - name: Create SQL User and Database if not exists
         run: |
           docker exec -it relative_db sudo /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "yourStrong(!)Password" -Q "
-            CREATE LOGIN myUser WITH PASSWORD = 'MyPassword123';
-            CREATE USER myUser FOR LOGIN myUser;
-            ALTER ROLE db_owner ADD MEMBER myUser;
             IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KeaRpg') BEGIN CREATE DATABASE KeaRpg; END
           "
-            - name: Setup .NET Core
+
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
