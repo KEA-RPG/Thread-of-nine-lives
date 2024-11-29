@@ -187,6 +187,15 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Test MSSQL Connection
+        run: |
+          echo "Testing MSSQL availability on relative_db..."
+          until nc -zv relative_db; do
+            echo "Waiting for MSSQL to become available..."
+            sleep 2
+          done
+          echo "MSSQL is available!"
+
       - name: Run Data Seeder
         run: docker run bjand49/tonl-seeder -e ASPNETCORE_ENVIRONMENT=Docker
 
