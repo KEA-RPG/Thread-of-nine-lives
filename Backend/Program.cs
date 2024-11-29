@@ -6,6 +6,7 @@ using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -66,14 +67,51 @@ namespace Backend
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 
-            builder.Services.AddCors(p => p.AddPolicy("*", b =>
-            b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:5173") // Make sure this matches the frontend origin exactly
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // Required for including cookies
+                });
+            });
+
+
 
 
             PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
 
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRF-TOKEN"; // Custom header for CSRF token
+                options.Cookie.Name = ".AspNetCore.Antiforgery"; // Default antiforgery cookie name
+                options.Cookie.SameSite = SameSiteMode.Lax; // Use Lax for local development to ease cross-origin issues
+                options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Allow cookies over HTTP
+            });
+
+
+
+
 
             var app = builder.Build();
+
+
+            app.Use(async (context, next) =>
+            {
+                try
+                {
+                    await next();
+                }
+                catch (AntiforgeryValidationException ex)
+                {
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    await context.Response.WriteAsync("CSRF token validation failed.");
+                }
+            });
+
 
             // Map controllers
             app.MapCardEndpoint();
@@ -89,7 +127,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("*");
+            app.UseCors("CorsPolicy");
             app.Run();
         }
     }

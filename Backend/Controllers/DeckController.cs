@@ -2,6 +2,7 @@
 using Backend.SecurityLogic;
 using Backend.Services;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Identity.Client;
 using System.IdentityModel.Tokens.Jwt;
@@ -124,21 +125,35 @@ namespace Backend.Controllers
 
 
             // Add a comment to a deck
-            app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto) =>
+            // Add a comment to a deck
+            app.MapPost("/decks/{deckId}/comments", async (IDeckService deckService, int deckId, CommentDTO commentDto, HttpContext context) =>
             {
+                System.Diagnostics.Debug.WriteLine("Attempting to validate anti-forgery token for comment.");
+                System.Diagnostics.Debug.WriteLine("Incoming request cookies:");
+
+                foreach (var cookie in context.Request.Cookies)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Cookie Name: {cookie.Key}, Cookie Value: {cookie.Value}");
+                }
+
+                try
+                {
+                    await AntiForgeryHelper.ValidateAntiForgeryToken(context);
+                    System.Diagnostics.Debug.WriteLine("Anti-forgery token validated successfully.");
+                }
+                catch (AntiforgeryValidationException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Anti-forgery token validation failed: {ex.Message}");
+                    throw;
+                }
+
                 commentDto.DeckId = deckId;
                 deckService.AddComment(commentDto);
+                System.Diagnostics.Debug.WriteLine($"Comment added successfully to deck {deckId}.");
                 return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
 
-
-            // Get all comments for a specific deck
-            app.MapGet("/decks/{deckId}/comments", (IDeckService deckService, int deckId) =>
-            {
-                var comments = deckService.GetCommentsByDeckId(deckId);
-                return Results.Ok(comments);
-            });
 
         }
     }

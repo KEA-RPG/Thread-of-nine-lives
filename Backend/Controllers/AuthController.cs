@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.JsonWebTokens;
 using JwtClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 using Backend.Models;
+using Microsoft.AspNetCore.Antiforgery;
 
 namespace Backend.Controllers
 {
@@ -114,6 +115,37 @@ namespace Backend.Controllers
 
                 return Results.BadRequest("Token is invalid or has no jti.");
             });
+
+
+
+            app.MapGet("/auth/antiforgery-token", (HttpContext context, IAntiforgery antiforgery) =>
+            {
+                var tokens = antiforgery.GetAndStoreTokens(context);
+                context.Response.Cookies.Append(
+                    ".AspNetCore.Antiforgery",
+                    tokens.RequestToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = false,
+                        SameSite = SameSiteMode.None,
+                        Secure = false // Temporarily set to false for HTTP testing
+                    }
+                );
+
+                System.Diagnostics.Debug.WriteLine("Antiforgery cookie appended to the response:");
+                System.Diagnostics.Debug.WriteLine($"Cookie Name: .AspNetCore.Antiforgery, Cookie Value: {tokens.RequestToken}");
+
+                return Results.Ok(new { RequestToken = tokens.RequestToken });
+            });
+
+
+
+
+
+
+
+
+
 
 
         }
