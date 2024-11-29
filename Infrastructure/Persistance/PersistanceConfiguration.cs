@@ -24,7 +24,7 @@ namespace Infrastructure.Persistance
                 .Build();
 
             var connectionString = configuration.GetConnectionString(dbString);
-
+            Console.WriteLine(connectionString);
             services.AddDbContext<RelationalContext>(options =>
             {
                 options.UseSqlServer(connectionString,
