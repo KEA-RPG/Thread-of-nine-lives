@@ -166,16 +166,17 @@ jobs:
       backend:
         image: bjand49/tonl-api
         ports:
-          - 5000:80  # Expose backend port
+          - 8080:8080  # Expose backend port
         options: >-
-          --health-cmd "curl --silent --fail http://localhost:80/health || exit 1"  # Adjust health check
+          --health-cmd "curl --silent --fail http://localhost:8080/health || exit 1" 
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --ASPNETCORE_ENVIRONMENT Docker
       seeder:
         image: bjand49/tonl-seeder
         options: >-
-          --health-cmd "curl --silent --fail http://localhost:80/health || exit 1"  # Adjust health check
+          --health-cmd "curl --silent --fail http://localhost:80/health || exit 1" 
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
