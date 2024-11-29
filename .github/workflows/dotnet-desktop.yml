@@ -173,8 +173,8 @@ jobs:
 
       seeder:
         image: bjand49/tonl-seeder
-      env:
-        ASPNETCORE_ENVIRONMENT: "Docker"
+        env:
+          ASPNETCORE_ENVIRONMENT: "Docker"
 
 
     steps:
