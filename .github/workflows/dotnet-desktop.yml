@@ -187,8 +187,8 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: |
-          docker exec -t seeder /bin/sh -c "dotnet /path/to/DatabaseSeeder.dll"
+        run: docker run bjand49/tonl-seeder 
+
       - name: Start Backend in Background
         run: |
           docker exec -t backend /bin/sh -c "dotnet /path/to/Backend.dll &"
