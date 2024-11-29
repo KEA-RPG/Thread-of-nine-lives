@@ -182,22 +182,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         
-      - name: Test MSSQL Connection
-        run: |
-          echo "Testing MSSQL availability on 127.0.0.1:1433..."
-          until nc -zv 127.0.0.1 1433; do
-            echo "Waiting for MSSQL to become available..."
-            sleep 2
-          done
-          echo "MSSQL is available!"
-          
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: docker run bjand49/tonl-seeder
+        run: docker run bjand49/tonl-seeder -e ASPNETCORE_ENVIRONMENT=Docker
 
       - name: Start Backend in Background
         run: docker run bjand49/tonl-api
