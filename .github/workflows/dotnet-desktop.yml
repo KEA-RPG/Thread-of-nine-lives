@@ -184,14 +184,14 @@ jobs:
 
       - name: Install sudo and mssql-tools (if needed)
         run: |
-          docker exec -it relative_db /bin/bash -c "apt-get update && apt-get install -y sudo curl gnupg2"
-          docker exec -it relative_db /bin/bash -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -"
-          docker exec -it relative_db /bin/bash -c "curl https://packages.microsoft.com/mssql-server/debian/mssql-server-2022.list > /etc/apt/sources.list.d/mssql-server-2022.list"
-          docker exec -it relative_db /bin/bash -c "apt-get update && apt-get install -y mssql-tools"
+          docker exec -T relative_db /bin/bash -c "apt-get update && apt-get install -y sudo curl gnupg2"
+          docker exec -T relative_db /bin/bash -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -"
+          docker exec -T relative_db /bin/bash -c "curl https://packages.microsoft.com/mssql-server/debian/mssql-server-2022.list > /etc/apt/sources.list.d/mssql-server-2022.list"
+          docker exec -T relative_db /bin/bash -c "apt-get update && apt-get install -y mssql-tools"
 
       - name: Create SQL User and Database if not exists
         run: |
-          docker exec -it relative_db sudo /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "yourStrong(!)Password" -Q "
+          docker exec -T relative_db sudo /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "yourStrong(!)Password" -Q "
             IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KeaRpg') BEGIN CREATE DATABASE KeaRpg; END
           "
 
