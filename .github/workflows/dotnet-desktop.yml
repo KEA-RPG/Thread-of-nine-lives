@@ -173,11 +173,10 @@ jobs:
 
       seeder:
         image: bjand49/tonl-seeder
-        options: >-
-          --health-cmd "curl --silent --fail http://localhost:80/health || exit 1" 
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+      env:
+        ASPNETCORE_ENVIRONMENT: "Docker"
+
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
