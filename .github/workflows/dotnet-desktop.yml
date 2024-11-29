@@ -168,11 +168,6 @@ jobs:
         image: bjand49/tonl-api
         ports:
           - 8080:8080  # Expose backend port
-        options: >-
-          --health-cmd "curl --silent --fail http://127.0.0.1:8080/health || exit 1" 
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
         env:
           ASPNETCORE_ENVIRONMENT: "Docker"
 
