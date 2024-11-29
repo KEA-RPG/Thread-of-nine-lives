@@ -16,6 +16,8 @@ namespace DataSeeder
         public static void Main(string[] args)
         {
             Console.WriteLine("Starting application...");
+            Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+
             var builder = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
@@ -35,9 +37,10 @@ namespace DataSeeder
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<RelationalContext>();
 
+                Console.WriteLine("Updating DB");
                 // Ensure database is created
                 context.Database.EnsureCreated();
-
+                Console.WriteLine("DB updated");
                 Console.WriteLine("Seeding users");
                 // Seed data
                 //User
