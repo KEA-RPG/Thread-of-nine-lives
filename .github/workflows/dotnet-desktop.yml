@@ -171,8 +171,6 @@ jobs:
         options: >-
           --network thread-of-nine-lives_app-network api
           --name testAPI
-          --health-timeout 5s
-          --health-retries 5
         env:
           ASPNETCORE_ENVIRONMENT: "Docker"
 
