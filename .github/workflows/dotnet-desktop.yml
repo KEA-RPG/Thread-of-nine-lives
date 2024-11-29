@@ -186,7 +186,7 @@ jobs:
         run: |
           docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y curl gnupg2"
           docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -"
-          docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/mssql-tools/debian/2022/prod.list > /etc/apt/sources.list.d/mssql-tools.list"
+          docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-tools.list"
           docker exec --user=root relative_db bash -c "apt-get update"
           docker exec --user=root relative_db bash -c "apt-get install -y mssql-tools unixodbc-dev"
 
