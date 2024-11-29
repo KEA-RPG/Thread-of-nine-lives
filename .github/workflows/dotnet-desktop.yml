@@ -193,12 +193,11 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: docker run bjand49/tonl-seeder 
+        run: docker run bjand49/tonl-seeder --network thread-of-nine-lives_app-network --name=seeder
 
       - name: Start Backend in Background
-        run: |
-          docker exec -t backend /bin/sh -c "dotnet /path/to/Backend.dll &"
-          sleep 2
+        run: docker run bjand49/tonl-api --network thread-of-nine-lives_app-network --name=api
+
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
