@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  Build Job
+  # Build Job
   build_backend:
     runs-on: ubuntu-latest
 
@@ -171,12 +171,6 @@ jobs:
           - 8080:8080  # Expose backend port
         env:
           ASPNETCORE_ENVIRONMENT: "Docker"
-
-      seeder:
-        image: bjand49/tonl-seeder
-        env:
-          ASPNETCORE_ENVIRONMENT: "Docker"
-
 
     steps:
       - name: Checkout Code
