@@ -181,6 +181,8 @@ jobs:
       #     --health-interval 10s
       #     --health-timeout 5s
       #     --health-retries 5
+      # env:
+      #     ASPNETCORE_ENVIRONMENT: "Docker"
 
     steps:
       - name: Checkout Code
