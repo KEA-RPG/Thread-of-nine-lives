@@ -160,7 +160,6 @@ jobs:
           - 1433:1433
         options: >-
           --name relative_db
-          --network thread-of-nine-lives_app-network
           --health-cmd "exit 0"
           --health-interval 10s
           --health-timeout 5s
