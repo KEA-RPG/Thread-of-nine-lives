@@ -175,10 +175,6 @@ jobs:
 
       seeder:
         image: bjand49/tonl-seeder
-        options: >-
-          --name seeder
-          --network thread-of-nine-lives_app-network
-
         env:
           ASPNETCORE_ENVIRONMENT: "Docker"
 
@@ -193,10 +189,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: docker run bjand49/tonl-seeder --network thread-of-nine-lives_app-network --name=seeder
+        run: docker run bjand49/tonl-seeder -e ASPNETCORE_ENVIRONMENT=Docker --network thread-of-nine-lives_app-network --name=seeder
 
       - name: Start Backend in Background
-        run: docker run bjand49/tonl-api --network thread-of-nine-lives_app-network --name=api
+        run: docker run bjand49/tonl-api -e ASPNETCORE_ENVIRONMENT=Docker --network thread-of-nine-lives_app-network --name=api
 
       - name: Install Node.js
         uses: actions/setup-node@v3
