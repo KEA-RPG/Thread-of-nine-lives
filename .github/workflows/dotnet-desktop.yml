@@ -184,9 +184,8 @@ jobs:
 
       - name: Create Database 
         run: |
-          docker exec -it relative_db /opt/mssql-tools/bin/sqlcmd \
-          -S localhost -U sa -P 'yourStrong(!)Password' \
-          -Q 'IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KeaRpg') BEGIN CREATE DATABASE KeaRpg; END'
+          docker exec -t relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KeaRpg') BEGIN CREATE DATABASE KeaRpg; END'      
+      
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
