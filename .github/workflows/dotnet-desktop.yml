@@ -197,7 +197,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: docker run --rm --name database-seeder --network tonl-network
+        run: docker run --name database-seeder --network tonl-network bjand49/tonl-seeder
         
       - name: Start Backend in Background
         run: docker run bjand49/tonl-api
