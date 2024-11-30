@@ -188,7 +188,10 @@ jobs:
 
       - name: Wait for SQL Server to be ready
         run: |
-          sleep 5
+          echo "Waiting for SQL Server to be ready..."
+          until docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q "SELECT 1"; do
+            sleep 5
+          done
           echo "SQL Server is ready."
 
       - name: Setup .NET Core
