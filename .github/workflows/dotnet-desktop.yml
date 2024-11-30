@@ -166,6 +166,7 @@ jobs:
       seeder:
         image: bjand49/tonl-seeder:latest
         options: >-
+          --name seeder
           --entrypoint /bin/bash
 
 
