@@ -164,7 +164,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-
       backend:
         image: bjand49/tonl-api
         ports:
@@ -199,9 +198,6 @@ jobs:
       - name: Run Data Seeder
         run: docker run --name database-seeder --network tonl-network bjand49/tonl-seeder
         
-      # - name: Start Backend in Background
-      #   run: docker run bjand49/tonl-api
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
