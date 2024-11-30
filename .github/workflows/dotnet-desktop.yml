@@ -163,7 +163,13 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          
+      seeder:
+        image: bjand49/tonl-seeder:latest
+        options: >-
+          --name seeder
+          --link relative_db:relative_db  # Linking the seeder to the DB service
+          --entrypoint /bin/bash  # Start the container with bash for further commands if necessary
+
 
       # backend:
       #   image: bjand49/tonl-api
@@ -201,8 +207,13 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: docker run bjand49/tonl-seeder -e ASPNETCORE_ENVIRONMENT=Docker -d relative_db
-
+        run: |
+          echo "Waiting for Seeder to be ready..."
+          until docker exec seeder /bin/bash -c "echo 'Seeder container is ready'"; do
+            sleep 5
+          done
+          docker exec seeder /bin/bash -c "dotnet DataSeeder.dll --environment Docker"
+          
       - name: Start Backend in Background
         run: docker run bjand49/tonl-api
 
