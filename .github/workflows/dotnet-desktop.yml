@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [build_backend, build_seeder]
     services:
-      mssql:
+      relative_db:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           ACCEPT_EULA: "Y"
