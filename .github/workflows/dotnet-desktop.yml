@@ -159,7 +159,7 @@ jobs:
           - 1433:1433
         options: >-
           --name relative_db
-          --health-cmd "exit 0"
+          --health-cmd "sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'SELECT 1'" 
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -177,12 +177,11 @@ jobs:
 
       - name: Install mssql-tools in Docker container
         run: |
-          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y curl gnupg2"
-          docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -"
-          docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-tools.list"
-          docker exec --user=root relative_db bash -c "apt-get update"
-          docker exec --user=root relative_db bash -c "apt-get install -y mssql-tools unixodbc-dev"
-
+          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
+          docker exec --user=root relative_db bash -c "mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg"
+          docker exec --user=root relative_db bash -c "echo 'deb [signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main' > /etc/apt/sources.list.d/mssql-tools.list"
+          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
+      
       - name: Create Database
         run: |
           docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
