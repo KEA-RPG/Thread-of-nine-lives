@@ -175,25 +175,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # - name: Install mssql-tools in Docker container
-      #   run: |
-      #     docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y curl gnupg2"
-      #     docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -"
-      #     docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-tools.list"
-      #     docker exec --user=root relative_db bash -c "apt-get update"
-      #     docker exec --user=root relative_db bash -c "apt-get install -y mssql-tools unixodbc-dev"
+      - name: Install mssql-tools in Docker container
+        run: |
+          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y curl gnupg2"
+          docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -"
+          docker exec --user=root relative_db bash -c "curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-tools.list"
+          docker exec --user=root relative_db bash -c "apt-get update"
+          docker exec --user=root relative_db bash -c "apt-get install -y mssql-tools unixodbc-dev"
 
-      # - name: Create Database
-      #   run: |
-      #     docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
+      - name: Create Database
+        run: |
+          docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
 
-      # - name: Wait for SQL Server to be ready
-      #   run: |
-      #     echo "Waiting for SQL Server to be ready..."
-      #     until docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q "SELECT 1"; do
-      #       sleep 5
-      #     done
-      #     echo "SQL Server is ready."
+      - name: Wait for SQL Server to be ready
+        run: |
+          echo "Waiting for SQL Server to be ready..."
+          until docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q "SELECT 1"; do
+            sleep 5
+          done
+          echo "SQL Server is ready."
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
