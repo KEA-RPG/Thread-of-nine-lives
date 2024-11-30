@@ -3,7 +3,7 @@
     public class StateGameInit
     {
         public required int EnemyId { get; set; }
-        public required int UserId { get; set; }
+        public string UserName { get; set; }
         
     }
 }

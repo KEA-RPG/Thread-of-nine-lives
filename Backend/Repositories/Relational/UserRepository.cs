@@ -36,6 +36,10 @@ namespace Backend.Repositories.Relational
         public UserDTO GetUserByUsername(string username)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            if (user == null)
+            {
+                return null;
+            }
             return UserDTO.FromEntity(user);
         }
 
