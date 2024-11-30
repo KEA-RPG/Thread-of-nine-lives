@@ -156,14 +156,14 @@ jobs:
         run: docker network create tonl-network
         
       - name: Create database container
-        run: docker create --name relative_db --network tonl-network --network-alias relative_db -p 1433:1433 --name relative_db --health-cmd "exit 0" --health-interval 10s --health-timeout 5s --health-retries 5 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(!)Password" -e GITHUB_ACTIONS=true -e CI=true mcr.microsoft.com/mssql/server:2022-latest -d
+        run: docker create --name relative_db --network tonl-network --network-alias relative_db -p 1433:1433 --name relative_db --health-cmd "exit 0" --health-interval 10s --health-timeout 5s --health-retries 5 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(!)Password" -e GITHUB_ACTIONS=true -e CI=true mcr.microsoft.com/mssql/server:2022-latest
       
       - name: Start database container
         run: docker start relative_db
 
       - name: idk
         run: docker ps --all --filter name=relative_db --filter status=running --no-trunc --format "{{.Names}} {{.Status}}"
-        
+
       - name: Checkout Code
         uses: actions/checkout@v4
         
