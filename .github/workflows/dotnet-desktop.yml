@@ -163,8 +163,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --network tonl_network
-
+          
 
       # backend:
       #   image: bjand49/tonl-api
@@ -202,7 +201,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: docker run --network tonl_network bjand49/tonl-seeder -e ASPNETCORE_ENVIRONMENT=Docker
+        run: docker run bjand49/tonl-seeder -e ASPNETCORE_ENVIRONMENT=Docker -d relative_db
 
       - name: Start Backend in Background
         run: docker run bjand49/tonl-api
