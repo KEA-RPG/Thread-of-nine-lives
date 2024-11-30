@@ -166,8 +166,6 @@ jobs:
       seeder:
         image: bjand49/tonl-seeder:latest
         options: >-
-          --name seeder
-          --link relative_db:relative_db  # Linking the seeder to the DB service
           --entrypoint /bin/bash  # Start the container with bash for further commands if necessary
 
 
@@ -213,7 +211,7 @@ jobs:
             sleep 5
           done
           docker exec seeder /bin/bash -c "dotnet DataSeeder.dll --environment Docker"
-          
+
       - name: Start Backend in Background
         run: docker run bjand49/tonl-api
 
