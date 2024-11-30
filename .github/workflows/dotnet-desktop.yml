@@ -149,36 +149,25 @@ jobs:
   api_test:
     runs-on: ubuntu-latest
     # needs: [build_backend, build_seeder]
-    services:
-      relative_db:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "yourStrong(!)Password"
-        ports:
-          - 1433:1433
-        options: >-
-          --name relative_db
-          --health-cmd "exit 0"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      seeder:
-        image: bjand49/tonl-seeder:latest
-        options: >-
-          --name seeder
-
-
-      # backend:
-      #   image: bjand49/tonl-api
-      #   ports:
-      #     - 8080:8080  
-      #   env:
-      #     ASPNETCORE_ENVIRONMENT: "Docker"
 
     steps:
+
+      - name: Create network for containers
+        run: docker network create tonl-network
+        
+      - name: Start database container
+        run: docker run --name relative_db --network tonl-network --network-alias relative_db -p 1433:1433 --name relative_db --health-cmd "exit 0" --health-interval 10s --health-timeout 5s --health-retries 5 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(!)Password" -e GITHUB_ACTIONS=true -e CI=true mcr.microsoft.com/mssql/server:2022-latest
+      
       - name: Checkout Code
         uses: actions/checkout@v4
+        
+      - name: Wait for SQL Server to be ready
+        run: |
+          echo "Waiting for SQL Server to be ready..."
+          until docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q "SELECT 1"; do
+            sleep 5
+          done
+          echo "SQL Server is ready."
 
       - name: Install mssql-tools in Docker container
         run: |
@@ -191,26 +180,13 @@ jobs:
         run: |
           docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
 
-      - name: Wait for SQL Server to be ready
-        run: |
-          echo "Waiting for SQL Server to be ready..."
-          until docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q "SELECT 1"; do
-            sleep 5
-          done
-          echo "SQL Server is ready."
-
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
 
       - name: Run Data Seeder
-        run: |
-          echo "Waiting for Seeder to be ready..."
-          until docker exec seeder /bin/bash -c "echo 'Seeder container is ready'"; do
-            sleep 5
-          done
-          docker exec seeder /bin/bash -c "dotnet DataSeeder.dll --environment Docker"
+        run: docker run --name seeder --network tonl-network --network-alias seeder --name seeder -e ASPNETCORE_ENVIRONMENT=docker bjand49/tonl-seeder
 
       - name: Start Backend in Background
         run: docker run bjand49/tonl-api
