@@ -166,7 +166,7 @@ jobs:
       seeder:
         image: bjand49/tonl-seeder:latest
         options: >-
-          --entrypoint /bin/bash  # Start the container with bash for further commands if necessary
+          --entrypoint /bin/bash
 
 
       # backend:
