@@ -160,6 +160,9 @@ jobs:
       
       - name: Start database container
         run: docker start relative_db
+
+      - name: idk
+        run: docker ps --all --filter name=relative_db --filter status=running --no-trunc --format "{{.Names}} {{.Status}}"
         
       - name: Checkout Code
         uses: actions/checkout@v4
