@@ -71,15 +71,12 @@ namespace Backend
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder
-                        .WithOrigins("http://localhost:5173") // Make sure this matches the frontend origin exactly
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials(); // Required for including cookies
+                    builder.WithOrigins("http://localhost:5173")  // Specify the allowed origin (frontend)
+                           .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
+                           .AllowAnyMethod()                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                           .AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
                 });
             });
-
-
 
 
             PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
@@ -88,29 +85,12 @@ namespace Backend
             {
                 options.HeaderName = "X-CSRF-TOKEN"; // Custom header for CSRF token
                 options.Cookie.Name = ".AspNetCore.Antiforgery"; // Default antiforgery cookie name
-                options.Cookie.SameSite = SameSiteMode.Lax; // Use Lax for local development to ease cross-origin issues
-                options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Allow cookies over HTTP
+                options.Cookie.SameSite = SameSiteMode.Strict; // Use Lax for local development to ease cross-origin issues
+                options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Allow cookies over HTTP. Skal være HTTPS optimalt set
             });
-
-
-
 
 
             var app = builder.Build();
-
-
-            app.Use(async (context, next) =>
-            {
-                try
-                {
-                    await next();
-                }
-                catch (AntiforgeryValidationException ex)
-                {
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsync("CSRF token validation failed.");
-                }
-            });
 
 
             // Map controllers

@@ -19,7 +19,7 @@ const Login = () => {
       return;
     }
 
-    // Initialize the anti-forgery token after successful login
+    // Initialize the anti-forgery token after successful login. Skal bruges til at showcase CSRF.
     await fetchAntiForgeryToken();
   };
 

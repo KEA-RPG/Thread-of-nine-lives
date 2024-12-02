@@ -17,7 +17,7 @@ class ApiClient {
         headers: {
           ContentType: 'application/json',
         },
-        withCredentials: true
+        //withCredentials: true    Skal bruges til at showcase CSRF.
         
       });
     }
