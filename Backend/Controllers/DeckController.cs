@@ -131,7 +131,7 @@ namespace Backend.Controllers
                     //await AntiForgeryHelper.ValidateAntiForgeryToken(context);
                     //var user = context.User?.Identity?.Name ?? "Anonymous";
                     //var claims = context.User?.Claims?.Select(c => $"{c.Type}: {c.Value}") ?? new List<string>();
-        
+                    //Ovenstående er hvad der skal bruges til at authenticate en CSRF token og cookie. Det virker dog desværre ikke.
 
                 commentDto.DeckId = deckId;
                 deckService.AddComment(commentDto);

@@ -131,10 +131,6 @@ namespace Backend.Controllers
                         Secure = false // Temporarily set to false for HTTP testing
                     }
                 );
-
-                System.Diagnostics.Debug.WriteLine("Antiforgery cookie appended to the response:");
-                System.Diagnostics.Debug.WriteLine($"Cookie Name: .AspNetCore.Antiforgery, Cookie Value: {tokens.RequestToken}");
-
                 return Results.Ok(new { RequestToken = tokens.RequestToken });
             });
 

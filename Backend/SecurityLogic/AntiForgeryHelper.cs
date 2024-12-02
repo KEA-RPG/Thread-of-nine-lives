@@ -12,12 +12,10 @@ namespace Backend.SecurityLogic
             try
             {
                 await antiforgery.ValidateRequestAsync(context);
-                System.Diagnostics.Debug.WriteLine("CSRF token validated successfully.");
             }
             catch (AntiforgeryValidationException ex)
             {
-                System.Diagnostics.Debug.WriteLine($"CSRF validation failed: {ex.Message}");
-                throw; // Re-throw to allow higher-level error handling
+                throw;
             }
         }
     }
