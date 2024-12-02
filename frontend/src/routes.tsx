@@ -2,6 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import App from './App.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
 import ListLayout from './components/ListLayout.tsx';
+import MainLayout from './layouts/MainLayout.tsx';
+import CombatPage from "./pages/CombatPage.tsx";
+import SelectionPage from "./pages/Selection.tsx"
 import EnemyUpsert from './pages/EnemyUpsert.tsx';
 import Login from './pages/Login.tsx';
 import Logout from "./pages/Logout.tsx";
@@ -140,6 +143,22 @@ const router = createBrowserRouter([
         ),
       },
 
+      {
+        path: "/selection",
+        element: (
+          <MainLayout header="Select Enemy">
+            <SelectionPage />
+          </MainLayout>
+        ),
+      },
+      {
+        path: "/combat/:fightId",
+        element: (
+          <MainLayout header="Combat">
+            <CombatPage />
+          </MainLayout>
+        ),
+      },
     ],
   },
 ]);

@@ -3,7 +3,7 @@ import { useGet, usePost, usePut } from "./useData";
 export interface Enemy {
     id?: number;
     name: string;
-    health: string;
+    health: number;
     cost: number;
     imagePath: string;
 }

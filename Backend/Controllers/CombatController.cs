@@ -1,11 +1,7 @@
 ﻿using Backend.Models;
 using Backend.Services;
 using Domain.DTOs;
-using Backend.Helpers;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Numerics;
-using System.CodeDom;
+using Backend.Extensions;
 
 namespace Backend.Controllers
 {
@@ -22,13 +18,20 @@ namespace Backend.Controllers
                 return Results.Ok(state);
             });
 
-            app.MapPost("/combat/initialize", (ICombatService combatService, StateGameInit stateGameInit) =>
+            app.MapPost("/combat/initialize", (ICombatService combatService, StateGameInit stateGameInit, HttpContext context) =>
             {
+                stateGameInit.UserName = context.GetUserName();
                 var state = combatService.GetInitialState(stateGameInit);
 
                 return Results.Ok(state);
             });
 
+            app.MapGet("/combat/{id}", (ICombatService combatService, int id) =>
+            {
+                var state = combatService.GetStateByFightId(id);
+
+                return Results.Ok(state);
+            });
         }
     }
 }
