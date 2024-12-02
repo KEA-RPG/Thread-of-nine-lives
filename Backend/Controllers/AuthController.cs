@@ -126,9 +126,9 @@ namespace Backend.Controllers
                     tokens.RequestToken,
                     new CookieOptions
                     {
-                        HttpOnly = false,
+                        HttpOnly = true,
                         SameSite = SameSiteMode.None,
-                        Secure = false // Temporarily set to false for HTTP testing
+                        Secure = true
                     }
                 );
                 return Results.Ok(new { RequestToken = tokens.RequestToken });
