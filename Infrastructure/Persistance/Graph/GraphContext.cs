@@ -9,6 +9,8 @@ using System.Xml.Linq;
 using Domain.Entities.Neo4J;
 using Neo4j.Driver.Mapping;
 using Neo4jClient;
+using Neo4jClient.Transactions;
+using System.Net.Sockets;
 namespace Infrastructure.Persistance.Graph
 {
     public class GraphContext
@@ -35,6 +37,31 @@ namespace Infrastructure.Persistance.Graph
             .ResultsAsync;
             return query;
         }
+
+        public async Task Insert<T>(T entity, string labelName)
+        {
+            await _client.Cypher
+                .Create($"(x:{labelName} {{newItem}})")
+                .WithParam("newItem", entity)
+                .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task InsertMany<T>(IEnumerable<T> list, string labelName)
+        {
+            using (ITransaction tx = _client.BeginTransaction())
+            {
+                foreach (var item in list)
+                {
+
+                    await _client.Cypher
+                        .Create("(x:Card $newItem)")
+                        .WithParam("newItem", item)
+                        .ExecuteWithoutResultsAsync();
+                }
+                await tx.CommitAsync();
+            }
+        }
+
         public async Task<IReadOnlyList<Person>> ExecuteQueryWithMap2(string query)
         {
             using (var session = _driver.AsyncSession())

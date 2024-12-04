@@ -12,15 +12,5 @@ namespace Domain.Entities.Neo4J
 
         public Enemy() { }
 
-        public static Enemy FromDTO(EnemyDTO enemyDTO)
-        {
-            return new Enemy
-            {
-                Id = enemyDTO.Id,
-                Name = enemyDTO.Name,
-                Health = enemyDTO.Health,
-                ImagePath = enemyDTO.ImagePath
-            };
-        }
     }
 }
