@@ -47,12 +47,20 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@document_db:27017/
       ME_CONFIG_BASICAUTH: false
+  
   frontend:
     container_name: 'frontend'
-    image: frontend
+    image: bjand49/tonl-frontend
     ports:
       - "80:80"
     restart: always
+
+  seeder: 
+    container_name: 'seeder'
+    image: bjand49/tonl-seeder
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+
     
 networks:
   app-network:

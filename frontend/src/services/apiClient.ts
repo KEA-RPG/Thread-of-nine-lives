@@ -18,7 +18,6 @@ class ApiClient {
       baseurl = envBaseUrl;
     }
 
-    console.log(envBaseUrl);
 
     if (!this.apiClient) {
       this.apiClient = axios.create({

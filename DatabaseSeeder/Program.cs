@@ -16,12 +16,11 @@ namespace DataSeeder
         public static void Main(string[] args)
         {
             Console.WriteLine("Starting application...");
-            Console.WriteLine(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 
             var builder = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection, "Docker");
+                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             });
             var host = builder.Build();
             Console.WriteLine("Builder built");
