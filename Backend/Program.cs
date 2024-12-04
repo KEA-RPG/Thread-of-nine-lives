@@ -5,11 +5,13 @@ using Backend.Repositories.Interfaces;
 using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
+using Infrastructure.Persistance.Graph;
 using Infrastructure.Persistance.Relational;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Neo4j.Driver;
 using System.Security.Claims;
 using System.Text;
 
@@ -74,6 +76,10 @@ namespace Backend
 
 
             var app = builder.Build();
+            app.MapGet("/111", async (GraphContext gc) =>
+            {
+                return await gc.ExecuteQueryWithMap();
+            });
 
             // Map controllers
             app.MapCardEndpoint();

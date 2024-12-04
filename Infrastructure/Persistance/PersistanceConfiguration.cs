@@ -6,6 +6,7 @@ using Infrastructure.Persistance.Relational;
 using System.Reflection;
 using Infrastructure.Persistance.Document;
 using Microsoft.Extensions.Options;
+using Infrastructure.Persistance.Graph;
 
 
 namespace Infrastructure.Persistance
@@ -31,14 +32,28 @@ namespace Infrastructure.Persistance
                 b => b.MigrationsAssembly("Infrastructure"));
             });
 
-            services.AddSingleton<DocumentContext>(options =>
+            services.AddSingleton(options =>
             {
                 var settings = configuration.GetSection("ConnectionStrings:MongoDB");
+
                 var connectionString = settings.GetSection("Connectionstring").Value;
                 var databaseName = settings.GetSection("DatabaseName").Value;
 
                 return new DocumentContext(connectionString, databaseName);
             });
+
+            services.AddSingleton(options =>
+            {
+                var settings = configuration.GetSection("ConnectionStrings:Neo4j");
+
+                var connectionString = settings.GetSection("Connectionstring").Value;
+                var databaseName = settings.GetSection("DatabaseName").Value;
+                var user = settings.GetSection("User").Value;
+                var password = settings.GetSection("Password").Value;
+
+                return new GraphContext(connectionString,user,password,databaseName);
+            });
+
         }
 
         public static string GetConnectionString(dbtype dbtype)
