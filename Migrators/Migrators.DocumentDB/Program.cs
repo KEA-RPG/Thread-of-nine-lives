@@ -11,7 +11,7 @@ Console.WriteLine("Starting mongoDB migration");
 var builder = Host.CreateDefaultBuilder(args)
 .ConfigureServices(services =>
 {
-    PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
+    PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 });
 
 

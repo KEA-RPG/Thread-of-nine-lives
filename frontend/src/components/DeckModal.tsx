@@ -9,7 +9,7 @@ import {
   Text,
   Box,
 } from "@chakra-ui/react";
-import { Deck, Comment } from "../hooks/usePublicDecks";
+import { Deck } from "../hooks/usePublicDecks";
 import CommentForm from "./CommentForm";
 
 interface Props {
