@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Entities.Neo4j;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Neo4J
 {
-    public class Card
+    public class Card : Neo4jBase
     {
 
         public int Id { get; set; }

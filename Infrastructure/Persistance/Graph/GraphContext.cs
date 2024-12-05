@@ -11,6 +11,7 @@ using Neo4j.Driver.Mapping;
 using Neo4jClient;
 using Neo4jClient.Transactions;
 using System.Net.Sockets;
+using Domain.Entities.Neo4j;
 namespace Infrastructure.Persistance.Graph
 {
     public class GraphContext
@@ -29,11 +30,13 @@ namespace Infrastructure.Persistance.Graph
             _client.ConnectAsync().Wait();
 
         }
-        public async Task<IEnumerable<Person>> ExecuteQueryWithMap()
+        public async Task<IEnumerable<T>> ExecuteQueryWithMap<T>()
         {
+            var type = typeof(T).Name;
+
             var query = await _client.Cypher
-            .Match("(person:Person)")
-            .Return(person => person.As<Person>())
+            .Match($"(x:{type})")
+            .Return(x => x.As<T>())
             .ResultsAsync;
             return query;
         }
@@ -46,45 +49,35 @@ namespace Infrastructure.Persistance.Graph
                 .ExecuteWithoutResultsAsync();
         }
 
-        public async Task InsertMany<T>(IEnumerable<T> list, string labelName)
+        public async Task InsertManyNodes<T>(IEnumerable<T> list)
         {
+            var type = typeof(T).Name;
             using (ITransaction tx = _client.BeginTransaction())
             {
                 foreach (var item in list)
                 {
 
                     await _client.Cypher
-                        .Create("(x:Card $newItem)")
+                        .Create($"(x:{type} $newItem)")
                         .WithParam("newItem", item)
                         .ExecuteWithoutResultsAsync();
                 }
                 await tx.CommitAsync();
             }
         }
-
-        public async Task<IReadOnlyList<Person>> ExecuteQueryWithMap2(string query)
+        public async Task MapNodes<TFrom,TTo>(int fromID, int toId, string relationType)
+            where TFrom : Neo4jBase 
+            where TTo : Neo4jBase
         {
-            using (var session = _driver.AsyncSession())
-            {
-                var result = await _driver
-                .ExecutableQuery(query)
-                .ExecuteAsync();
+            var typeFrom = typeof(TFrom).Name;
+            var typeTo = typeof(TTo).Name;
 
-                var result2 = await _driver
-                .ExecutableQuery(query)
-                .ExecuteAsync()
-                .AsObjectsAsync<Person>();
-
-
-
-                return result2;
-            }
+            await _client.Cypher
+                .Match($"(x:{typeFrom})", $"(y:{typeTo})")
+                .Where((TFrom x) => x.Id == fromID)
+                .AndWhere((TTo y) => y.Id == toId)
+                .Create($"(x)-[:{relationType}]->(y)")
+                .ExecuteWithoutResultsAsync();
         }
-
-    }
-    public class Person
-    {
-        public string? name { get; set; }
-        public string? twitter { get; set; } = "";
     }
 }
