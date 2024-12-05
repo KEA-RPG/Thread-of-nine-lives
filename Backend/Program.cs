@@ -6,6 +6,7 @@ using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -66,14 +67,33 @@ namespace Backend
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 
-            builder.Services.AddCors(p => p.AddPolicy("*", b =>
-            b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.WithOrigins("https://localhost:5173")  // Specify the allowed origin (frontend)
+                           .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
+                           .AllowAnyMethod()                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                           .AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
+                });
+            });
 
 
             PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
 
+            builder.Services.AddAntiforgery(options =>
+            {
+                // Customize the settings if needed (e.g., SameSite policy, cookie options)
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
+                options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
+                options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
+                options.Cookie.Expiration = TimeSpan.FromMinutes(60);
+                options.Cookie.Path = "/";
+            });
+
 
             var app = builder.Build();
+
 
             // Map controllers
             app.MapCardEndpoint();
@@ -89,7 +109,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("*");
+            app.UseCors("CorsPolicy");
             app.Run();
         }
     }

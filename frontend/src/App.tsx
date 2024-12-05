@@ -4,7 +4,7 @@ import { UserProvider } from "./components/UserContext"
 function App() {
   return (
     <UserProvider>
-      <Outlet/>
+          <Outlet/>
     </UserProvider>
   )
 }
