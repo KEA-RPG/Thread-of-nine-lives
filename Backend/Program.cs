@@ -71,7 +71,7 @@ namespace Backend
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173")  // Specify the allowed origin (frontend)
+                    builder.WithOrigins("https://localhost:5173")  // Specify the allowed origin (frontend)
                            .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
                            .AllowAnyMethod()                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
                            .AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
@@ -83,10 +83,12 @@ namespace Backend
 
             builder.Services.AddAntiforgery(options =>
             {
-                options.HeaderName = "X-CSRF-TOKEN"; // Custom header for CSRF token
-                options.Cookie.Name = ".AspNetCore.Antiforgery"; // Default antiforgery cookie name
-                options.Cookie.SameSite = SameSiteMode.Strict; // Use Lax for local development to ease cross-origin issues
-                options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Allow cookies over HTTP. Skal være HTTPS optimalt set
+                // Customize the settings if needed (e.g., SameSite policy, cookie options)
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
+                options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
+                options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
+                options.Cookie.Expiration = TimeSpan.FromMinutes(60);
+                options.Cookie.Path = "/";
             });
 
 

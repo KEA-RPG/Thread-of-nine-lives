@@ -126,14 +126,14 @@ namespace Backend.Controllers
 
             // Add a comment to a deck
             // Add a comment to a deck
-            app.MapPost("/decks/{deckId}/comments", async (IDeckService deckService, int deckId, CommentDTO commentDto, HttpContext context) =>
+            app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto, HttpContext context) =>
             {
-                    //await AntiForgeryHelper.ValidateAntiForgeryToken(context);
-                    //var user = context.User?.Identity?.Name ?? "Anonymous";
-                    //var claims = context.User?.Claims?.Select(c => $"{c.Type}: {c.Value}") ?? new List<string>();
-                    //Ovenstående er hvad der skal bruges til at authenticate en CSRF token og cookie. Det virker dog desværre ikke.
+                AntiForgeryHelper.ValidateAntiForgeryToken(context).Wait();
+                var user = context.User?.Identity?.Name ?? "Anonymous";
+                var claims = context.User?.Claims?.Select(c => $"{c.Type}: {c.Value}") ?? new List<string>();
+                //Ovenstående er hvad der skal bruges til at authenticate en CSRF token og cookie. Det virker dog desværre ikke.
 
-                commentDto.DeckId = deckId;
+            commentDto.DeckId = deckId;
                 deckService.AddComment(commentDto);
                 return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));

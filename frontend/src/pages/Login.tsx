@@ -3,7 +3,6 @@ import { Image, Button, Card, CardBody, CardFooter, Stack, Text, Link, Box } fro
 import InputFieldElement from "../components/InputFieldElement";
 import { Credentials } from "../hooks/useUser";
 import { useUserContext } from "../components/UserContext";
-import { fetchAntiForgeryToken } from "../hooks/useAntiForgery";
 
 const Login = () => {
   const [credentials, setCredentials] = useState<Credentials>({ username: "", password: "" });
@@ -19,8 +18,6 @@ const Login = () => {
       return;
     }
 
-    // Initialize the anti-forgery token after successful login. Skal bruges til at showcase CSRF.
-    await fetchAntiForgeryToken();
   };
 
   return (

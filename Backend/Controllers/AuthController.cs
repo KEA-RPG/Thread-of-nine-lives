@@ -17,7 +17,7 @@ namespace Backend.Controllers
         public static void MapAuthEndpoints(this WebApplication app)
         {
             // Login Endpoint
-            app.MapPost("/auth/login", (IUserService userService, Credentials credentials) =>
+            app.MapPost("/auth/login", (IUserService userService, HttpContext context, IAntiforgery antiforgery, Credentials credentials) =>
             {
                 // Check if user exists and password is correct
                 if (userService.ValidateUserCredentials(credentials.Username, credentials.Password))
@@ -45,8 +45,17 @@ namespace Backend.Controllers
 
                     var jwtHandler = new JsonWebTokenHandler();
                     var token = jwtHandler.CreateToken(tokenDescriptor);
-
-                    return Results.Ok(new { Token = token });
+                    var csrf = antiforgery.GetAndStoreTokens(context);
+                    context.Response.Cookies.Append("X-CSRF-TOKEN", csrf.RequestToken, new CookieOptions
+                    {
+                        HttpOnly = true,  // Prevent JavaScript access
+                        Secure = false,    // Only send over HTTPS
+                        SameSite = SameSiteMode.Unspecified,  // Protect from CSRF
+                        Expires = DateTime.UtcNow.AddHours(1), // Set expiration time
+                        Path = "/",
+                        
+                    });
+                    return Results.Ok(new { Token = token , RequestToken = csrf.RequestToken });
                 }
 
                 // If user is not valid
@@ -115,34 +124,6 @@ namespace Backend.Controllers
 
                 return Results.BadRequest("Token is invalid or has no jti.");
             });
-
-
-
-            app.MapGet("/auth/antiforgery-token", (HttpContext context, IAntiforgery antiforgery) =>
-            {
-                var tokens = antiforgery.GetAndStoreTokens(context);
-                context.Response.Cookies.Append(
-                    ".AspNetCore.Antiforgery",
-                    tokens.RequestToken,
-                    new CookieOptions
-                    {
-                        HttpOnly = true,
-                        SameSite = SameSiteMode.None,
-                        Secure = true
-                    }
-                );
-                return Results.Ok(new { RequestToken = tokens.RequestToken });
-            });
-
-
-
-
-
-
-
-
-
-
 
         }
     }

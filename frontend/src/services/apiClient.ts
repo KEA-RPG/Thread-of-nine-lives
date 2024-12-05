@@ -17,7 +17,7 @@ class ApiClient {
         headers: {
           ContentType: 'application/json',
         },
-        //withCredentials: true    Skal bruges til at showcase CSRF.
+        withCredentials: true,   
         
       });
     }
@@ -37,6 +37,7 @@ class ApiClient {
 
     if (antiForgeryToken) {
         headers["X-CSRF-TOKEN"] = antiForgeryToken; // Include CSRF token
+        headers["RequestVerificationToken"] = antiForgeryToken; // Include CSRF token
     }
 
     return headers;
