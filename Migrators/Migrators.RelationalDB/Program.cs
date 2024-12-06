@@ -29,10 +29,23 @@ using (var host = builder.Build())
     using (var scope = host.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
-        Console.WriteLine("Attempting to do database migration");
+        var context = services.GetRequiredService<RelationalContext>();
+
+        //Tager navnene på migrations for debugging
+        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+
+        if (pendingMigrations.Any())
+        {
+            var migrationsNames = string.Join(", ", pendingMigrations);
+
+            Console.WriteLine($"Attempting to do database migration on {migrationsNames}");
+        }
+        else
+        {
+            Console.WriteLine("No pending migrations found.");
+        }
         try
         {
-            var context = services.GetRequiredService<RelationalContext>();
             context.Database.Migrate();  // Apply pending migrations
             Console.WriteLine("Database migration completed successfully.");
         }

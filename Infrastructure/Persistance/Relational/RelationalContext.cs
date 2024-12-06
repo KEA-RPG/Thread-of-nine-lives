@@ -24,6 +24,7 @@ namespace Infrastructure.Persistance.Relational
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new FightConfiguration());
+            modelBuilder.ApplyConfiguration(new CardConfiguration());
 
             modelBuilder.Entity<Card>().ToTable(x => x.HasTrigger("trg_Audit_Cards_Insert"));
             modelBuilder.Entity<Card>().ToTable(x => x.HasTrigger("trg_Audit_Cards_Update"));
