@@ -7,17 +7,22 @@ namespace Infrastructure.Migrations
     /// <inheritdoc />
     public partial class LimitedStringLenghts : Migration
     {
+        const string tableCards = "Cards";
+        const string varchar60 = "nvarchar(60)";
+        const string varcharMax = "nvarchar(max)";
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            
+
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Decks",
-                type: "nvarchar(60)",
+                type: varchar60,
                 maxLength: 60,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: varcharMax);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Text",
@@ -26,34 +31,34 @@ namespace Infrastructure.Migrations
                 maxLength: 350,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: varcharMax);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Cards",
-                type: "nvarchar(60)",
+                type: varchar60,
                 maxLength: 60,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: varcharMax);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ImagePath",
-                table: "Cards",
+                table: tableCards,
                 type: "nvarchar(80)",
                 maxLength: 80,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: varcharMax);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
-                table: "Cards",
+                table: tableCards,
                 type: "nvarchar(300)",
                 maxLength: 300,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: varcharMax);
         }
 
         /// <inheritdoc />
@@ -62,10 +67,10 @@ namespace Infrastructure.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Decks",
-                type: "nvarchar(max)",
+                type: varcharMax,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(60)",
+                oldType: varchar60,
                 oldMaxLength: 60);
 
             migrationBuilder.AlterColumn<string>(
@@ -79,17 +84,17 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
-                table: "Cards",
-                type: "nvarchar(max)",
+                table: tableCards,
+                type: varcharMax,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(60)",
+                oldType: varchar60,
                 oldMaxLength: 60);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ImagePath",
-                table: "Cards",
-                type: "nvarchar(max)",
+                table: tableCards,
+                type: varcharMax,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(80)",
@@ -97,8 +102,8 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
-                table: "Cards",
-                type: "nvarchar(max)",
+                table: tableCards,
+                type: varcharMax,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(300)",
