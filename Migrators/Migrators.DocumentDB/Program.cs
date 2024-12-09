@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistance.Document;
 using Domain.Entities.Mongo;
+using Domain.Entities;
 
 Console.WriteLine("Starting mongoDB migration");
 var builder = Host.CreateDefaultBuilder(args)
@@ -35,11 +36,11 @@ using (var scope = host.Services.CreateScope())
     Console.WriteLine("Extracted data from relational database");
 
     //map to mongo models (dtos)
-    var mongoCards = cards.Select(x => CardDTO.FromEntity(x));
-    var mongoDecks = decks.Select(x => DeckDTO.FromEntity(x));
-    var mongoEnemies = enemies.Select(x => EnemyDTO.FromEntity(x));
-    var mongoUsers = users.Select(x => UserDTO.FromEntity(x));
-    var mongoFights = fights.Select(x => FightDTO.FromEntity(x));
+    var mongoCards = cards.Select(x => Card.FromEntity(x));
+    var mongoDecks = decks.Select(x => Deck.FromEntity(x));
+    var mongoEnemies = enemies.Select(x => Enemy.FromEntity(x));
+    var mongoUsers = users.Select(x => User.FromEntity(x));
+    var mongoFights = fights.Select(x => Fight.FromEntity(x));
     Console.WriteLine("Mapped data to mongoDB data");
 
     Console.WriteLine("Clearing out old database..");

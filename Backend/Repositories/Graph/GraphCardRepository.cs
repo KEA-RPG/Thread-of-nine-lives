@@ -40,7 +40,6 @@ namespace Backend.Repositories.Graph
         {
             return _context
                 .ExecuteQueryWithMap<Card>()
-                
                 .Result
                 .Select(x => Card.FromEntity(x))
                 .FirstOrDefault();

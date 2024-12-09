@@ -15,7 +15,7 @@ namespace Domain.Entities.Neo4J
         public string Name { get; set; }
         public List<Card> Cards { get; set; }
         public bool IsPublic { get; set; }
-        public User Users { get; set; }
+        public List<User> Users { get; set; } //there should be only one
         public List<Comment> Comments { get; set; }
         public static Deck ToEntity(DeckDTO deckDto)
         {
@@ -27,7 +27,6 @@ namespace Domain.Entities.Neo4J
                 UserId = deckDto.UserId,
                 Name = deckDto.Name,
                 IsPublic = deckDto.IsPublic,
-                Comments = deckDto.Comments.Select(commentDto => Comment.ToEntity(commentDto)).ToList()
             };
             deck.Cards = deckDto.Cards.Select(card => new Card
             {
@@ -43,11 +42,11 @@ namespace Domain.Entities.Neo4J
             {
                 Id = deck.Id,
                 UserId = deck.UserId,
-                UserName = deck.User.Username,
+                UserName = deck.Users.First().Username,
                 Name = deck.Name,
-                Cards = deck.DeckCards.Select(dc => CardDTO.FromEntity(dc.Card)).ToList(),
+                Cards = deck.Cards.Select(dc => Card.FromEntity(dc)).ToList(),
                 IsPublic = deck.IsPublic,
-                Comments = deck.Comments.Select(comment => CommentDTO.FromEntity(comment)).ToList()
+                Comments = deck.Comments.Select(comment => Comment.FromEntity(comment)).ToList()
             };
         }
 

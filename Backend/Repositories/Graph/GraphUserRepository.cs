@@ -36,7 +36,7 @@ namespace Backend.Repositories.Graph
         public UserDTO GetUserByUsername(string username)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
-            return UserDTO.FromEntity(user);
+            return User.FromEntity(user);
         }
 
         public void UpdateUser(User user)
@@ -48,7 +48,7 @@ namespace Backend.Repositories.Graph
         public UserDTO GetUserById(int id)
         {
             var dbUser = _context.Users.FirstOrDefault(u => u.Id == id);
-            var user = UserDTO.FromEntity(dbUser);
+            var user = User.FromEntity(dbUser);
             return user;
         }
     }

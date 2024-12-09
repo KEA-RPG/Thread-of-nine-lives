@@ -40,7 +40,7 @@ namespace Backend.Repositories.Relational
             {
                 return null;
             }
-            return UserDTO.FromEntity(user);
+            return User.FromEntity(user);
         }
 
         public void UpdateUser(User user)
@@ -52,7 +52,7 @@ namespace Backend.Repositories.Relational
         public UserDTO GetUserById(int id)
         {
             var dbUser = _context.Users.FirstOrDefault(u => u.Id == id);
-            var user = UserDTO.FromEntity(dbUser);
+            var user = User.FromEntity(dbUser);
             return user;
         }
     }

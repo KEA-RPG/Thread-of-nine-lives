@@ -22,7 +22,7 @@ namespace Backend.Repositories.Relational
                 .Include(x => x.GameActions)
                 .FirstOrDefault(x => x.Id == id);
 
-            var fight = FightDTO.FromEntity(dbFight);
+            var fight = Fight.FromEntity(dbFight);
 
             return fight;
         }
