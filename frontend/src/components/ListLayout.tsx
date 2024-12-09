@@ -15,7 +15,7 @@ const ListLayout = <T extends ListItemBase>({ data, onAdd, onEdit, onDelete, onS
     return (
         <VStack spacing={4} p={6} bg="gray.300" align="stretch" w="80%">
             <Box display="flex" justifyContent="flex-end">
-                <Button colorScheme="green" onClick={onAdd}>New</Button>
+                {onAdd && <Button colorScheme="green" onClick={onAdd}>New</Button>}
             </Box>
             {data.length === 0 &&
                 <Card w={200} userSelect="none" alignSelf="center">

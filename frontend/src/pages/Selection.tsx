@@ -1,46 +1,52 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initGame, StateGameInit } from '../hooks/useGame';
-import { useToast } from '@chakra-ui/react';
+import { useToast, Spinner, Text } from '@chakra-ui/react';
+import { useEnemies, Enemy } from '../hooks/useEnemy';
+import ListLayout from '../components/ListLayout';
 
 const SelectionPage = () => {
-    const [enemyId, setEnemyId] = useState('');
+    const [enemies, setEnemies] = useState<Enemy[]>([]);
+    const { data, error } = useEnemies();
     const navigate = useNavigate();
     const toast = useToast()
 
-    const initializeGameState = async () => {
-
-        const { data, error } = await initGame({ enemyId: Number(enemyId) } as StateGameInit );
-        if (data == undefined || error) {
+    const onSelection = async (item: Enemy) => {
+        const { data, error } = await initGame({ enemyId: item.id! } as StateGameInit);
+        if (!data || error) {
             toast({
-                description: `Error: Failed to create combat`,
-                status: "error",
+                description: 'Failed to start the game',
+                status: 'error',
             });
             return;
         }
 
-        // Navigate to CombatPage after initialization
-        navigate('/combat/' + data.fightId);
+        navigate(`/combat/${data.fightId}`);
     };
+
+    useEffect(() => {
+        if (data !== undefined) {
+            setEnemies(data);
+        }
+    }, [data]);
+
+    if (error) {
+        return <div>{error.message}</div>;
+    }
+
+    if (enemies.length === 0) {
+        return <Spinner />;
+    }
 
     return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h1>Select Enemy</h1>
-            <div>
-                <label>
-                    Enemy ID:
-                    <input
-                        type="number"
-                        value={enemyId}
-                        onChange={(e) => setEnemyId(e.target.value)}
-                        placeholder="Enter enemy ID"
-                    />
-                </label>
-            </div>
-
-            <button onClick={initializeGameState} disabled={!enemyId}>
-                Start Game
-            </button>
+            <Text fontSize="2xl" fontWeight="bold" color="teal.500" mb={4}>
+                Select Enemy
+            </Text>
+            <ListLayout
+                data={enemies}
+                onSelection={(item: Enemy) => onSelection(item)}    
+            />
         </div>
     );
 };
