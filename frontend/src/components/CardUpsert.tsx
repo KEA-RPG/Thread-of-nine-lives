@@ -109,7 +109,7 @@ const CardUpsert = ({ cardModel }: Props) => {
                         <p>Image: {card.imagePath}</p>
                     </Box>
                 </HStack>
-                <Button colorScheme="orange" onClick={async () => await handleUpsert()}>
+                <Button colorScheme="orange" onClick={handleUpsert}>
                     {card.id === undefined ? "Create" : "Update"}
                 </Button>
             </VStack>
