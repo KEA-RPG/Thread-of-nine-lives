@@ -16,5 +16,6 @@ const useCards = () => apiClient.get<Card[]>(`/cards`);
 const useCard = (id: number) => apiClient.get<Card>(`/cards/${id}`)
 const postCard = (car: Card) => apiClient.post<Card, Card>(`/cards`, car);
 const putCard = (id: number, card: Card) => apiClient.put<Card, Card>(`/cards/${id}`, card);
+const deleteCard = (id: number) => apiClient.delete(`/cards/${id}`);
 
-export { useCards, useCard, postCard, putCard };
+export { useCards, useCard, postCard, putCard,deleteCard };

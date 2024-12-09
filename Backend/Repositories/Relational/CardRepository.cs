@@ -24,7 +24,7 @@ namespace Backend.Repositories.Relational
 
         public void DeleteCard(CardDTO card)
         {
-            var dbCard = Card.FromDTO(card);
+            var dbCard = _context.Cards.First(x => x.Id == card.Id);
 
             _context.Cards.Remove(dbCard);
             _context.SaveChanges();
