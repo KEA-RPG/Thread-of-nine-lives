@@ -1,44 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initGame, StateGameInit } from '../hooks/useGame';
 import { useToast } from '@chakra-ui/react';
+import { useEnemies, Enemy } from '../hooks/useEnemy';
 
 const SelectionPage = () => {
-    const [enemyId, setEnemyId] = useState('');
+    const [selectedEnemyId, setSelectedEnemyId] = useState<number | null>(null);
+    const { data: enemies, error } = useEnemies();
     const navigate = useNavigate();
     const toast = useToast()
 
-    const initializeGameState = async () => {
-
-        const { data, error } = await initGame({ enemyId: Number(enemyId) } as StateGameInit );
-        if (data == undefined || error) {
+    useEffect(() => {
+        if (error) {
             toast({
-                description: `Error: Failed to create combat`,
-                status: "error",
+                description: 'Failed to fetch enemies',
+                status: 'error',
+            });
+        }
+    }, [error, toast]);
+
+
+    const initializeGameState = async () => {
+        if (selectedEnemyId == null) {
+            toast({
+                description: 'Please select an enemy',
+                status: 'warning',
             });
             return;
         }
 
-        // Navigate to CombatPage after initialization
+        const { data, error } = await initGame({ enemyId: selectedEnemyId } as StateGameInit);
+        if (data == undefined || error) {
+            toast({
+                description: 'Error: Failed to create combat',
+                status: 'error',
+            });
+            return;
+        }
+
         navigate('/combat/' + data.fightId);
     };
 
     return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
             <h1>Select Enemy</h1>
-            <div>
-                <label>
-                    Enemy ID:
-                    <input
-                        type="number"
-                        value={enemyId}
-                        onChange={(e) => setEnemyId(e.target.value)}
-                        placeholder="Enter enemy ID"
-                    />
-                </label>
-            </div>
+            {enemies ? (
+                <div>
+                    {enemies.map((enemy: Enemy) => (
+                        <label key={enemy.id} style={{ display: 'block', margin: '10px 0' }}>
+                            <input
+                                type="radio"
+                                value={enemy.id}
+                                checked={selectedEnemyId === enemy.id}
+                                onChange={() => setSelectedEnemyId(enemy.id!)}
+                            />
+                            {enemy.name} (Health: {enemy.health})
+                        </label>
+                    ))}
+                </div>
+            ) : (
+                <p>Loading enemies...</p>
+            )}
 
-            <button onClick={initializeGameState} disabled={!enemyId}>
+            <button onClick={initializeGameState} disabled={selectedEnemyId == null}>
                 Start Game
             </button>
         </div>
