@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from 'jwt-decode';
 import { Response } from '../services/apiClient';
-import { Credentials, Token, login, signUp } from "../hooks/useUser";
+import { Credentials, TokenResponse, login, signUp } from "../hooks/useUser";
 
 interface UserContextType {
   token: string | null;
   username: string | null;
-  handleLogin: (credentials: Credentials) => Promise<Response<Token>>;
+  handleLogin: (credentials: Credentials) => Promise<Response<TokenResponse>>;
   logout: () => void;
   handleSignUp: (credentials: Credentials) => Promise<Response<string>>;
   requireLogin: (role: string) => void;
@@ -41,7 +41,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const setRole = (role: string) => localStorage.setItem("role", role);
   const setUsername = (username: string) => localStorage.setItem("username", username);
 
-  const handleLogin = async (credentials: Credentials): Promise<Response<Token>> => {
+  const handleLogin = async (credentials: Credentials): Promise<Response<TokenResponse>> => {
     const result = await login(credentials);
     if (result.data) {
       setToken(result.data.token)
@@ -50,8 +50,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setToken(result.data.token);
         setRole(decodedToken.role.toLowerCase());
         setUsername(decodedToken.sub);
-        navigate('/menu');
       }
+      const requestToken = result.data.requestToken;
+      console.log(result)
+      if (requestToken) {
+          // Store the token in localStorage
+          localStorage.setItem("antiForgeryToken", requestToken);
+      } else {
+          console.error("Anti-forgery token missing in response.");
+      }
+
+      navigate('/menu');
     }
     else {
       console.error('Login failed: result is undefined');
