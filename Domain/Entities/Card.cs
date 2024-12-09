@@ -31,7 +31,6 @@ namespace Domain.Entities
         {
         }
 
-        //Borrowed from Enemy.cs
         public static Card ToEntity(CardDTO cardDTO)
         {
             return new Card

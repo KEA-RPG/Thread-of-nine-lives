@@ -31,13 +31,13 @@ namespace Backend.Repositories.Relational
 
         public List<EnemyDTO> GetAllEnemies()
         {
-            return _context.Enemies.Select(EnemyDTO.FromEntity).ToList();
+            return _context.Enemies.Select(Enemy.FromEntity).ToList();
         }
 
         public EnemyDTO GetEnemyById(int id)
         {
             var dbEnemy = _context.Enemies.Find(id);
-            return EnemyDTO.FromEntity(dbEnemy);
+            return Enemy.FromEntity(dbEnemy);
         }
 
         public void UpdateEnemy(EnemyDTO enemy)

@@ -76,10 +76,6 @@ namespace Backend
 
 
             var app = builder.Build();
-            app.MapGet("/111", async (GraphContext gc) =>
-            {
-                return await gc.ExecuteQueryWithMap();
-            });
 
             // Map controllers
             app.MapCardEndpoint();
