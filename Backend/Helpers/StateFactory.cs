@@ -59,7 +59,7 @@ namespace Backend.Helpers
 
         private State PerformEnemyTurn(State state, GameActionDTO action)
         {
-            state.PlayerHealth -= action.Value;
+            state.PlayerHealth -= 5;
             if (state.PlayerHealth < 0)
             {
                 state.PlayerHealth = 0;

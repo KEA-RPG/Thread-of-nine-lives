@@ -24,7 +24,7 @@ namespace Backend.Repositories.Relational
 
         public void DeleteEnemy(EnemyDTO enemy)
         {
-            var dbEnemy = Enemy.ToEntity(enemy);
+            var dbEnemy = _context.Enemies.First(x=> x.Id == enemy.Id);
             _context.Enemies.Remove(dbEnemy);
             _context.SaveChanges();
         }

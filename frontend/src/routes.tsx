@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from './App.tsx';
 import CenterNavigation from './components/CenterNavigation.tsx';
-import ListLayout from './components/ListLayout.tsx';
-import EnemyUpsert from './pages/EnemyUpsert.tsx';
+import MainLayout from './layouts/MainLayout.tsx';
+import CombatPage from "./pages/CombatPage.tsx";
+import SelectionPage from "./pages/Selection.tsx"
 import Login from './pages/Login.tsx';
 import Logout from "./pages/Logout.tsx";
 import SignUp from "./pages/SignUp.tsx";
@@ -14,6 +15,11 @@ import CardCreate from "./pages/CardCreate.tsx";
 import DeckCreate from "./pages/DeckCreate.tsx";
 import DeckUpdate from "./pages/DeckUpdate.tsx";
 import PublicDecksPage from "./pages/PublicDecksPage.tsx";
+import AdminEnemyList from "./pages/AdminEnemyList.tsx";
+import EnemyUpdate from "./pages/EnemyUpdate.tsx";
+import EnemyCreate from "./pages/EnemyCreate.tsx";
+import AdminCardList from "./pages/AdminCardList.tsx";
+import DeckList from "./pages/DeckList.tsx";
 
 const router = createBrowserRouter([
   {
@@ -63,7 +69,7 @@ const router = createBrowserRouter([
         path: "/decks",
         element: (
           <PlayerLayout header="Decks">
-            <ListLayout />
+            <DeckList />
           </PlayerLayout>
         ),
       },
@@ -87,7 +93,7 @@ const router = createBrowserRouter([
         path: "/admin/cards",
         element: (
           <AdminLayout header="Admin Cards">
-            <ListLayout />
+            <AdminCardList />
           </AdminLayout>
         ),
       },
@@ -111,23 +117,23 @@ const router = createBrowserRouter([
         path: "/admin/enemies",
         element: (
           <AdminLayout header="Admin Enemies">
-            <ListLayout />
+            <AdminEnemyList />
           </AdminLayout>
         ),
       },
       {
-        path: "/admin/enemies/upsert",
+        path: "/admin/enemies/create",
         element: (
-          <AdminLayout header="Enemy Upsert">
-            <EnemyUpsert />
+          <AdminLayout header="Enemy create">
+            <EnemyCreate />
           </AdminLayout>
         ),
       },
       {
-        path: "/admin/enemies/upsert/:enemyid",
+        path: "/admin/enemies/:enemyId",
         element: (
-          <AdminLayout header="Enemy Upsert">
-            <EnemyUpsert />
+          <AdminLayout header="Enemy update">
+            <EnemyUpdate />
           </AdminLayout>
         ),
       },
@@ -140,6 +146,22 @@ const router = createBrowserRouter([
         ),
       },
 
+      {
+        path: "/selection",
+        element: (
+          <MainLayout header="Select Enemy">
+            <SelectionPage />
+          </MainLayout>
+        ),
+      },
+      {
+        path: "/combat/:fightId",
+        element: (
+          <MainLayout header="Combat">
+            <CombatPage />
+          </MainLayout>
+        ),
+      },
     ],
   },
 ]);

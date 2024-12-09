@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FormControl,
   FormErrorMessage,
@@ -23,8 +22,8 @@ const InputFieldElement = (props: Props) => {
     name,
     placeholder,
     component = "Input",
-    type,
-    value,
+    type = "text",
+    value = "",
     onChange,
     errorText,
     isInvalid,

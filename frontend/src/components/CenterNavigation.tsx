@@ -6,8 +6,9 @@ const CenterNavigation = () => {
     const { role } = useUserContext();
 
     const data = [
-        { link: "/combat", text: "Fight!" },
+        { link: "/selection", text: "Fight!" },
         { link: "/decks", text: "Decks" },
+        { link: "/decks/public", text: "Public Decks" },
         { link: "/logout", text: "Log out" }
     ];
     const adminData = [
