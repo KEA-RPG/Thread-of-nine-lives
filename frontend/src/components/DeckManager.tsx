@@ -114,7 +114,6 @@ const DeckManager = ({ deckModel }: Props) => {
             }
         })
     }
-    console.log(deck.isPublic)
     return (
         <VStack justifyItems={"center"}>
             <HStack>
