@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Box, Grid, GridItem, Heading, VStack } from '@chakra-ui/react';
+import { Box, Grid, GridItem, VStack } from '@chakra-ui/react';
 import Header from '../components/Header';
 
 export interface LayoutProps {
