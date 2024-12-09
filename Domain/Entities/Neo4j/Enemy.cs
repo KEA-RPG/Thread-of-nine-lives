@@ -1,8 +1,9 @@
 ﻿using Domain.DTOs;
+using Domain.Entities.Neo4j;
 
-namespace Domain.Entities
+namespace Domain.Entities.Neo4J
 {
-    public class Enemy
+    public class Enemy : Neo4jBase
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -11,7 +12,6 @@ namespace Domain.Entities
         public List<Fight> Fights { get; set; }
 
         public Enemy() { }
-
         public static Enemy ToEntity(EnemyDTO enemyDTO)
         {
             return new Enemy

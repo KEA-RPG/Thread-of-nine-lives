@@ -22,14 +22,14 @@ namespace Backend.Repositories.Relational
                 .Include(x => x.GameActions)
                 .FirstOrDefault(x => x.Id == id);
 
-            var fight = FightDTO.FromEntity(dbFight);
+            var fight = Fight.FromEntity(dbFight);
 
             return fight;
         }
 
         public FightDTO AddFight(FightDTO fight)
         {
-            var dbFight = Fight.FromDTO(fight);
+            var dbFight = Fight.ToEntity(fight);
             _context.Fights.Add(dbFight);
             _context.SaveChanges();
 
@@ -38,7 +38,7 @@ namespace Backend.Repositories.Relational
 
         public void InsertAction(GameActionDTO gameAction)
         {
-            var dbGameAction = GameAction.FromDTO(gameAction);
+            var dbGameAction = GameAction.ToEntity(gameAction);
             _context.GameActions.Add(dbGameAction);
             _context.SaveChanges();
         }

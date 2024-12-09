@@ -9,15 +9,5 @@ namespace Domain.DTOs
         public required int Health { get; set; }
         public required string ImagePath { get; set; }
 
-        public static EnemyDTO FromEntity(Enemy enemy)
-        {
-            return new EnemyDTO
-            {
-                Id = enemy.Id,
-                Name = enemy.Name,
-                Health = enemy.Health,
-                ImagePath = enemy.ImagePath
-            };
-        }
     }
 }

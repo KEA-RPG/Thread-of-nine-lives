@@ -1,9 +1,10 @@
 ﻿using Domain.DTOs;
+using Domain.Entities.Neo4j;
 using System;
 
-namespace Domain.Entities
+namespace Domain.Entities.Neo4J
 {
-    public class Comment
+    public class Comment : Neo4jBase
     {
         public int Id { get; set; }
         public int DeckId { get; set; }
