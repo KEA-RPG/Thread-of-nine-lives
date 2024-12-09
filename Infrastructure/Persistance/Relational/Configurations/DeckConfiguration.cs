@@ -9,7 +9,7 @@ namespace Infrastructure.Persistance.Relational.Configurations
         public void Configure(EntityTypeBuilder<Deck> builder)
         {
             builder.Property(b => b.IsPublic).HasDefaultValue(false);
-
+            builder.Property(b => b.Name).HasMaxLength(60);
 
             // Create index on UserId with included columns
             builder.HasIndex(d => d.UserId)
