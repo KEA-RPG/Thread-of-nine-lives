@@ -3,7 +3,6 @@ import ListLayout from "../components/ListLayout";
 import { useEffect, useState } from "react";
 import { Deck, deleteDeck, useUserDecks } from "../hooks/useDeck";
 import { useDisclosure } from "@chakra-ui/react";
-import { Enemy } from "../hooks/useEnemy";
 import ConfirmationModal from "../components/ConfirmModal";
 
 const DeckList = () => {
