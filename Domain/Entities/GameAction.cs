@@ -12,7 +12,7 @@ namespace Domain.Entities
 
         public GameAction() { }
 
-        public static GameAction FromDTO(GameActionDTO gameActionDTO)
+        public static GameAction ToEntity(GameActionDTO gameActionDTO)
         {
             return new GameAction
             {
@@ -22,5 +22,16 @@ namespace Domain.Entities
                 Value = gameActionDTO.Value,
             };
         }
+        public static GameActionDTO FromEntity(GameAction gameAction)
+        {
+            return new GameActionDTO
+            {
+                Id = gameAction.Id,
+                FightId = gameAction.FightId,
+                Type = gameAction.Type,
+                Value = gameAction.Value,
+            };
+        }
+
     }
 }

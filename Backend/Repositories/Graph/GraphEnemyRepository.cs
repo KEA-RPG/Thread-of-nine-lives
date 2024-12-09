@@ -3,13 +3,13 @@ using Domain.Entities;
 using Backend.Repositories.Interfaces;
 using Domain.DTOs;
 
-namespace Backend.Repositories.Relational
+namespace Backend.Repositories.Graph
 {
-    public class EnemyRepository : IEnemyRepository
+    public class GraphEnemyRepository : IEnemyRepository
     {
         private readonly RelationalContext _context;
 
-        public EnemyRepository(RelationalContext context)
+        public GraphEnemyRepository(RelationalContext context)
         {
             _context = context;
         }

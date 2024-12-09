@@ -3,13 +3,13 @@ using Domain.DTOs;
 using Infrastructure.Persistance.Relational;
 using Backend.Repositories.Interfaces;
 
-namespace Backend.Repositories.Relational
+namespace Backend.Repositories.Graph
 {
-    public class UserRepository : IUserRepository
+    public class GraphUserRepository : IUserRepository
     {
         private readonly RelationalContext _context;
 
-        public UserRepository(RelationalContext context)
+        public GraphUserRepository(RelationalContext context)
         {
             _context = context;
         }

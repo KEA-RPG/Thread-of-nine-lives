@@ -19,5 +19,27 @@ namespace Domain.Entities.Neo4J
         public List<Fight> Fights { get; set; }
 
         public User() { }
+        public static User ToEntity(UserDTO user)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                PasswordHash = user.Password //assume its been hashed here
+            };
+        }
+        public static UserDTO FromEntity(User user)
+        {
+            return new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.PasswordHash,
+                Role = user.Role
+            };
+        }
+
+
     }
 }

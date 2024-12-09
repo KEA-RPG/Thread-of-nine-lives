@@ -12,6 +12,7 @@ using Neo4jClient;
 using Neo4jClient.Transactions;
 using System.Net.Sockets;
 using Domain.Entities.Neo4j;
+using MongoDB.Driver;
 namespace Infrastructure.Persistance.Graph
 {
     public class GraphContext
@@ -40,13 +41,60 @@ namespace Infrastructure.Persistance.Graph
             .ResultsAsync;
             return query;
         }
-
-        public async Task Insert<T>(T entity, string labelName)
+        public async Task<T> ExecuteQueryWithMapSingle<T>(int id)
+            where T : Neo4jBase
         {
+            var type = typeof(T).Name;
+
+            var query = await _client.Cypher
+            .Match($"(x:{type})")
+            .Where((T x) => x.Id == id)
+            .Return(x => x.As<T>())
+            .ResultsAsync;
+            return query.FirstOrDefault();
+        }
+
+        public async Task Insert<T>(T entity)
+        {
+            var type = typeof(T).Name;
+
             await _client.Cypher
-                .Create($"(x:{labelName} {{newItem}})")
+                .Create($"(x:{type} {{newItem}})")
                 .WithParam("newItem", entity)
                 .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task Delete<T>(int id)
+            where T : Neo4jBase
+        {
+            var type = typeof(T).Name;
+            await _client.Cypher
+                .Match($"(x:{type})")
+                .Where((T x) => x.Id == id)
+                .DetachDelete("x")
+                .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task<int> GetAutoIncrementedId<T>()
+        {
+            var typeName = typeof(T).Name;
+
+            var query = await _client.Cypher
+                .Match($"(x:Counter)")
+                .Where((Counter x) => x.Name == typeName)
+                .Return(x => x.As<Counter>()).ResultsAsync;
+            
+            var node = query.FirstOrDefault();
+            if(node == null)
+            {
+                node = new Counter()
+                {
+                    Count = 1,
+                    Name = typeName
+                };
+                await Insert(node);
+            }
+            return node.Count;
         }
 
         public async Task InsertManyNodes<T>(IEnumerable<T> list)
@@ -77,6 +125,17 @@ namespace Infrastructure.Persistance.Graph
                 .Where((TFrom x) => x.Id == fromID)
                 .AndWhere((TTo y) => y.Id == toId)
                 .Create($"(x)-[:{relationType}]->(y)")
+                .ExecuteWithoutResultsAsync();
+        }
+        public async Task UpdateNode<T>(T node)
+            where T : Neo4jBase
+        {
+            var type = typeof(T).Name;
+            await _client.Cypher
+                .Match($"(x:{type})")
+                .Where((T x) => x.Id == node.Id)
+                .Set("x = {y}")
+                .WithParam("y", node)
                 .ExecuteWithoutResultsAsync();
         }
     }

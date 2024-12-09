@@ -32,7 +32,7 @@ namespace Domain.Entities
         }
 
         //Borrowed from Enemy.cs
-        public static Card FromDTO(CardDTO cardDTO)
+        public static Card ToEntity(CardDTO cardDTO)
         {
             return new Card
             {
@@ -45,6 +45,20 @@ namespace Domain.Entities
                 ImagePath = cardDTO.ImagePath
             };
         }
+        public static CardDTO FromEntity(Card card)
+        {
+            return new CardDTO
+            {
+                Id = card.Id,
+                Name = card.Name,
+                Description = card.Description,
+                Attack = card.Attack,
+                Defence = card.Defence,
+                Cost = card.Cost,
+                ImagePath = card.ImagePath
+            };
+        }
+
 
     }
 }

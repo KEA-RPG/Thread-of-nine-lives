@@ -12,11 +12,22 @@ namespace Domain.Entities
         public List<GameAction> GameActions { get; set; } = new List<GameAction>();
 
 
-        public static Fight FromDTO(FightDTO fight)
+        public static Fight ToEntity(FightDTO fight)
         {
             return new Fight
             {
                 Id = fight.Id,
+                EnemyId = fight.EnemyId,
+                UserId = fight.UserId
+            };
+        }
+        public static FightDTO FromEntity(Fight fight)
+        {
+            return new FightDTO
+            {
+                Id = fight.Id,
+                Enemy = Enemy.FromEntity(fight.Enemy),
+                GameActions = fight.GameActions.Select(x=> GameAction.FromEntity(x)).ToList(),
                 EnemyId = fight.EnemyId,
                 UserId = fight.UserId
             };

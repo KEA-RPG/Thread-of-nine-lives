@@ -19,7 +19,7 @@ namespace Domain.Entities
 
         public User() { }
 
-        public static User FromDTO(UserDTO user)
+        public static User ToEntity(UserDTO user)
         {
             return new User()
             {
@@ -29,6 +29,17 @@ namespace Domain.Entities
                 PasswordHash = user.Password //assume its been hashed here
             };
         }
+        public static UserDTO FromEntity(User user)
+        {
+            return new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.PasswordHash,
+                Role = user.Role
+            };
+        }
+
     }
 
 }

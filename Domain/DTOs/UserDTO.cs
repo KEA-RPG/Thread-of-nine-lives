@@ -11,16 +11,5 @@ namespace Domain.DTOs
 
         public UserDTO() { }
 
-        // Static method to create UserDTO from a User object
-        public static UserDTO FromEntity(User user)
-        {
-            return new UserDTO
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Password = user.PasswordHash,
-                Role = user.Role
-            };
-        }
     }
 }

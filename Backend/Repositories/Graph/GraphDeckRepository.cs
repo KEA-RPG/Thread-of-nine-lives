@@ -1,18 +1,19 @@
-﻿using Domain.Entities;
-using Infrastructure.Persistance.Relational;
+﻿using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Backend.Repositories.Interfaces;
+using Infrastructure.Persistance.Graph;
+using Domain.Entities.Neo4J;
 
-namespace Backend.Repositories.Relational
+namespace Backend.Repositories.Graph
 {
     //Recieves DTO looks for Entities
     //Sends DTO's back
-    public class DeckRepository : IDeckRepository
+    public class GraphDeckRepository : IDeckRepository
     {
-        private readonly RelationalContext _context;
+        private readonly GraphContext _context;
 
-        public DeckRepository(RelationalContext context)
+        public GraphDeckRepository(GraphContext context)
         {
             _context = context;
         }
@@ -20,9 +21,8 @@ namespace Backend.Repositories.Relational
         public DeckDTO AddDeck(DeckDTO deck)
         {
             var dbDeck = Deck.ToEntity(deck);
-            dbDeck.Comments = new List<Comment>(); //TODO: ensuring that comments are not pre-set in the deck create
-            _context.Decks.Add(dbDeck);
-            _context.SaveChanges();
+            dbDeck.Id = _context.GetAutoIncrementedId<Deck>().Result;
+            _context.Insert(dbDeck).Wait();
 
             return GetDeckById(dbDeck.Id);
         }

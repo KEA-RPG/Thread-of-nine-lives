@@ -19,15 +19,16 @@ namespace Domain.Entities
         // New field to store comments
         public List<Comment> Comments { get; set; } = new List<Comment>();
 
-        public static Deck FromDTO(DeckDTO deckDto)
+        public static Deck ToEntity(DeckDTO deckDto)
         {
+
             var deck = new Deck
             {
                 Id = deckDto.Id,
                 UserId = deckDto.UserId,
                 Name = deckDto.Name,
                 IsPublic = deckDto.IsPublic,
-                Comments = deckDto.Comments.Select(commentDto => CommentDTO.ToEntity(commentDto)).ToList()
+                Comments = deckDto.Comments.Select(commentDto => Comment.ToEntity(commentDto)).ToList()
             };
             deck.DeckCards = deckDto.Cards.Select(card => new DeckCard
             {
@@ -37,5 +38,19 @@ namespace Domain.Entities
 
             return deck;
         }
+        public static DeckDTO FromEntity(Deck deck)
+        {
+            return new DeckDTO
+            {
+                Id = deck.Id,
+                UserId = deck.UserId,
+                UserName = deck.User.Username,
+                Name = deck.Name,
+                Cards = deck.DeckCards.Select(dc => Card.FromEntity(dc.Card)).ToList(),
+                IsPublic = deck.IsPublic,
+                Comments = deck.Comments.Select(comment => Comment.FromEntity(comment)).ToList()
+            };
+        }
+
     }
 }

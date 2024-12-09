@@ -12,6 +12,26 @@ namespace Domain.Entities.Neo4J
         public List<Fight> Fights { get; set; }
 
         public Enemy() { }
+        public static Enemy ToEntity(EnemyDTO enemyDTO)
+        {
+            return new Enemy
+            {
+                Id = enemyDTO.Id,
+                Name = enemyDTO.Name,
+                Health = enemyDTO.Health,
+                ImagePath = enemyDTO.ImagePath
+            };
+        }
+        public static EnemyDTO FromEntity(Enemy enemy)
+        {
+            return new EnemyDTO
+            {
+                Id = enemy.Id,
+                Name = enemy.Name,
+                Health = enemy.Health,
+                ImagePath = enemy.ImagePath
+            };
+        }
 
     }
 }

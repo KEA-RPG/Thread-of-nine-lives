@@ -16,7 +16,7 @@ namespace Backend.Repositories.Relational
 
         public CardDTO AddCard(CardDTO card)
         {
-            var dbCard = Card.FromDTO(card);
+            var dbCard = Card.ToEntity(card);
             _context.Cards.Add(dbCard);
             _context.SaveChanges();
             return GetCardById(dbCard.Id);
@@ -24,7 +24,7 @@ namespace Backend.Repositories.Relational
 
         public void DeleteCard(CardDTO card)
         {
-            var dbCard = Card.FromDTO(card);
+            var dbCard = Card.ToEntity(card);
 
             _context.Cards.Remove(dbCard);
             _context.SaveChanges();
@@ -43,7 +43,7 @@ namespace Backend.Repositories.Relational
 
         public void UpdateCard(CardDTO card)
         {
-            var dbCard = Card.FromDTO(card);
+            var dbCard = Card.ToEntity(card);
 
             _context.Cards.Update(dbCard);
             _context.SaveChanges();

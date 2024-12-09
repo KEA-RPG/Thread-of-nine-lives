@@ -12,7 +12,7 @@ namespace Domain.Entities
 
         public Enemy() { }
 
-        public static Enemy FromDTO(EnemyDTO enemyDTO)
+        public static Enemy ToEntity(EnemyDTO enemyDTO)
         {
             return new Enemy
             {
@@ -22,5 +22,16 @@ namespace Domain.Entities
                 ImagePath = enemyDTO.ImagePath
             };
         }
+        public static EnemyDTO FromEntity(Enemy enemy)
+        {
+            return new EnemyDTO
+            {
+                Id = enemy.Id,
+                Name = enemy.Name,
+                Health = enemy.Health,
+                ImagePath = enemy.ImagePath
+            };
+        }
+
     }
 }
