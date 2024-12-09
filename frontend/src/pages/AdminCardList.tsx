@@ -7,8 +7,8 @@ import ConfirmationModal from "../components/ConfirmModal";
 
 const AdminCardList = () => {
     const { onClose,isOpen, onOpen } = useDisclosure()
-
     const [deleteItem, setDeleteItem] = useState<Card>({} as Card);
+    
     const navigate = useNavigate();
 
     const onAdd = () => {
