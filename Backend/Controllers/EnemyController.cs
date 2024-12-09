@@ -12,7 +12,7 @@ namespace Backend.Controllers
             {
                 var enemyDTOs = enemyService.GetAllEnemies();
                 return enemyDTOs;
-            }).RequireAuthorization(policy => policy.RequireRole("Player"));
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
             // Get enemy by id
             app.MapGet("/enemies/{id}", (IEnemyService enemyService, int id) =>
@@ -33,8 +33,9 @@ namespace Backend.Controllers
             });
 
             // Put enemy
-            app.MapPut("/enemies", (IEnemyService enemyService, EnemyDTO enemyDTO) =>
+            app.MapPut("/enemies/{id}", (IEnemyService enemyService, EnemyDTO enemyDTO, int id) =>
             {
+                enemyDTO.Id = id;
                 var updatedEnemyDTO = enemyService.UpdateEnemy(enemyDTO);
                 if (updatedEnemyDTO == null)
                 {

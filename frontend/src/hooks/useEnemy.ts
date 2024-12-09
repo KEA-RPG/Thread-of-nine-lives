@@ -1,10 +1,9 @@
-import { useGet, usePost, usePut } from "./useData";
+import { ListItemBase, useGet, usePost, usePut } from "./useData";
 
-export interface Enemy {
+export interface Enemy extends ListItemBase {
     id?: number;
     name: string;
     health: number;
-    cost: number;
     imagePath: string;
 }
 

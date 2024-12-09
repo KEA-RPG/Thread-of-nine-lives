@@ -1,7 +1,8 @@
 import ApiClient from "../services/apiClient";
 import { Card } from "./useCard";
+import { ListItemBase } from "./useData";
 
-export interface Deck {
+export interface Deck extends ListItemBase {
     id?: number;
     name: string;
     userId: number;

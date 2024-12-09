@@ -25,7 +25,6 @@ const CardUpsert = ({ cardModel }: Props) => {
             const result = isNewCard 
                 ? await postCard(card)
                 : await putCard(card.id!, card);
-
             if (result.error) {
                 toast({
                     description: `Error: Failed to ${isNewCard ? 'save' : 'update'} card`,
@@ -110,7 +109,7 @@ const CardUpsert = ({ cardModel }: Props) => {
                         <p>Image: {card.imagePath}</p>
                     </Box>
                 </HStack>
-                <Button colorScheme="orange" onClick={handleUpsert}>
+                <Button colorScheme="orange" onClick={async () => await handleUpsert()}>
                     {card.id === undefined ? "Create" : "Update"}
                 </Button>
             </VStack>

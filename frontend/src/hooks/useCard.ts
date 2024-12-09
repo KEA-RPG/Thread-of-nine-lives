@@ -1,6 +1,7 @@
 import ApiClient from "../services/apiClient";
+import { ListItemBase } from "./useData";
 
-export interface Card {
+export interface Card extends ListItemBase {
     id?: number;
     name: string;
     description: string;
