@@ -49,7 +49,7 @@ namespace Backend.Controllers
                     context.Response.Cookies.Append("X-CSRF-TOKEN", csrf.RequestToken, new CookieOptions
                     {
                         HttpOnly = true,  // Prevent JavaScript access
-                        Secure = false,    // Only send over HTTPS
+                        Secure = true,    // Only send over HTTPS
                         SameSite = SameSiteMode.Unspecified,  // Protect from CSRF
                         Expires = DateTime.UtcNow.AddHours(1), // Set expiration time
                         Path = "/",
