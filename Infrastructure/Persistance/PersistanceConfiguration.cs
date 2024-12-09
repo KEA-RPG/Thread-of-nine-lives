@@ -12,7 +12,7 @@ namespace Infrastructure.Persistance
 {
     public static class PersistanceConfiguration
     {
-        public static void ConfigureServices(IServiceCollection services, dbtype dbtype)
+        public static void ConfigureServices(IServiceCollection services, dbtype dbtype, string environmentName)
         {
             string dbString = dbtype.ToString();
 
@@ -20,11 +20,11 @@ namespace Infrastructure.Persistance
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(binpath)
-                .AddJsonFile("dbsettings.json")
+                .AddJsonFile($"dbsettings.{environmentName}.json")
                 .Build();
 
             var connectionString = configuration.GetConnectionString(dbString);
-
+            Console.WriteLine(connectionString);
             services.AddDbContext<RelationalContext>(options =>
             {
                 options.UseSqlServer(connectionString,

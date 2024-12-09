@@ -8,11 +8,20 @@ export interface Response<T> {
 
 class ApiClient {
   public apiClient: AxiosInstance | undefined;
-
+  
   private getClient(): AxiosInstance {
+    let baseurl = "https://localhost:7195/";
+    const envBaseUrl = import.meta.env.VITE_BASE_URL;
+
+    if(envBaseUrl)
+    {
+      baseurl = envBaseUrl;
+    }
+
+
     if (!this.apiClient) {
       this.apiClient = axios.create({
-        baseURL: "https://localhost:7195/",
+        baseURL: baseurl,
         timeout: 10000,
         headers: {
           ContentType: 'application/json',

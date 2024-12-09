@@ -15,13 +15,15 @@ namespace DataSeeder
 
         public static void Main(string[] args)
         {
+            Console.WriteLine("Starting application...");
+
             var builder = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
+                PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             });
-
             var host = builder.Build();
+            Console.WriteLine("Builder built");
 
             SeedDatabase(host);
         }
@@ -30,12 +32,15 @@ namespace DataSeeder
         {
             using (var scope = host.Services.CreateScope())
             {
+                Console.WriteLine("Getting required services and database...");
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<RelationalContext>();
 
+                Console.WriteLine("Updating DB");
                 // Ensure database is created
                 context.Database.EnsureCreated();
-
+                Console.WriteLine("DB updated");
+                Console.WriteLine("Seeding users");
                 // Seed data
                 //User
                 if (!context.Users.Any())
@@ -52,6 +57,7 @@ namespace DataSeeder
                     context.SaveChanges();
                 }
 
+                Console.WriteLine("Seeding cards");
                 //Card
                 if (!context.Cards.Any())
                 {
@@ -60,6 +66,7 @@ namespace DataSeeder
                     context.SaveChanges();
                 }
 
+                Console.WriteLine("Seeding enemies");
                 //Enemy
                 if (!context.Enemies.Any())
                 {
@@ -68,6 +75,7 @@ namespace DataSeeder
                     context.SaveChanges();
                 }
 
+                Console.WriteLine("Seeding decks");
                 //Deck
                 if (!context.Decks.Any())
                 {
@@ -122,6 +130,8 @@ namespace DataSeeder
 
                 }
             }
+            Console.WriteLine("Seeding done!");
+
         }
 
 
