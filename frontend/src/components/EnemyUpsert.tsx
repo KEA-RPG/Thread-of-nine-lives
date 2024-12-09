@@ -1,33 +1,43 @@
-import { Box, HStack, VStack, Image, Button } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
-import { Enemy, postEnemy, putEnemy, useEnemy } from "../hooks/useEnemy";
-import { useState, useEffect } from "react";
-import InputFieldElement from "../components/InputFieldElement";
+import { Box, HStack, VStack, Image, Button, useToast } from "@chakra-ui/react";
+import { Enemy, postEnemy, putEnemy } from "../hooks/useEnemy";
+import { useState } from "react";
+import InputFieldElement from "./InputFieldElement";
+import { useNavigate } from "react-router-dom";
 
-const EnemyUpsert = () => {
+type Props = {
+    data?: Enemy;
+};
 
-    const param = useParams().enemyid;
-    const [enemy, setEnemy] = useState<Enemy>({} as Enemy);
-    const value = param !== undefined && !isNaN(Number(param)) ? Number(param) : null;
+const EnemyUpsert = ({ data }: Props) => {
+    const navigate = useNavigate();
+    const toast = useToast()
 
-
-    useEffect(() => {
-        if (value !== null) {
-            const enemyData = useEnemy(value);
-            if (enemyData.data) {
-                setEnemy(enemyData.data);
+    const [enemy, setEnemy] = useState<Enemy>(data ?? {} as Enemy);
+    const handleUpsert = async () => {
+        try {
+            const isNewEnemy = enemy.id === undefined;
+            const result = isNewEnemy 
+                ? await postEnemy(enemy)
+                : await putEnemy(enemy.id!, enemy);
+            if (result.error) {
+                toast({
+                    description: `Error: Failed to ${isNewEnemy ? 'save' : 'update'} enemy`,
+                    status: "error",
+                });
+                return;
             }
-        }
-    }, []);
 
+            toast({
+                description: `Enemy ${isNewEnemy ? 'created' : 'updated'} successfully`,
+                status: "success",
+            });
 
-
-    const handleUpsert = () => {
-        if (enemy.id === undefined) {
-            postEnemy(enemy);
-        }
-        else {
-            putEnemy(enemy.id, enemy);
+            navigate('/admin/enemies');
+        } catch (error) {
+            toast({
+                description: "Error: Failed to save enemy",
+                status: "error",
+            });
         }
     }
 
@@ -48,16 +58,8 @@ const EnemyUpsert = () => {
                             type="text"
                             name="Health"
                             placeholder="Health"
-                            value={enemy.health.toString()}
+                            value={enemy.health?.toString()}
                             onChange={(health) => setEnemy({ ...enemy, health: Number(health) })}
-                        />
-
-                        <InputFieldElement
-                            type="number"
-                            name="Cost"
-                            placeholder="Cost"
-                            value={enemy.cost?.toString()}
-                            onChange={(cost) => setEnemy({ ...enemy, cost: Number(cost) })}
                         />
 
                         <InputFieldElement
@@ -72,12 +74,11 @@ const EnemyUpsert = () => {
                         <Image src="https://loremflickr.com/320/240" border="1px solid black" w="160px" h="160px" />
                         <p>Name: {enemy.name}</p>
                         <p>Health: {enemy.health}</p>
-                        <p>Cost: {enemy.cost}</p>
                         <p>Image: {enemy.imagePath}</p>
                     </Box>
                 </HStack>
                 <Button colorScheme="orange" onClick={handleUpsert}>
-                    {param === undefined ? "Create" : "Update"}
+                    {data === undefined ? "Create" : "Update"}
                 </Button>
             </VStack>
         </Box>
