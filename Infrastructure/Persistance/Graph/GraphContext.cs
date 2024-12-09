@@ -13,6 +13,8 @@ using Neo4jClient.Transactions;
 using System.Net.Sockets;
 using Domain.Entities.Neo4j;
 using MongoDB.Driver;
+using Neo4jClient.Cypher;
+using System.Linq.Expressions;
 namespace Infrastructure.Persistance.Graph
 {
     public class GraphContext
@@ -38,6 +40,17 @@ namespace Infrastructure.Persistance.Graph
             var query = await _client.Cypher
             .Match($"(x:{type})")
             .Return(x => x.As<T>())
+            .ResultsAsync;
+            return query;
+        }
+
+        public async Task<IEnumerable<T1>> ExecuteQueryWithMapAndRelations<T1,T2>()
+        {
+            var type = typeof(T1).Name;
+
+            var query = await _client.Cypher
+            .Match($"(x:{type})")
+            .Return(x => x.As<T1>())
             .ResultsAsync;
             return query;
         }
@@ -137,6 +150,21 @@ namespace Infrastructure.Persistance.Graph
                 .Set("x = {y}")
                 .WithParam("y", node)
                 .ExecuteWithoutResultsAsync();
+        }
+        public async Task<IEnumerable<T>> ExecuteQueryWithWhere<T>(Expression<Func<T, bool>> whereClause)
+        {
+            var type = typeof(T).Name;
+
+            var query = await _client.Cypher
+            .Match($"(x:{type})")
+            .Where(whereClause)
+            .Return(x => x.As<T>())
+            .ResultsAsync;
+            return query;
+        }
+        public BoltGraphClient GetClient()
+        {
+            return _client;
         }
     }
 }

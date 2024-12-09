@@ -1,108 +1,133 @@
-﻿//using Infrastructure.Persistance.Relational;
-//using Domain.DTOs;
-//using Microsoft.EntityFrameworkCore;
-//using Backend.Repositories.Interfaces;
-//using Infrastructure.Persistance.Graph;
-//using Domain.Entities.Neo4J;
+﻿using Infrastructure.Persistance.Relational;
+using Domain.DTOs;
+using Microsoft.EntityFrameworkCore;
+using Backend.Repositories.Interfaces;
+using Infrastructure.Persistance.Graph;
+using Domain.Entities.Neo4J;
+using Neo4jClient.Transactions;
+using System;
 
-//namespace Backend.Repositories.Graph
-//{
-//    //Recieves DTO looks for Entities
-//    //Sends DTO's back
-//    public class GraphDeckRepository : IDeckRepository
-//    {
-//        private readonly GraphContext _context;
+namespace Backend.Repositories.Graph
+{
+    //Recieves DTO looks for Entities
+    //Sends DTO's back
+    public class DeckRepository : IDeckRepository
+    {
+        private readonly GraphContext _context;
 
-//        public GraphDeckRepository(GraphContext context)
-//        {
-//            _context = context;
-//        }
+        public DeckRepository(GraphContext context)
+        {
+            _context = context;
+        }
 
-//        public DeckDTO AddDeck(DeckDTO deck)
-//        {
-//            var dbDeck = Deck.ToEntity(deck);
-//            dbDeck.Id = _context.GetAutoIncrementedId<Deck>().Result;
-//            _context.Insert(dbDeck).Wait();
+        public DeckDTO AddDeck(DeckDTO deck)
+        {
+            var dbDeck = Deck.ToEntity(deck);
+            dbDeck.Id = _context.GetAutoIncrementedId<Deck>().Result;
+            dbDeck.Comments = new List<Comment> { };
+            _context.Insert(dbDeck).Wait();
 
-//            return GetDeckById(dbDeck.Id);
-//        }
+            return GetDeckById(dbDeck.Id);
+        }
 
-//        public void DeleteDeck(int deckId)
-//        {
-//            _context.Delete<Deck>(deckId).Wait();
-//        }
+        public void DeleteDeck(int deckId)
+        {
+            var deck = GetDeckById(deckId);
+            if (deck != null)
+            {
+                _context.Delete<Deck>(deckId).Wait();
+            }
+        }
 
-//        public DeckDTO GetDeckById(int id)
-//        {
-//            var dbDeck = _context.Decks.
-//                Include(deck => deck.DeckCards).
-//                ThenInclude(deckCard => deckCard.Card).
-//                Include(deck => deck.User).
-//                FirstOrDefault(deck => deck.Id == id);
+        public DeckDTO GetDeckById(int id)
+        {
+            return _context
+                .ExecuteQueryWithMap<Deck>()
+                .Result
+                .Select(x => Deck.FromEntity(x))
+                .FirstOrDefault();
+        }
 
-//            var deck = DeckDTO.FromEntity(dbDeck);
+        public void UpdateDeck(DeckDTO deckToUpdate)
+        {
+            var dbDeck = GetDeckById(deckToUpdate.Id);
 
-//            return deck;
-//        }
+            if (dbDeck != null)
+            {
+                var client = _context.GetClient();
+                using (ITransaction tx = client.BeginTransaction())
+                {
+                    //removing the old connections
+                    client.Cypher
+                        .Match("(x:Deck)")
+                        .Where((Deck x) => x.Id == deckToUpdate.Id)
+                        .Set("x = {y}")
+                        .WithParam("y", deckToUpdate)
+                        .ExecuteWithoutResultsAsync().Wait();
 
-//        public void UpdateDeck(DeckDTO deckToUpdate)
-//        {
-//            var dbDeck = _context.Decks.Find(deckToUpdate.Id);
+                    client.Cypher
+                        .Match("(d:Deck)-[r]-(c:Card)")
+                        .Where((Deck d) => d.Id == deckToUpdate.Id)
+                        .Delete("r").ExecuteWithoutResultsAsync().Wait();
 
-//            if (dbDeck != null)
-//            {
-//                // Map the properties from the DTO to the entity
-//                dbDeck.Name = deckToUpdate.Name;
-//                dbDeck.Id = deckToUpdate.Id;
-//                dbDeck.DeckCards = deckToUpdate.Cards.Select(card => new DeckCard
-//                {
-//                    CardId = card.Id,
-//                    DeckId = deckToUpdate.Id
-//                }).ToList();
-//                dbDeck.IsPublic = deckToUpdate.IsPublic;
+                    foreach (var card in deckToUpdate.Cards)
+                    {
+                        //attaching new connections
+                        client.Cypher
+                            .Match("(x:deck)", "(y:Card)")
+                            .Where((Deck x) => x.Id == deckToUpdate.Id)
+                            .AndWhere((Card y) => y.Id == card.Id)
+                            .Create($"(x)-[:CONTAINS]->(y)")
+                            .ExecuteWithoutResultsAsync().Wait();
+                    }
+                    tx.CommitAsync().Wait();
+                }
 
+            }
 
-//                _context.Decks.Update(dbDeck);
-//                _context.SaveChanges();
-//            }
-//        }
+        }
 
-//        public List<DeckDTO> GetPublicDecks()
-//        {
-//            return _context.Decks
-//                .Include(deck => deck.DeckCards)
-//                .ThenInclude(deckCard => deckCard.Card)
-//                .Include(deck => deck.User)
-//                .Include(deck => deck.Comments)
-//                .ThenInclude(comment => comment.User)
-//                .Where(deck => deck.IsPublic)
-//                .Select(deck => DeckDTO.FromEntity(deck)).ToList();
-//        }
+        public List<DeckDTO> GetPublicDecks()
+        {
+            return _context
+                .ExecuteQueryWithWhere<Deck>(x => x.IsPublic).Result
+                .Select(x => Deck.FromEntity(x))
+                .ToList();
+        }
 
-//        public List<DeckDTO> GetUserDecks(string userName)
-//        {
-//            var user = _context.Users.FirstOrDefault(u => u.Username == userName);
+        public List<DeckDTO> GetUserDecks(string userName)
+        {
+            var user = _context
+                .ExecuteQueryWithMap<User>()
+                .Result
+                .Select(x => x)
+                .FirstOrDefault();
 
-//            if (user == null)
-//            {
-//                return null;
-//            }
+            if (user == null)
+            {
+                return null;
+            }
 
-//            return _context.Decks.Include(x=> x.User)
-//                .Where(deck => deck.User == user)
-//                .Select(deck => DeckDTO.FromEntity(deck)).ToList();
-//        }
-//        public void AddComment(CommentDTO comment)
-//        {
-//            var commentDB =CommentDTO.ToEntity(comment);
-//            _context.Comments.Add(commentDB);
-//            _context.SaveChanges();
-//        }
+            return _context
+                .ExecuteQueryWithWhere<Deck>(x => x.UserId == user.Id).Result
+                .Select(x => Deck.FromEntity(x))
+                .ToList();
+        }
+        public void AddComment(CommentDTO comment)
+        {
+            var dbComment = Comment.ToEntity(comment);
+            dbComment.Id = _context.GetAutoIncrementedId<Comment>().Result;
+            _context.Insert(dbComment).Wait();
+            _context.MapNodes<Comment, Deck>(comment.Id, comment.DeckId, "IS_IN").Wait();
+        }
 
-//        public List<CommentDTO> GetCommentsByDeckId(int deckId)
-//        {
-//            return _context.Comments.Where(comment => comment.DeckId == deckId).Select(x=> CommentDTO.FromEntity(x)).ToList();
-//        }
+        public List<CommentDTO> GetCommentsByDeckId(int deckId)
+        {
+            return _context
+                .ExecuteQueryWithWhere<Comment>(x => x.DeckId == deckId).Result
+                .Select(x => Comment.FromEntity(x))
+                .ToList();
+        }
 
-//    }
-//}
+    }
+}
