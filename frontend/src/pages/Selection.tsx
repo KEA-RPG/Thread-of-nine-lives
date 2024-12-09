@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initGame, StateGameInit } from '../hooks/useGame';
-import { useToast, Spinner } from '@chakra-ui/react';
+import { useToast, Spinner, Button, Text } from '@chakra-ui/react';
 import { useEnemies, Enemy } from '../hooks/useEnemy';
 import ListLayout from '../components/ListLayout';
 
@@ -53,14 +53,25 @@ const SelectionPage = () => {
 
     return (
         <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h1>Select Enemy</h1>
+            <Text fontSize="2xl" fontWeight="bold" color="teal.500" mb={4}>
+                Select Enemy
+            </Text>
             <ListLayout
                 data={enemies}
                 onSelection={(item: Enemy) => onSelection(item)}
             />
-            <button onClick={initializeGameState} disabled={!selectedEnemy}>
+            <Button
+                onClick={initializeGameState}
+                disabled={!selectedEnemy}
+                colorScheme="teal"
+                size="lg"
+                mt={4}
+                w="50%"
+                _hover={{ bg: "teal.600" }}
+                _disabled={{ bg: "gray.400", cursor: "not-allowed" }}
+            >
                 Start Game
-            </button>
+            </Button>
         </div>
     );
 };
