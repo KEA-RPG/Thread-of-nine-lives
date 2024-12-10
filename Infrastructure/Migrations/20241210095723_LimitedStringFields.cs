@@ -5,60 +5,55 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class LimitedStringLenghts : Migration
+    public partial class LimitedStringFields : Migration
     {
-        const string tableCards = "Cards";
-        const string varchar60 = "nvarchar(60)";
-        const string varcharMax = "nvarchar(max)";
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
-
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Decks",
-                type: varchar60,
+                type: "nvarchar(60)",
                 maxLength: 60,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varcharMax);
+                oldType: "nvarchar(max)");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Text",
                 table: "Comments",
-                type: "nvarchar(255)",
+                type: "nvarchar(350)",
                 maxLength: 350,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varcharMax);
+                oldType: "nvarchar(max)");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Cards",
-                type: varchar60,
+                type: "nvarchar(60)",
                 maxLength: 60,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varcharMax);
+                oldType: "nvarchar(max)");
 
             migrationBuilder.AlterColumn<string>(
                 name: "ImagePath",
-                table: tableCards,
+                table: "Cards",
                 type: "nvarchar(80)",
                 maxLength: 80,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varcharMax);
+                oldType: "nvarchar(max)");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
-                table: tableCards,
+                table: "Cards",
                 type: "nvarchar(300)",
                 maxLength: 300,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varcharMax);
+                oldType: "nvarchar(max)");
         }
 
         /// <inheritdoc />
@@ -67,10 +62,10 @@ namespace Infrastructure.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Decks",
-                type: varcharMax,
+                type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varchar60,
+                oldType: "nvarchar(60)",
                 oldMaxLength: 60);
 
             migrationBuilder.AlterColumn<string>(
@@ -79,22 +74,22 @@ namespace Infrastructure.Migrations
                 type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(255)",
+                oldType: "nvarchar(350)",
                 oldMaxLength: 350);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
-                table: tableCards,
-                type: varcharMax,
+                table: "Cards",
+                type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: varchar60,
+                oldType: "nvarchar(60)",
                 oldMaxLength: 60);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ImagePath",
-                table: tableCards,
-                type: varcharMax,
+                table: "Cards",
+                type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(80)",
@@ -102,8 +97,8 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
-                table: tableCards,
-                type: varcharMax,
+                table: "Cards",
+                type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(300)",

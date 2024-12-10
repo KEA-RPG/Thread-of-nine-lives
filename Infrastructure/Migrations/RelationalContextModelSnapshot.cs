@@ -55,7 +55,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuditLogs");
+                    b.ToTable("AuditLogs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
@@ -92,7 +92,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards", t =>
+                    b.ToTable("Cards", null, t =>
                         {
                             t.HasTrigger("trg_Audit_Cards_Delete");
 
@@ -121,7 +121,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(350)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(350)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -135,7 +135,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", t =>
+                    b.ToTable("Comments", null, t =>
                         {
                             t.HasTrigger("trg_Audit_Comments_Delete");
 
@@ -180,7 +180,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("UserId"), new[] { "Name", "IsPublic" });
 
-                    b.ToTable("Decks", t =>
+                    b.ToTable("Decks", null, t =>
                         {
                             t.HasTrigger("trg_Audit_Decks_Delete");
 
@@ -212,7 +212,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DeckId");
 
-                    b.ToTable("DeckCards", t =>
+                    b.ToTable("DeckCards", null, t =>
                         {
                             t.HasTrigger("trg_Audit_DeckCards_Delete");
 
@@ -245,7 +245,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Enemies", t =>
+                    b.ToTable("Enemies", null, t =>
                         {
                             t.HasTrigger("trg_Audit_Enemies_Delete");
 
@@ -277,7 +277,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Fights", t =>
+                    b.ToTable("Fights", null, t =>
                         {
                             t.HasTrigger("trg_Audit_Fights_Delete");
 
@@ -311,7 +311,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("FightId");
 
-                    b.ToTable("GameActions", t =>
+                    b.ToTable("GameActions", null, t =>
                         {
                             t.HasTrigger("trg_Audit_GameActions_Delete");
 
@@ -353,7 +353,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Username"), new[] { "PasswordHash", "Role" });
 
-                    b.ToTable("Users", t =>
+                    b.ToTable("Users", null, t =>
                         {
                             t.HasTrigger("trg_Audit_Users_Delete");
 

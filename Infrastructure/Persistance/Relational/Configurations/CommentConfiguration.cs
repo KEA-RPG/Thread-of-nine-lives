@@ -10,6 +10,7 @@ namespace Infrastructure.Persistance.Relational.Configurations
         {
 
             builder.Property(c => c.Text).HasMaxLength(350);
+            builder.Property(c => c.Text).HasColumnType("nvarchar(350)");
 
             // Set primary key
             builder.HasKey(c => c.Id);

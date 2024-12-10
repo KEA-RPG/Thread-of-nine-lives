@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RelationalContext))]
-    [Migration("20241206153743_LimitedStringLenghts")]
-    partial class LimitedStringLenghts
+    [Migration("20241210095723_LimitedStringFields")]
+    partial class LimitedStringFields
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,7 +124,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(350)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(350)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
