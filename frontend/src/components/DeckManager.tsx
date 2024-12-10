@@ -1,4 +1,4 @@
-import { Box, Button, Heading, HStack, SimpleGrid, Spacer, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Heading, HStack, SimpleGrid, Spacer, useToast, VStack } from "@chakra-ui/react";
 import CardCard from "../components/GameCard";
 import SelectedCardListItem from "../components/SelectedCardListItem";
 import { useEffect, useState } from "react";
@@ -120,6 +120,11 @@ const DeckManager = ({ deckModel }: Props) => {
                 <Spacer />
                 <InputFieldElement type="text" placeholder="Deck name" name="Deck Name" onChange={e => setDeck(prevDeck => ({ ...prevDeck, name: e }))} value={deck.name} />
                 <Button onClick={() => handleUpsert()} colorScheme='green'>Save deck</Button>
+                <Checkbox
+                isChecked={deck.isPublic}
+                onChange={(e) => {
+                    setDeck(prevDeck => ({ ...prevDeck, isPublic: e.target.checked }))
+                }}>Is deck public?</Checkbox>
                 <Spacer />
             </HStack>
             <HStack spacing={25} mt={10} alignItems="flex-start">

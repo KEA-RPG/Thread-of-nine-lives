@@ -1,10 +1,9 @@
-import { useGet, usePost, usePut } from "./useData";
+import { ListItemBase, useDelete, useGet, usePost, usePut } from "./useData";
 
-export interface Enemy {
+export interface Enemy extends ListItemBase {
     id?: number;
     name: string;
     health: number;
-    cost: number;
     imagePath: string;
 }
 
@@ -12,5 +11,5 @@ const useEnemies = () => useGet<Enemy[]>(`/enemies`)
 const useEnemy = (id: number) => useGet<Enemy>(`/enemies/${id}`)
 const postEnemy = (enemy: Enemy) => usePost<Enemy, Enemy>(`/enemies`, enemy);
 const putEnemy = (id: number, enemy: Enemy) => usePut<Enemy, Enemy>(`/enemies/${id}`, enemy);
-
-export { useEnemy, useEnemies, postEnemy, putEnemy };
+const deleteEnemy = (id: number) => useDelete<Enemy>(`/enemies/${id}`);
+export { useEnemy, useEnemies, postEnemy, putEnemy,deleteEnemy };

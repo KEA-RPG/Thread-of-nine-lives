@@ -16,7 +16,7 @@ namespace Backend.Controllers
             {
                 var cards = cardService.GetAllCards();
                 return cards;
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
             //Get card by id
             //Samme årsag som ovenstående
