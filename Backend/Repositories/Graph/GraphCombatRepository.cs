@@ -19,22 +19,24 @@ namespace Backend.Repositories.Graph
         public FightDTO GetFightById(int id)
         {
             var result = _context.GetClient().Cypher
-                .Match("(f:Fight) - [] - (g:GameAction)")
+                .Match("(f:Fight) - [] - (e:Enemy)")
                 .Where((Fight f) => f.Id == id)
-                .Return((f, g) => new
+                .OptionalMatch("(f:Fight) - [] - (g:GameAction)")
+                .Return((f, g, e) => new
                 {
-                    Fight = f,
-                    GameActions = g,
-                }).ResultsAsync.Result;
-            //var data = new FightDTO()
-            //{
-            //    Enemy = Enemy.FromEntity(result.Enemy),
-            //    EnemyId = result.Enemy.Id,
-            //    Id = result.Fight.Id,
-            //    UserId = result.Fight.UserId,
-            //    GameActions = result.GameActions.Select(x => GameAction.FromEntity(x)).ToList()
-            //};
-            return null;
+                    Fight = f.As<Fight>(),
+                    GameActions = g.CollectAs<GameAction>(),
+                    Enemy = e.As<Enemy>(),
+                }).ResultsAsync.Result.First();
+            var data = new FightDTO()
+            {
+                Enemy = Enemy.FromEntity(result.Enemy),
+                EnemyId = result.Enemy.Id,
+                Id = result.Fight.Id,
+                UserId = result.Fight.UserId,
+                GameActions = result.GameActions.Select(x => GameAction.FromEntity(x)).ToList()
+            };
+            return data;
 
         }
 
@@ -43,6 +45,9 @@ namespace Backend.Repositories.Graph
             var dbFight = Fight.ToEntity(fight);
             dbFight.Id = _context.GetAutoIncrementedId<Fight>().Result;
             _context.Insert(dbFight).Wait();
+            _context.MapNodes<User,Fight>(fight.UserId, dbFight.Id, "FIGHTS_IN").Wait();
+            _context.MapNodes<Enemy, Fight>(fight.EnemyId, dbFight.Id, "FIGHTS_IN").Wait();
+
             return GetFightById(dbFight.Id);
         }
 
@@ -51,6 +56,7 @@ namespace Backend.Repositories.Graph
             var dbGameAction = GameAction.ToEntity(gameAction);
             dbGameAction.Id = _context.GetAutoIncrementedId<Fight>().Result;
             _context.Insert(dbGameAction).Wait();
+            _context.MapNodes<GameAction, Fight>(gameAction.Id, gameAction.FightId, "PART_OF").Wait();
         }
     }
 }
