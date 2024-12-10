@@ -71,10 +71,11 @@ namespace Infrastructure.Persistance.Graph
         {
             var type = typeof(T).Name;
 
-            await _client.Cypher
-                .Create($"(x:{type} {{newItem}})")
+            var cyper = _client.Cypher
+                .Create($"(x:{type} $newItem)")
                 .WithParam("newItem", entity)
                 .ExecuteWithoutResultsAsync();
+            await cyper;
         }
 
         public async Task Delete<T>(int id)
@@ -87,26 +88,38 @@ namespace Infrastructure.Persistance.Graph
                 .DetachDelete("x")
                 .ExecuteWithoutResultsAsync();
         }
-
-        public async Task<int> GetAutoIncrementedId<T>()
+        public async Task<Counter> InitCounter<T>(int startVal = 0)
         {
             var typeName = typeof(T).Name;
-
             var query = await _client.Cypher
                 .Match($"(x:Counter)")
                 .Where((Counter x) => x.Name == typeName)
                 .Return(x => x.As<Counter>()).ResultsAsync;
-            
+
             var node = query.FirstOrDefault();
-            if(node == null)
+            if (node == null)
             {
                 node = new Counter()
                 {
-                    Count = 1,
+                    Count = startVal,
                     Name = typeName
                 };
                 await Insert(node);
             }
+            return node;
+        }
+        public async Task<int> GetAutoIncrementedId<T>()
+        {
+            var typeName = typeof(T).Name;
+            var node = await InitCounter<T>();
+
+            node.Count++;
+            await _client.Cypher
+                .Match("(x:Counter)")
+                .Where((Counter x) => x.Name == typeName)
+                .Set("x.Count = $Count")
+                .WithParam("Count", node.Count)
+                .ExecuteWithoutResultsAsync();
             return node.Count;
         }
 
@@ -147,9 +160,11 @@ namespace Infrastructure.Persistance.Graph
             await _client.Cypher
                 .Match($"(x:{type})")
                 .Where((T x) => x.Id == node.Id)
-                .Set("x = {y}")
+                .Set("x = $y")
                 .WithParam("y", node)
                 .ExecuteWithoutResultsAsync();
+
+
         }
         public async Task<IEnumerable<T>> ExecuteQueryWithWhere<T>(Expression<Func<T, bool>> whereClause)
         {

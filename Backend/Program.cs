@@ -1,6 +1,7 @@
 using Backend;
 using Backend.Controllers;
 using Backend.Repositories.Document;
+using Backend.Repositories.Graph;
 using Backend.Repositories.Interfaces;
 using Backend.Repositories.Relational;
 using Backend.Services;
@@ -56,20 +57,23 @@ namespace Backend
             });
             builder.Services.AddAuthorization();
             builder.Services.AddScoped<ICardService, CardService>();
-            builder.Services.AddScoped<ICardRepository, CardRepository>();
+            builder.Services.AddScoped<ICardRepository, GraphCardRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IDeckRepository, DeckRepository>();
+            builder.Services.AddScoped<IUserRepository, GraphUserRepository>();
+            builder.Services.AddScoped<IDeckRepository, GraphDeckRepository>();
             builder.Services.AddScoped<IDeckService, DeckService>();
-            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
+            builder.Services.AddScoped<ICombatRepository, GraphCombatRepository>();
             builder.Services.AddScoped<ICombatService, CombatService>();
             builder.Services.AddScoped<IEnemyService, EnemyService>();
-            builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
+            builder.Services.AddScoped<IEnemyRepository, GraphEnemyRepository>();
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 
             builder.Services.AddCors(p => p.AddPolicy("*", b =>
-            b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            
+            b.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()));
 
 
             PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);

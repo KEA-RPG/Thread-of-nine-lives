@@ -1,15 +1,16 @@
 ﻿using Infrastructure.Persistance.Relational;
-using Domain.Entities;
 using Backend.Repositories.Interfaces;
 using Domain.DTOs;
+using Infrastructure.Persistance.Graph;
+using Domain.Entities.Neo4J;
 
 namespace Backend.Repositories.Graph
 {
     public class GraphEnemyRepository : IEnemyRepository
     {
-        private readonly RelationalContext _context;
+        private readonly GraphContext _context;
 
-        public GraphEnemyRepository(RelationalContext context)
+        public GraphEnemyRepository(GraphContext context)
         {
             _context = context;
         }
@@ -17,37 +18,38 @@ namespace Backend.Repositories.Graph
         public EnemyDTO AddEnemy(EnemyDTO enemy)
         {
             var dbEnemy = Enemy.ToEntity(enemy);
-            _context.Enemies.Add(dbEnemy);
-            _context.SaveChanges();
+            dbEnemy.Id = _context.GetAutoIncrementedId<Enemy>().Result;
+            _context.Insert(dbEnemy).Wait();
             return GetEnemyById(dbEnemy.Id);
         }
 
         public void DeleteEnemy(EnemyDTO enemy)
         {
-            var dbEnemy = Enemy.ToEntity(enemy);
-            _context.Enemies.Remove(dbEnemy);
-            _context.SaveChanges();
+            _context.Delete<Enemy>(enemy.Id).Wait();
         }
 
         public List<EnemyDTO> GetAllEnemies()
         {
-            return _context.Enemies.Select(Enemy.FromEntity).ToList();
+            return _context
+                .ExecuteQueryWithMap<Enemy>()
+                .Result
+                .Select(x => Enemy.FromEntity(x))
+                .ToList();
         }
 
         public EnemyDTO GetEnemyById(int id)
         {
-            var dbEnemy = _context.Enemies.Find(id);
-            return Enemy.FromEntity(dbEnemy);
+            return _context
+                .ExecuteQueryWithMap<Enemy>()
+                .Result
+                .Select(x => Enemy.FromEntity(x))
+                .FirstOrDefault();
         }
 
         public void UpdateEnemy(EnemyDTO enemy)
         {
-            var enemyDB = _context.Enemies.Find(enemy.Id);
-            enemyDB.Health = enemy.Health;
-            enemyDB.Name = enemy.Name;
-            enemyDB.ImagePath = enemy.ImagePath;
-            _context.Enemies.Update(enemyDB);
-            _context.SaveChanges();
+            var dbEnemy = Enemy.ToEntity(enemy);
+            _context.UpdateNode(dbEnemy).Wait();
         }
     }
 }

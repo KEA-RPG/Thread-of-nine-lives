@@ -8,6 +8,6 @@ namespace Domain.Entities.Neo4j
 {
     public abstract class Neo4jBase
     {
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
     }
 }

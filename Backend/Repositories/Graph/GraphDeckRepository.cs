@@ -11,11 +11,11 @@ namespace Backend.Repositories.Graph
 {
     //Recieves DTO looks for Entities
     //Sends DTO's back
-    public class DeckRepository : IDeckRepository
+    public class GraphDeckRepository : IDeckRepository
     {
         private readonly GraphContext _context;
 
-        public DeckRepository(GraphContext context)
+        public GraphDeckRepository(GraphContext context)
         {
             _context = context;
         }
@@ -23,9 +23,17 @@ namespace Backend.Repositories.Graph
         public DeckDTO AddDeck(DeckDTO deck)
         {
             var dbDeck = Deck.ToEntity(deck);
+            var cards = deck.Cards;
             dbDeck.Id = _context.GetAutoIncrementedId<Deck>().Result;
-            dbDeck.Comments = new List<Comment> { };
+            dbDeck.Comments = null;
+            dbDeck.Cards = null;
             _context.Insert(dbDeck).Wait();
+
+            foreach (var card in cards)
+            {
+                _context.MapNodes<Deck, Card>(dbDeck.Id, card.Id, "CONTAINS").Wait();
+            }
+            _context.MapNodes<User, Deck>(deck.UserId, dbDeck.Id, "OWNS").Wait();
 
             return GetDeckById(dbDeck.Id);
         }
@@ -41,11 +49,26 @@ namespace Backend.Repositories.Graph
 
         public DeckDTO GetDeckById(int id)
         {
-            return _context
-                .ExecuteQueryWithMap<Deck>()
-                .Result
-                .Select(x => Deck.FromEntity(x))
-                .FirstOrDefault();
+            var result = _context.GetClient().Cypher
+                .Match("(d:Deck) - [] - (c:Card)")
+                .Match("(d:Deck) - [] - (u:User)")
+                .Where((Deck d) => d.Id == id)
+                .Return((d, c, u) => new
+                {
+                    Deck = d.As<Deck>(),
+                    Cards = c.CollectAs<Card>(),
+                    User = u.As<User>(),
+                }).ResultsAsync.Result.First();
+            return  new DeckDTO()
+            {
+                UserName = result.User.Username,
+                Id = result.Deck.Id,
+                UserId = result.Deck.UserId,
+                Cards = result.Cards.Select(c => Card.FromEntity(c)).ToList(),
+                IsPublic = result.Deck.IsPublic,
+                Name = result.Deck.Name,
+            };
+
         }
 
         public void UpdateDeck(DeckDTO deckToUpdate)
@@ -55,13 +78,16 @@ namespace Backend.Repositories.Graph
             if (dbDeck != null)
             {
                 var client = _context.GetClient();
+                var cards = deckToUpdate.Cards;
+                deckToUpdate.Comments = null;
+                deckToUpdate.Cards = null;
                 using (ITransaction tx = client.BeginTransaction())
                 {
                     //removing the old connections
                     client.Cypher
                         .Match("(x:Deck)")
                         .Where((Deck x) => x.Id == deckToUpdate.Id)
-                        .Set("x = {y}")
+                        .Set("x = $y")
                         .WithParam("y", deckToUpdate)
                         .ExecuteWithoutResultsAsync().Wait();
 
@@ -70,15 +96,10 @@ namespace Backend.Repositories.Graph
                         .Where((Deck d) => d.Id == deckToUpdate.Id)
                         .Delete("r").ExecuteWithoutResultsAsync().Wait();
 
-                    foreach (var card in deckToUpdate.Cards)
+                    foreach (var card in cards)
                     {
-                        //attaching new connections
-                        client.Cypher
-                            .Match("(x:deck)", "(y:Card)")
-                            .Where((Deck x) => x.Id == deckToUpdate.Id)
-                            .AndWhere((Card y) => y.Id == card.Id)
-                            .Create($"(x)-[:CONTAINS]->(y)")
-                            .ExecuteWithoutResultsAsync().Wait();
+                        _context.MapNodes<Deck, Card>(dbDeck.Id, card.Id, "CONTAINS").Wait();
+
                     }
                     tx.CommitAsync().Wait();
                 }
@@ -108,10 +129,27 @@ namespace Backend.Repositories.Graph
                 return null;
             }
 
-            return _context
-                .ExecuteQueryWithWhere<Deck>(x => x.UserId == user.Id).Result
-                .Select(x => Deck.FromEntity(x))
-                .ToList();
+
+            var result = _context.GetClient().Cypher
+                .Match("(d:Deck) - [] - (c:Card)",
+                "(d:Deck) - [] - (u:User)")
+                .Where((User u) => u.Username == userName)
+                .Return((d, c, u) => new
+                {
+                    Deck = d.As<Deck>(),
+                    Cards = c.CollectAs<Card>(),
+
+                }).ResultsAsync.Result;
+            return result.Select(x => new DeckDTO()
+            {
+                UserName = userName,
+                Id = x.Deck.Id,
+                UserId = x.Deck.UserId,
+                Cards = x.Cards.Select(c => Card.FromEntity(c)).ToList(),
+                IsPublic = x.Deck.IsPublic,
+                Name = x.Deck.Name,
+            }).ToList();
+
         }
         public void AddComment(CommentDTO comment)
         {

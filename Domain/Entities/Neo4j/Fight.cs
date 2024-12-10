@@ -5,7 +5,7 @@ namespace Domain.Entities.Neo4J
 {
     public class Fight : Neo4jBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public int EnemyId { get; set; }
         public Enemy Enemy { get; set; }
         public int UserId { get; set; }

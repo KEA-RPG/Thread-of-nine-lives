@@ -10,7 +10,7 @@ namespace Domain.Entities.Neo4J
 {
     public class Deck : Neo4jBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
         public List<Card> Cards { get; set; }
@@ -42,11 +42,11 @@ namespace Domain.Entities.Neo4J
             {
                 Id = deck.Id,
                 UserId = deck.UserId,
-                UserName = deck.Users.First().Username,
+                UserName = deck.Users?.First().Username,
                 Name = deck.Name,
-                Cards = deck.Cards.Select(dc => Card.FromEntity(dc)).ToList(),
+                Cards = deck.Cards?.Select(dc => Card.FromEntity(dc)).ToList(),
                 IsPublic = deck.IsPublic,
-                Comments = deck.Comments.Select(comment => Comment.FromEntity(comment)).ToList()
+                Comments = deck.Comments?.Select(comment => Comment.FromEntity(comment)).ToList()
             };
         }
 

@@ -18,7 +18,7 @@ using GraphFight = Domain.Entities.Neo4J.Fight;
 using GraphGameAction = Domain.Entities.Neo4J.GameAction;
 using GraphUser = Domain.Entities.Neo4J.User;
 
-Console.WriteLine("Starting mongoDB migration");
+Console.WriteLine("Starting Neo4j migration");
 var builder = Host.CreateDefaultBuilder(args)
 .ConfigureServices(services =>
 {
@@ -112,6 +112,14 @@ using (var scope = host.Services.CreateScope())
     Console.WriteLine("Enemy --> Fight done");
     Console.WriteLine("User --> Fight done");
     Console.WriteLine("GameAction --> Fight done");
+    Console.WriteLine("Creating counters...");
+    await graphContext.InitCounter<GraphCard>(cards.Max(x=>x.Id));
+    await graphContext.InitCounter<GraphComment>(comments.Max(x => x.Id));
+    await graphContext.InitCounter<GraphDeck>(decks.Max(x => x.Id));
+    await graphContext.InitCounter<GraphEnemy>(enemies.Max(x => x.Id));
+    await graphContext.InitCounter<GraphFight>(fights.Max(x => x.Id));
+    await graphContext.InitCounter<GraphGameAction>(gameActions.Max(x => x.Id));
+    await graphContext.InitCounter<GraphUser>(users.Max(x => x.Id));
 
     Console.WriteLine("Mapping done");
 

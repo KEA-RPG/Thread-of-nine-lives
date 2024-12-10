@@ -1,55 +1,63 @@
-﻿using Domain.Entities;
-using Domain.DTOs;
+﻿using Domain.DTOs;
 using Infrastructure.Persistance.Relational;
 using Backend.Repositories.Interfaces;
+using Domain.Entities.Neo4J;
+using Infrastructure.Persistance.Graph;
 
 namespace Backend.Repositories.Graph
 {
     public class GraphUserRepository : IUserRepository
     {
-        private readonly RelationalContext _context;
+        private readonly GraphContext _context;
 
-        public GraphUserRepository(RelationalContext context)
+        public GraphUserRepository(GraphContext context)
         {
             _context = context;
         }
 
         public void CreateUser(UserDTO user)
         {
-            var userDb = User.ToEntity(user);
-            _context.Users.Add(userDb);
-            _context.SaveChanges();
+            var dbUser = User.ToEntity(user);
+            dbUser.Id = _context.GetAutoIncrementedId<User>().Result;
+            _context.Insert(dbUser).Wait();
         }
 
         public void DeleteUser(UserDTO user)
         {
-            var userDB = _context.Users.First(u => u.Id == user.Id);
-            _context.Users.Remove(userDB);
-            _context.SaveChanges();
+            _context.Delete<User>(user.Id).Wait();
         }
 
-        public List<User> GetAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
-            return _context.Users.ToList();
+            return _context
+                .ExecuteQueryWithMap<User>()
+                .Result
+                .Select(x => User.FromEntity(x))
+                .ToList();
         }
 
         public UserDTO GetUserByUsername(string username)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == username);
-            return User.FromEntity(user);
+            return _context
+                .ExecuteQueryWithWhere<User>(x => x.Username == username)
+                .Result
+                .Select(x => User.FromEntity(x))
+                .FirstOrDefault();
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(UserDTO user)
         {
-            _context.Users.Update(user);
-            _context.SaveChanges();
+            var dbUser = User.ToEntity(user);
+            _context.UpdateNode(dbUser).Wait();
         }
 
         public UserDTO GetUserById(int id)
         {
-            var dbUser = _context.Users.FirstOrDefault(u => u.Id == id);
-            var user = User.FromEntity(dbUser);
-            return user;
+            return _context
+                .ExecuteQueryWithWhere<User>(x => x.Id == id)
+                .Result
+                .Select(x => User.FromEntity(x))
+                .FirstOrDefault();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Backend.Repositories.Graph
         public CardDTO GetCardById(int id)
         {
             return _context
-                .ExecuteQueryWithMap<Card>()
+                .ExecuteQueryWithWhere<Card>(x=> x.Id == id)
                 .Result
                 .Select(x => Card.FromEntity(x))
                 .FirstOrDefault();

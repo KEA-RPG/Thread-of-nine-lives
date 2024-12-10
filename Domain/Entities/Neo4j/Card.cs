@@ -10,14 +10,13 @@ namespace Domain.Entities.Neo4J
 {
     public class Card : Neo4jBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Attack { get; set; }
         public int Defence { get; set; }
         public int Cost { get; set; }
         public string ImagePath { get; set; }
-        public List<Deck> Deck{ get; set; }
         public Card()
         {
 

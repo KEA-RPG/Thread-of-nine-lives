@@ -10,7 +10,7 @@ namespace Domain.Entities.Neo4J
 {
     public class User : Neo4jBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }
         public string Role { get; set; }

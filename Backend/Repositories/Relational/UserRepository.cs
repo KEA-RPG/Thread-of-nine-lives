@@ -28,9 +28,9 @@ namespace Backend.Repositories.Relational
             _context.SaveChanges();
         }
 
-        public List<User> GetAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
-            return _context.Users.ToList();
+            return _context.Users.Select(x => User.FromEntity(x)).ToList();
         }
 
         public UserDTO GetUserByUsername(string username)
