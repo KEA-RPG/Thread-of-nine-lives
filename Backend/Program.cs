@@ -72,7 +72,7 @@ namespace Backend
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.WithOrigins("*")  // Specify the allowed origin (frontend)
+                    builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
                            .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
                            .AllowAnyMethod()                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
                            .AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
