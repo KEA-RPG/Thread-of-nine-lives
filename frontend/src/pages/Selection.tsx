@@ -34,16 +34,11 @@ const SelectionPage = () => {
         return <div>{error.message}</div>;
     }
 
-    return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-            <Text fontSize="2xl" fontWeight="bold" color="teal.500" mb={4}>
-                Select Enemy
-            </Text>
-            <ListLayout
-                data={enemies}
-                onSelection={(item: Enemy) => onSelection(item)}    
-            />
-        </div>
+    return ( 
+        <ListLayout
+            data={enemies}
+            onSelection={(item: Enemy) => onSelection(item)}    
+        /> 
     );
 };
 
