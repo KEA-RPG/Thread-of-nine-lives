@@ -3,6 +3,8 @@ using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Backend.Repositories.Interfaces;
+using Backend.SecurityLogic;
+
 
 namespace Backend.Repositories.Relational
 {
@@ -95,7 +97,10 @@ namespace Backend.Repositories.Relational
                 return null;
             }
 
-            return _context.Decks.Include(x=> x.User)
+            return _context.Decks
+                .Include(x=> x.User)
+                .Include(x=> x.DeckCards)
+                .ThenInclude(x=> x.Card)
                 .Where(deck => deck.User == user)
                 .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
