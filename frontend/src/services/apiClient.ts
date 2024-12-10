@@ -5,7 +5,7 @@ export interface Response<T> {
   data: T | undefined;
   error: AxiosError | null;
 }
-
+ 
 class ApiClient {
   public apiClient: AxiosInstance | undefined;
   
