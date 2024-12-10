@@ -40,7 +40,7 @@ namespace Backend.Repositories.Graph
         public EnemyDTO GetEnemyById(int id)
         {
             return _context
-                .ExecuteQueryWithMap<Enemy>()
+                .ExecuteQueryWithWhere<Enemy>(x=> x.Id == id)
                 .Result
                 .Select(x => Enemy.FromEntity(x))
                 .FirstOrDefault();
