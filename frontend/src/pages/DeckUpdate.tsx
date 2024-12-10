@@ -1,5 +1,5 @@
 import { Spinner, useToast } from "@chakra-ui/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeckManager from "../components/DeckManager";
 import { Deck, useDeck } from "../hooks/useDeck";

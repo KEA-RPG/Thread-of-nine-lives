@@ -1,4 +1,8 @@
 import useApiClient from "../services/apiClient";
+export type ListItemBase = {
+    id?: number;
+    name: string;
+};
 
 const apiClient = new useApiClient();
 const useGet = <T>(endpoint: string) => {

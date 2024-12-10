@@ -1,12 +1,13 @@
 import { usePost } from "./useData";
-export interface Token {
+export interface TokenResponse {
     token: string;
+    requestToken : string;
 }
 export interface Credentials {
     username: string;
     password: string;
 }
-const login = (credentials: Credentials) => usePost<Credentials, Token>(`/auth/login`, credentials);
+const login = (credentials: Credentials) => usePost<Credentials, TokenResponse>(`/auth/login`, credentials);
 const signUp = (credentials: Credentials) => usePost<Credentials, string/*no return data*/>(`/auth/signup`, credentials);
 
 
