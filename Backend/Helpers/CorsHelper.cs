@@ -13,25 +13,19 @@ namespace Backend.Helpers
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    if (corsSettings.AllowedOrigins != null && corsSettings.AllowedOrigins.Any())
+                    if (corsSettings?.AllowedOrigins != null && corsSettings.AllowedOrigins.Any())
                     {
                         builder.WithOrigins(corsSettings.AllowedOrigins.ToArray());
                     }
-
-                    if (corsSettings.AllowAnyHeader)
+                    else
                     {
-                        builder.AllowAnyHeader();
+                        builder.AllowAnyOrigin();
                     }
 
-                    if (corsSettings.AllowAnyMethod)
-                    {
-                        builder.AllowAnyMethod();
-                    }
-
-                    if (corsSettings.AllowCredentials)
-                    {
-                        builder.AllowCredentials();
-                    }
+                    
+                    builder.AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
                 });
             });
         }
@@ -40,8 +34,5 @@ namespace Backend.Helpers
     public class CorsSettings
     {
         public List<string> AllowedOrigins { get; set; }
-        public bool AllowAnyHeader { get; set; }
-        public bool AllowAnyMethod { get; set; }
-        public bool AllowCredentials { get; set; }
     }
 }
