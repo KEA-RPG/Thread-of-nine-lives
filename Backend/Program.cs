@@ -81,15 +81,15 @@ namespace Backend
             var hostingEnvironment = builder.Environment.EnvironmentName;
             PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
 
-            builder.Services.AddAntiforgery(options =>
-            {
-                // Customize the settings if needed (e.g., SameSite policy, cookie options)
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
-                options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
-                options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
-                options.Cookie.Expiration = TimeSpan.FromMinutes(60);
-                options.Cookie.Path = "/";
-            });
+            //builder.Services.AddAntiforgery(options =>
+            //{
+            //    // Customize the settings if needed (e.g., SameSite policy, cookie options)
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
+            //    options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
+            //    options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
+            //    options.Cookie.Expiration = TimeSpan.FromMinutes(60);
+            //    options.Cookie.Path = "/";
+            //});
 
 
             var app = builder.Build();
