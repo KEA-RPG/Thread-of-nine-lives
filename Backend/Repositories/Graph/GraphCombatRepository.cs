@@ -19,18 +19,22 @@ namespace Backend.Repositories.Graph
         public FightDTO GetFightById(int id)
         {
             var result = _context.GetClient().Cypher
-                .Match("(f:Fight) -[]- (g:GameAction)")
-                .Match("(f) - [] - (e:Enemy)")
+                .Match("(f:Fight) - [] - (g:GameAction)")
                 .Where((Fight f) => f.Id == id)
-                .Return((f, g, e) => new FightDTO
+                .Return((f, g) => new
                 {
-                    Enemy = e.As<EnemyDTO>(),
-                    EnemyId = e.As<EnemyDTO>().Id,
-                    Id = id,
-                    GameActions = g.CollectAs<GameActionDTO>().ToList()
-                }).ResultsAsync.Result.First();
-
-            return result;
+                    Fight = f,
+                    GameActions = g,
+                }).ResultsAsync.Result;
+            //var data = new FightDTO()
+            //{
+            //    Enemy = Enemy.FromEntity(result.Enemy),
+            //    EnemyId = result.Enemy.Id,
+            //    Id = result.Fight.Id,
+            //    UserId = result.Fight.UserId,
+            //    GameActions = result.GameActions.Select(x => GameAction.FromEntity(x)).ToList()
+            //};
+            return null;
 
         }
 
