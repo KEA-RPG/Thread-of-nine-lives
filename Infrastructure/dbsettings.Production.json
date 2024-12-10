@@ -7,7 +7,7 @@
   },
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "DefaultConnection": "Server=relative_db,1433;Database=KeaRpg;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;Persist Security Info=False;Encrypt=False",
+    "DefaultConnection": "Server=tcp:kearpg.database.windows.net,1433;Initial Catalog=KeaRpg;Persist Security Info=False;User ID=rpgSA;Password=yourStrong(!)Password;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
     "MongoDB": {
       "ConnectionString": "mongodb://root:example@127.0.0.1:27017/",
       "DatabaseName": "KeaRpg"
