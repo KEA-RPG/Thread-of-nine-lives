@@ -70,12 +70,11 @@ namespace Backend
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", builder =>
+                options.AddPolicy("*", builder =>
                 {
                     builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
                            .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
                            .AllowAnyMethod()                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
-                           .AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
                 });
             });
 
@@ -111,7 +110,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("CorsPolicy");
+            app.UseCors("*");
             app.Run();
         }
     }
