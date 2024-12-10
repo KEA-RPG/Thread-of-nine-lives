@@ -9,9 +9,15 @@
   <ItemGroup>
     <None Remove="dbsettings.Development.json" />
     <None Remove="dbsettings.docker.json" />
+    <None Remove="dbsettings.Production.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="dbsettings.Production.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="dbsettings.Docker.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
