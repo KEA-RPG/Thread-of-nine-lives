@@ -74,7 +74,7 @@ namespace Backend
                 {
                     builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
                            .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
-                           .AllowAnyMethod()                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                           .AllowAnyMethod();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
                 });
             });
 
