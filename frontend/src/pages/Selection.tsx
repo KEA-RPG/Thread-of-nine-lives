@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initGame, StateGameInit } from '../hooks/useGame';
-import { useToast, Spinner, Text } from '@chakra-ui/react';
+import { useToast, Text } from '@chakra-ui/react';
 import { useEnemies, Enemy } from '../hooks/useEnemy';
 import ListLayout from '../components/ListLayout';
 
@@ -32,10 +32,6 @@ const SelectionPage = () => {
 
     if (error) {
         return <div>{error.message}</div>;
-    }
-
-    if (enemies.length === 0) {
-        return <Spinner />;
     }
 
     return (
