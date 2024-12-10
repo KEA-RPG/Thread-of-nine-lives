@@ -23,6 +23,7 @@ namespace Backend
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
+            builder.Services.AddHealthChecks();
 
             // Add services to the container
             builder.Services.AddEndpointsApiExplorer();
@@ -78,8 +79,8 @@ namespace Backend
                 });
             });
 
-
-            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
+            var hostingEnvironment = builder.Environment.EnvironmentName;
+            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
 
             builder.Services.AddAntiforgery(options =>
             {
@@ -100,6 +101,7 @@ namespace Backend
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+            app.MapHealthChecks("/health");
 
             app.MapCombatEndpoints();
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Image, Button, Card, CardBody, CardFooter, Stack, Text, Link, Box } from "@chakra-ui/react";
 import InputFieldElement from "../components/InputFieldElement";
 import { Credentials } from "../hooks/useUser";
