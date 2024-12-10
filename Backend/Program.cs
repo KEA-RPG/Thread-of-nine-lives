@@ -6,7 +6,6 @@ using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
