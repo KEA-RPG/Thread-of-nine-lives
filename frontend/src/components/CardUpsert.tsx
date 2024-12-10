@@ -25,7 +25,6 @@ const CardUpsert = ({ cardModel }: Props) => {
             const result = isNewCard 
                 ? await postCard(card)
                 : await putCard(card.id!, card);
-
             if (result.error) {
                 toast({
                     description: `Error: Failed to ${isNewCard ? 'save' : 'update'} card`,

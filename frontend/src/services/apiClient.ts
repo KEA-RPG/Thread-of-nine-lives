@@ -90,17 +90,15 @@ class ApiClient {
     }
   }
 
-  delete<T>(url: string): Response<T> {
-    const [data, setData] = useState<T>();
-    const [error, setError] = useState(null);
-
-    this.getClient().delete<T>(`${url}`, {
-      headers: this.getHeaders()
-    }).then((response) => setData(response.data))
-      .catch((response) => setError(response));
-
-
-    return { data, error };
+  async delete<T>(url: string): Promise<Response<T>> {
+    try {
+      const response = await this.getClient().delete(`${url}`, {
+        headers: this.getHeaders()
+      });
+      return { data: response.data, error: null };
+    } catch (error: any) {
+      return { data: undefined, error: error.message };
+    }
   }
 
   setToken(token: string) {

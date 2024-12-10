@@ -7,7 +7,9 @@ const CenterNavigation = () => {
 
     const data = [
         { link: "/selection", text: "Fight!" },
-        { link: "/decks/public", text: "Decks" },
+
+        { link: "/decks", text: "Decks" },
+        { link: "/decks/public", text: "Public Decks" },
         { link: "/logout", text: "Log out" }
     ];
     const adminData = [

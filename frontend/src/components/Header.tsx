@@ -6,7 +6,7 @@ interface Props {
   text: string;
 }
 const Header = ({ text }: Props) => {
-  const { role, logout } = useUserContext();
+  const { role, username } = useUserContext();
   const [userRole, setUserRole] = useState(role);
 
   useEffect(() => {
@@ -14,21 +14,18 @@ const Header = ({ text }: Props) => {
   }, [role]);
 
   const buttonMenu = () => {
-    if (userRole === "admin") {
+    if (userRole === null) {
+      return null;
+    } else {
       return (
         <>
-          <Button onClick={logout}>Logout</Button>
-          <Button>Admin Dashboard</Button>
+          <Text>Welcome {username}</Text>
+          <Link href="/logout">
+            <Button>Logout</Button>
+          </Link>
         </>
       );
-    } else if (userRole === "player") {
-      return (
-        <Link href="/logout">
-          <Button>Logout</Button>
-        </Link>
-      );
     }
-    return null; // Show nothing if role is undefined
   };
 
   return (

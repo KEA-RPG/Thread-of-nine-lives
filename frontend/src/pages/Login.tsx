@@ -30,13 +30,17 @@ const Login = () => {
             type="text"
             name="Username"
             placeholder="Username"
+            value={credentials.username}
             onChange={(username) => setCredentials({ ...credentials, username })}
           />
           <InputFieldElement
             type="password"
             name="Password"
             placeholder="Password"
-            onChange={(password) => setCredentials({ ...credentials, password })}
+
+            value={credentials.password}
+            onChange={(password) => setCredentials({ ...credentials, password: password })}
+
           />
           <Button variant="solid" colorScheme="blue" mt={3} onClick={submitLogin}>
             Sign in
