@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { initGame, StateGameInit } from '../hooks/useGame';
-import { useToast, Text } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { useEnemies, Enemy } from '../hooks/useEnemy';
 import ListLayout from '../components/ListLayout';
 
