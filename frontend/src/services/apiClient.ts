@@ -10,7 +10,7 @@ class ApiClient {
   public apiClient: AxiosInstance | undefined;
   
   private getClient(): AxiosInstance {
-    let baseurl = "https://localhost:7195/";
+    let baseurl = "https://thread-of-nine-lives-1.onrender.com/";
     const envBaseUrl = import.meta.env.VITE_BASE_URL;
 
     if(envBaseUrl)
