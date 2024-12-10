@@ -3,6 +3,8 @@ using Infrastructure.Persistance.Relational;
 using Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Backend.Repositories.Interfaces;
+using Backend.SecurityLogic;
+
 
 namespace Backend.Repositories.Relational
 {

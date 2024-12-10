@@ -7,6 +7,7 @@ const CenterNavigation = () => {
 
     const data = [
         { link: "/selection", text: "Fight!" },
+
         { link: "/decks", text: "Decks" },
         { link: "/decks/public", text: "Public Decks" },
         { link: "/logout", text: "Log out" }
