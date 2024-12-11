@@ -57,15 +57,15 @@ namespace Backend
             });
             builder.Services.AddAuthorization();
             builder.Services.AddScoped<ICardService, CardService>();
-            builder.Services.AddScoped<ICardRepository, GraphCardRepository>();
+            builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IUserRepository, GraphUserRepository>();
-            builder.Services.AddScoped<IDeckRepository, GraphDeckRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IDeckRepository, DeckRepository>();
             builder.Services.AddScoped<IDeckService, DeckService>();
-            builder.Services.AddScoped<ICombatRepository, GraphCombatRepository>();
+            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
             builder.Services.AddScoped<ICombatService, CombatService>();
             builder.Services.AddScoped<IEnemyService, EnemyService>();
-            builder.Services.AddScoped<IEnemyRepository, GraphEnemyRepository>();
+            builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 
