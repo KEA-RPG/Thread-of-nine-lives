@@ -71,7 +71,7 @@ namespace Backend
             {
                 options.AddPolicy("AllowAllSubdomains", b =>
                 {
-                    b.SetIsOriginAllowed(origin =>
+                    b.AllowAnyOrigin(origin =>
                     {
                         // Allow localhost during development
                         if (origin == "https://localhost:5173")
@@ -120,7 +120,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("*");
+            app.UseCors("AllowAllSubdomains");
             app.Run();
         }
     }
