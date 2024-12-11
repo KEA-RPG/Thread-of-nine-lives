@@ -1,4 +1,3 @@
-using Backend;
 using Backend.Controllers;
 using Backend.Helpers;
 using Backend.Repositories.Document;
@@ -6,14 +5,7 @@ using Backend.Repositories.Interfaces;
 using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
-using Infrastructure.Persistance.Relational;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
-using System.Text;
 
 namespace Backend
 {
@@ -24,6 +16,7 @@ namespace Backend
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
+            builder.Services.AddHealthChecks();
 
             // Add services to the container
             builder.Services.AddEndpointsApiExplorer();
@@ -71,17 +64,18 @@ namespace Backend
             CorsHelper.AddCorsPolicy(builder.Services, builder.Configuration);
 
 
-            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
+            var hostingEnvironment = builder.Environment.EnvironmentName;
+            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
 
-            builder.Services.AddAntiforgery(options =>
-            {
-                // Customize the settings if needed (e.g., SameSite policy, cookie options)
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
-                options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
-                options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
-                options.Cookie.Expiration = TimeSpan.FromMinutes(60);
-                options.Cookie.Path = "/";
-            });
+            //builder.Services.AddAntiforgery(options =>
+            //{
+            //    // Customize the settings if needed (e.g., SameSite policy, cookie options)
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
+            //    options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
+            //    options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
+            //    options.Cookie.Expiration = TimeSpan.FromMinutes(60);
+            //    options.Cookie.Path = "/";
+            //});
 
 
             var app = builder.Build();
@@ -92,6 +86,7 @@ namespace Backend
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+            app.MapHealthChecks("/health");
 
             app.MapCombatEndpoints();
 
@@ -101,7 +96,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("CorsPolicy");
+            app.UseCors("AllowAll");
             app.Run();
         }
     }

@@ -128,7 +128,7 @@ namespace Backend.Controllers
             // Add a comment to a deck
             app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto, HttpContext context) =>
             {
-                AntiForgeryHelper.ValidateAntiForgeryToken(context).Wait();
+                //AntiForgeryHelper.ValidateAntiForgeryToken(context).Wait();
                 var user = context.User?.Identity?.Name ?? "Anonymous";
                 var claims = context.User?.Claims?.Select(c => $"{c.Type}: {c.Value}") ?? new List<string>();
                 //Ovenstående er hvad der skal bruges til at authenticate en CSRF token og cookie. Det virker dog desværre ikke.
