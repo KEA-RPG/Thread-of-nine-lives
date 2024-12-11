@@ -1,18 +1,9 @@
-using Backend;
 using Backend.Controllers;
-using Backend.Repositories.Document;
 using Backend.Repositories.Interfaces;
 using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
-using Infrastructure.Persistance.Relational;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
-using System.Text;
 
 namespace Backend
 {
@@ -70,11 +61,12 @@ namespace Backend
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", builder =>
+                options.AddPolicy("AllowAll", builder =>
                 {
                     builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
                            .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
-                           .AllowAnyMethod();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                           .AllowAnyMethod()
+                           .SetIsOriginAllowedToAllowWildcardSubdomains();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
                                                                    //.AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
                 });
             });
@@ -111,7 +103,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("CorsPolicy");
+            app.UseCors("AllowAll");
             app.Run();
         }
     }
