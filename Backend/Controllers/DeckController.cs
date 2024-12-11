@@ -2,6 +2,7 @@
 using Backend.SecurityLogic;
 using Backend.Services;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Identity.Client;
 using System.IdentityModel.Tokens.Jwt;
@@ -124,21 +125,21 @@ namespace Backend.Controllers
 
 
             // Add a comment to a deck
-            app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto) =>
+            // Add a comment to a deck
+            app.MapPost("/decks/{deckId}/comments", (IDeckService deckService, int deckId, CommentDTO commentDto, HttpContext context) =>
             {
-                commentDto.DeckId = deckId;
+                //AntiForgeryHelper.ValidateAntiForgeryToken(context).Wait();
+                var user = context.User?.Identity?.Name ?? "Anonymous";
+                var claims = context.User?.Claims?.Select(c => $"{c.Type}: {c.Value}") ?? new List<string>();
+                //Ovenstående er hvad der skal bruges til at authenticate en CSRF token og cookie. Det virker dog desværre ikke.
+
+            commentDto.DeckId = deckId;
                 deckService.AddComment(commentDto);
                 return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
             }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
 
 
-            // Get all comments for a specific deck
-            app.MapGet("/decks/{deckId}/comments", (IDeckService deckService, int deckId) =>
-            {
-                var comments = deckService.GetCommentsByDeckId(deckId);
-                return Results.Ok(comments);
-            });
 
         }
     }

@@ -1,4 +1,3 @@
-using Backend;
 using Backend.Controllers;
 using Backend.Repositories.Document;
 using Backend.Repositories.Graph;
@@ -25,6 +24,7 @@ namespace Backend
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
+            builder.Services.AddHealthChecks();
 
             // Add services to the container
             builder.Services.AddEndpointsApiExplorer();
@@ -69,23 +69,41 @@ namespace Backend
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 
-            builder.Services.AddCors(p => p.AddPolicy("*", b =>
-            
-            b.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader()));
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
+                           .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
+                           .AllowAnyMethod()
+                           .SetIsOriginAllowedToAllowWildcardSubdomains();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                                                                   //.AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
+                });
+            });
 
+            var hostingEnvironment = builder.Environment.EnvironmentName;
+            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
 
-            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection);
+            //builder.Services.AddAntiforgery(options =>
+            //{
+            //    // Customize the settings if needed (e.g., SameSite policy, cookie options)
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
+            //    options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
+            //    options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
+            //    options.Cookie.Expiration = TimeSpan.FromMinutes(60);
+            //    options.Cookie.Path = "/";
+            //});
 
 
             var app = builder.Build();
+
 
             // Map controllers
             app.MapCardEndpoint();
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
+            app.MapHealthChecks("/health");
 
             app.MapCombatEndpoints();
 
@@ -95,7 +113,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("*");
+            app.UseCors("AllowAll");
             app.Run();
         }
     }

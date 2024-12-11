@@ -1,4 +1,3 @@
-// apiCaller.ts
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
 export interface Response<T> {
@@ -8,15 +7,25 @@ export interface Response<T> {
 
 class ApiClient {
   public apiClient: AxiosInstance | undefined;
-
+  
   private getClient(): AxiosInstance {
+    let baseurl = "https://localhost:7195/";
+    const envBaseUrl = import.meta.env.VITE_BASE_URL;
+
+    if(envBaseUrl)
+    {
+      baseurl = envBaseUrl;
+    }
+
+
     if (!this.apiClient) {
       this.apiClient = axios.create({
-        baseURL: "https://localhost:7195/",
+        baseURL: baseurl,
         timeout: 10000,
         headers: {
           ContentType: 'application/json',
         }
+        
       });
     }
     return this.apiClient;
@@ -24,13 +33,24 @@ class ApiClient {
 
   private getHeaders() {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+        "Content-Type": "application/json",
     };
-    if (this.getToken()) {
-      headers['Authorization'] = `Bearer ${this.getToken()}`;
+    const token = this.getToken();
+    const antiForgeryToken = localStorage.getItem("antiForgeryToken");
+
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
     }
+
+    if (antiForgeryToken) {
+        headers["X-CSRF-TOKEN"] = antiForgeryToken; // Include CSRF token
+        headers["RequestVerificationToken"] = antiForgeryToken; // Include CSRF token
+    }
+
     return headers;
-  }
+}
+
+  
 
   get<T>(url: string): Response<T> {
     const [data, setData] = useState<T>();
@@ -50,14 +70,16 @@ class ApiClient {
 
   async post<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
     try {
-      const response = await this.getClient().post<TReturn>(`${url}`, body, {
-        headers: this.getHeaders()
-      });
-      return { data: response.data, error: null };
+        const response = await this.getClient().post<TReturn>(`${url}`, body, {
+            headers: this.getHeaders(),
+        });
+        return { data: response.data, error: null };
     } catch (error: any) {
-      return { data: undefined, error: error };
+        console.error("Error making POST request:", error);
+        return { data: undefined, error: error };
     }
-  }
+}
+
 
   // put method
   async put<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
