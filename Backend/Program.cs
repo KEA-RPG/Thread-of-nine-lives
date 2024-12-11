@@ -1,4 +1,6 @@
 using Backend.Controllers;
+using Backend.Helpers;
+using Backend.Repositories.Document;
 using Backend.Repositories.Interfaces;
 using Backend.Repositories.Relational;
 using Backend.Services;
@@ -59,17 +61,8 @@ namespace Backend
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", builder =>
-                {
-                    builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
-                           .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
-                           .AllowAnyMethod()
-                           .SetIsOriginAllowedToAllowWildcardSubdomains();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
-                                                                   //.AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
-                });
-            });
+            CorsHelper.AddCorsPolicy(builder.Services, builder.Configuration);
+
 
             var hostingEnvironment = builder.Environment.EnvironmentName;
             PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
