@@ -1,12 +1,8 @@
-﻿using Domain.DTOs;
-using Infrastructure.Persistance;
+﻿using Infrastructure.Persistance;
 using Infrastructure.Persistance.Relational;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Persistance.Document;
-using Domain.Entities.Mongo;
-using System.Diagnostics.Metrics;
 using Infrastructure.Persistance.Graph;
 using AutoMapper;
 using Domain.Entities;
@@ -19,11 +15,13 @@ using GraphGameAction = Domain.Entities.Neo4J.GameAction;
 using GraphUser = Domain.Entities.Neo4J.User;
 
 Console.WriteLine("Starting Neo4j migration");
+
 var builder = Host.CreateDefaultBuilder(args)
 .ConfigureServices(services =>
 {
-    PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection);
+    PersistanceConfiguration.ConfigureServices(services, dbtype.DefaultConnection, Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 });
+
 var config = new MapperConfiguration(cfg =>
 {
     cfg.CreateMap<Card, GraphCard>();
