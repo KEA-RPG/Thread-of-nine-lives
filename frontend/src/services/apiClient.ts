@@ -1,4 +1,3 @@
-// apiCaller.ts
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
 export interface Response<T> {
@@ -25,8 +24,7 @@ class ApiClient {
         timeout: 10000,
         headers: {
           ContentType: 'application/json',
-        },
-        withCredentials: true,   
+        }
         
       });
     }
@@ -36,7 +34,6 @@ class ApiClient {
   private getHeaders() {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
-        "Referrer-Policy": "no-referrer-when-downgrade",
     };
     const token = this.getToken();
     const antiForgeryToken = localStorage.getItem("antiForgeryToken");
@@ -73,12 +70,8 @@ class ApiClient {
 
   async post<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
     try {
-        console.log("Posting with URL:", url);
-        console.log("With credentials?", this.getClient().defaults.withCredentials);
-
         const response = await this.getClient().post<TReturn>(`${url}`, body, {
             headers: this.getHeaders(),
-            withCredentials: true // Ensure cookies are included in all requests
         });
         return { data: response.data, error: null };
     } catch (error: any) {
