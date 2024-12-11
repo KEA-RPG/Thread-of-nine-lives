@@ -54,9 +54,9 @@ namespace Backend.Repositories.Graph
         public void InsertAction(GameActionDTO gameAction)
         {
             var dbGameAction = GameAction.ToEntity(gameAction);
-            dbGameAction.Id = _context.GetAutoIncrementedId<Fight>().Result;
+            dbGameAction.Id = _context.GetAutoIncrementedId<GameAction>().Result;
             _context.Insert(dbGameAction).Wait();
-            _context.MapNodes<GameAction, Fight>(gameAction.Id, gameAction.FightId, "PART_OF").Wait();
+            _context.MapNodes<GameAction, Fight>(dbGameAction.Id, gameAction.FightId, "PART_OF").Wait();
         }
     }
 }
