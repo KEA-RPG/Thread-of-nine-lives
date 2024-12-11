@@ -71,7 +71,7 @@ namespace Backend
             {
                 options.AddPolicy("AllowAllSubdomains", b =>
                 {
-                    b.AllowAnyOrigin(origin =>
+                    b.SetIsOriginAllowed(origin =>
                     {
                         // Allow localhost during development
                         if (origin == "https://localhost:5173")
