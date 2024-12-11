@@ -16,7 +16,7 @@ namespace Backend.Repositories.Relational
 
         public void CreateUser(UserDTO user)
         {
-            var userDb = User.FromDTO(user);
+            var userDb = User.ToEntity(user);
             _context.Users.Add(userDb);
             _context.SaveChanges();
         }
@@ -28,9 +28,9 @@ namespace Backend.Repositories.Relational
             _context.SaveChanges();
         }
 
-        public List<User> GetAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
-            return _context.Users.ToList();
+            return _context.Users.Select(x => User.FromEntity(x)).ToList();
         }
 
         public UserDTO GetUserByUsername(string username)
@@ -40,7 +40,7 @@ namespace Backend.Repositories.Relational
             {
                 return null;
             }
-            return UserDTO.FromEntity(user);
+            return User.FromEntity(user);
         }
 
         public void UpdateUser(User user)
@@ -52,7 +52,7 @@ namespace Backend.Repositories.Relational
         public UserDTO GetUserById(int id)
         {
             var dbUser = _context.Users.FirstOrDefault(u => u.Id == id);
-            var user = UserDTO.FromEntity(dbUser);
+            var user = User.FromEntity(dbUser);
             return user;
         }
     }

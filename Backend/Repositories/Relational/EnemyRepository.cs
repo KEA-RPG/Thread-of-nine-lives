@@ -16,7 +16,7 @@ namespace Backend.Repositories.Relational
 
         public EnemyDTO AddEnemy(EnemyDTO enemy)
         {
-            var dbEnemy = Enemy.FromDTO(enemy);
+            var dbEnemy = Enemy.ToEntity(enemy);
             _context.Enemies.Add(dbEnemy);
             _context.SaveChanges();
             return GetEnemyById(dbEnemy.Id);
@@ -31,13 +31,13 @@ namespace Backend.Repositories.Relational
 
         public List<EnemyDTO> GetAllEnemies()
         {
-            return _context.Enemies.Select(EnemyDTO.FromEntity).ToList();
+            return _context.Enemies.Select(Enemy.FromEntity).ToList();
         }
 
         public EnemyDTO GetEnemyById(int id)
         {
             var dbEnemy = _context.Enemies.Find(id);
-            return EnemyDTO.FromEntity(dbEnemy);
+            return Enemy.FromEntity(dbEnemy);
         }
 
         public void UpdateEnemy(EnemyDTO enemy)

@@ -21,6 +21,7 @@ const AdminEnemyList = () => {
     const onDelete = (item: Enemy) => {
         onOpen();
         setDeleteItem(item);
+        console.log(item);
     }
     const [enemies, setEnemies] = useState<Enemy[]>([]);
     const { data, error } = useEnemies();
