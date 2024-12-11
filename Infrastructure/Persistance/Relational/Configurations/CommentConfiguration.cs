@@ -8,6 +8,9 @@ namespace Infrastructure.Persistance.Relational.Configurations
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
+
+            builder.Property(c => c.Text).HasMaxLength(350).HasColumnType("nvarchar(350)");
+
             // Set primary key
             builder.HasKey(c => c.Id);
 
