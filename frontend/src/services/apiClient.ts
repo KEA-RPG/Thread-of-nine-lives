@@ -36,6 +36,7 @@ class ApiClient {
   private getHeaders() {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
     };
     const token = this.getToken();
     const antiForgeryToken = localStorage.getItem("antiForgeryToken");
