@@ -69,20 +69,9 @@ namespace Backend
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllSubdomains", b =>
+                options.AddPolicy("*", b =>
                 {
-                    b.SetIsOriginAllowed(origin =>
-                    {
-                        // Allow localhost during development
-                        if (origin == "https://localhost:5173")
-                            return true;
-
-                        // Allow all subdomains of vercel.app
-                        if (Uri.TryCreate(origin, UriKind.Absolute, out var uri) && uri.Host.EndsWith(".vercel.app"))
-                            return true;
-
-                        return false;
-                    })
+                    b.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
@@ -120,7 +109,7 @@ namespace Backend
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors("AllowAllSubdomains");
+            app.UseCors("*");
             app.Run();
         }
     }
