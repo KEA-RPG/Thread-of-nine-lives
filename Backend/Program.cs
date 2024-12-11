@@ -1,18 +1,9 @@
-using Backend;
 using Backend.Controllers;
-using Backend.Repositories.Document;
 using Backend.Repositories.Interfaces;
 using Backend.Repositories.Relational;
 using Backend.Services;
 using Infrastructure.Persistance;
-using Infrastructure.Persistance.Relational;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
-using System.Text;
 
 namespace Backend
 {
