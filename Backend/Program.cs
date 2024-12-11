@@ -69,11 +69,14 @@ namespace Backend
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("*", builder =>
+                options.AddPolicy("*", b =>
                 {
-                    builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
-                           .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
-                           .AllowAnyMethod();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                    b.WithOrigins("https://localhost:5173",
+                    "*.vercel.app",
+                    "")  // Specify the allowed origin (frontend)
+                       .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
+                       .AllowAnyMethod();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                                                               //.AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
                 });
             });
 
