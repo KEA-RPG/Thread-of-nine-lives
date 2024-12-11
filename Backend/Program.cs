@@ -73,7 +73,8 @@ namespace Backend
                 {
                     b.AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .SetIsOriginAllowedToAllowWildcardSubdomains();
                 });
             });
 
