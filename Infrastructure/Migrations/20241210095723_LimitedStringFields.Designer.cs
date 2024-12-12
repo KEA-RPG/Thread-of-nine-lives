@@ -4,6 +4,7 @@ using Infrastructure.Persistance.Relational;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RelationalContext))]
-    partial class RelationalContextModelSnapshot : ModelSnapshot
+    [Migration("20241210095723_LimitedStringFields")]
+    partial class LimitedStringFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +58,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuditLogs", (string)null);
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
@@ -92,7 +95,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards", null, t =>
+                    b.ToTable("Cards", t =>
                         {
                             t.HasTrigger("trg_Audit_Cards_Delete");
 
@@ -135,7 +138,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", null, t =>
+                    b.ToTable("Comments", t =>
                         {
                             t.HasTrigger("trg_Audit_Comments_Delete");
 
@@ -180,7 +183,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("UserId"), new[] { "Name", "IsPublic" });
 
-                    b.ToTable("Decks", null, t =>
+                    b.ToTable("Decks", t =>
                         {
                             t.HasTrigger("trg_Audit_Decks_Delete");
 
@@ -212,7 +215,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DeckId");
 
-                    b.ToTable("DeckCards", null, t =>
+                    b.ToTable("DeckCards", t =>
                         {
                             t.HasTrigger("trg_Audit_DeckCards_Delete");
 
@@ -245,7 +248,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Enemies", null, t =>
+                    b.ToTable("Enemies", t =>
                         {
                             t.HasTrigger("trg_Audit_Enemies_Delete");
 
@@ -277,7 +280,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Fights", null, t =>
+                    b.ToTable("Fights", t =>
                         {
                             t.HasTrigger("trg_Audit_Fights_Delete");
 
@@ -311,7 +314,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("FightId");
 
-                    b.ToTable("GameActions", null, t =>
+                    b.ToTable("GameActions", t =>
                         {
                             t.HasTrigger("trg_Audit_GameActions_Delete");
 
@@ -353,7 +356,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Username"), new[] { "PasswordHash", "Role" });
 
-                    b.ToTable("Users", null, t =>
+                    b.ToTable("Users", t =>
                         {
                             t.HasTrigger("trg_Audit_Users_Delete");
 
