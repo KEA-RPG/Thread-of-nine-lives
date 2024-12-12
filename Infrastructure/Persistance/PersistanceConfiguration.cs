@@ -17,6 +17,10 @@ namespace Infrastructure.Persistance
             string dbString = dbtype.ToString();
 
             var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if(string.IsNullOrWhiteSpace(environmentName))
+            {
+                environmentName = "Development";
+            }
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(binpath)
