@@ -15,13 +15,11 @@ const AdminEnemyList = () => {
         navigate("/admin/enemies/create");
     }
     const onEdit = (item: Enemy) => {
-        console.log(item);
         navigate(`/admin/enemies/${item.id}`);
     }
     const onDelete = (item: Enemy) => {
         onOpen();
         setDeleteItem(item);
-        console.log(item);
     }
     const [enemies, setEnemies] = useState<Enemy[]>([]);
     const { data, error } = useEnemies();

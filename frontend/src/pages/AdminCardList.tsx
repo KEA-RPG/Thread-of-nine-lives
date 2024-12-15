@@ -15,7 +15,6 @@ const AdminCardList = () => {
         navigate("/admin/cards/create");
     }
     const onEdit = (item: Card) => {
-        console.log(item);
         navigate(`/admin/cards/${item.id}`);
     }
     const onDelete = (item: Card) => {
