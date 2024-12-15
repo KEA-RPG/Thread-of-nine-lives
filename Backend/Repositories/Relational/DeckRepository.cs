@@ -34,21 +34,29 @@ namespace Backend.Repositories.Relational
             var dbDeck = _context.Decks.Find(deckId);
             if (dbDeck != null)
             {
-                var deckCards = _context.DeckCards.Where(dc => dc.DeckId == dbDeck.Id);
-                _context.DeckCards.RemoveRange(deckCards);
-                _context.Decks.Remove(dbDeck);
+                var deleteDeckEntry = new DeletedDeck()
+                {
+                    DeckId = dbDeck.Id,
+                    DeleteTime = DateTime.UtcNow,
+                };
+                _context.DeletedDecks.Add(deleteDeckEntry);
                 _context.SaveChanges();
             }
         }
 
         public DeckDTO GetDeckById(int id)
         {
-            var dbDeck = _context.Decks.
-                Include(deck => deck.DeckCards).
-                ThenInclude(deckCard => deckCard.Card).
-                Include(deck => deck.User).
-                FirstOrDefault(deck => deck.Id == id);
-
+            var dbDeck = _context.Decks
+                .Include(deck => deck.DeckCards)
+                .ThenInclude(deckCard => deckCard.Card)
+                .Include(deck => deck.User)
+                .Include(deck => deck.DeletedDeck)
+                .FirstOrDefault(deck => deck.Id == id && deck.DeletedDeck == null);
+            
+            if (dbDeck == null)
+            {
+                return null;
+            }
             var deck = DeckDTO.FromEntity(dbDeck);
 
             return deck;
@@ -84,7 +92,7 @@ namespace Backend.Repositories.Relational
                 .Include(deck => deck.User)
                 .Include(deck => deck.Comments)
                 .ThenInclude(comment => comment.User)
-                .Where(deck => deck.IsPublic)
+                .Where(deck => deck.IsPublic && deck.DeletedDeck == null)
                 .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
 
@@ -98,22 +106,22 @@ namespace Backend.Repositories.Relational
             }
 
             return _context.Decks
-                .Include(x=> x.User)
-                .Include(x=> x.DeckCards)
-                .ThenInclude(x=> x.Card)
-                .Where(deck => deck.User == user)
+                .Include(x => x.User)
+                .Include(x => x.DeckCards)
+                .ThenInclude(x => x.Card)
+                .Where(deck => deck.User == user && deck.DeletedDeck == null)
                 .Select(deck => DeckDTO.FromEntity(deck)).ToList();
         }
         public void AddComment(CommentDTO comment)
         {
-            var commentDB =CommentDTO.ToEntity(comment);
+            var commentDB = CommentDTO.ToEntity(comment);
             _context.Comments.Add(commentDB);
             _context.SaveChanges();
         }
 
         public List<CommentDTO> GetCommentsByDeckId(int deckId)
         {
-            return _context.Comments.Where(comment => comment.DeckId == deckId).Select(x=> CommentDTO.FromEntity(x)).ToList();
+            return _context.Comments.Where(comment => comment.DeckId == deckId).Select(x => CommentDTO.FromEntity(x)).ToList();
         }
 
     }
