@@ -121,7 +121,12 @@ namespace Backend.Repositories.Relational
 
         public List<CommentDTO> GetCommentsByDeckId(int deckId)
         {
-            return _context.Comments.Where(comment => comment.DeckId == deckId && comment.).Select(x=> Comment.FromEntity(x)).ToList();
+            return _context.Comments
+                .Include(x=> x.Deck)
+                .ThenInclude(x=> x.DeletedDeck)
+                .Where(comment => comment.DeckId == deckId && comment.Deck.DeletedDeck == null)
+                .Select(x=> Comment.FromEntity(x))
+                .ToList();
         }
 
     }
