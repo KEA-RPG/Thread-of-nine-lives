@@ -18,6 +18,7 @@ namespace Domain.Entities
 
         // New field to store comments
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public DeletedDeck? DeletedDeck { get; set; }
 
         public static Deck FromDTO(DeckDTO deckDto)
         {
