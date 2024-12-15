@@ -21,7 +21,7 @@ namespace Backend.Repositories.Relational
 
         public DeckDTO AddDeck(DeckDTO deck)
         {
-            var dbDeck = Deck.FromDTO(deck);
+            var dbDeck = Deck.ToEntity(deck);
             dbDeck.Comments = new List<Comment>(); //TODO: ensuring that comments are not pre-set in the deck create
             _context.Decks.Add(dbDeck);
             _context.SaveChanges();
@@ -57,7 +57,7 @@ namespace Backend.Repositories.Relational
             {
                 return null;
             }
-            var deck = DeckDTO.FromEntity(dbDeck);
+            var deck = Deck.FromEntity(dbDeck);
 
             return deck;
         }
@@ -93,7 +93,7 @@ namespace Backend.Repositories.Relational
                 .Include(deck => deck.Comments)
                 .ThenInclude(comment => comment.User)
                 .Where(deck => deck.IsPublic && deck.DeletedDeck == null)
-                .Select(deck => DeckDTO.FromEntity(deck)).ToList();
+                .Select(deck => Deck.FromEntity(deck)).ToList();
         }
 
         public List<DeckDTO> GetUserDecks(string userName)
@@ -110,18 +110,23 @@ namespace Backend.Repositories.Relational
                 .Include(x => x.DeckCards)
                 .ThenInclude(x => x.Card)
                 .Where(deck => deck.User == user && deck.DeletedDeck == null)
-                .Select(deck => DeckDTO.FromEntity(deck)).ToList();
+                .Select(deck => Deck.FromEntity(deck)).ToList();
         }
         public void AddComment(CommentDTO comment)
         {
-            var commentDB = CommentDTO.ToEntity(comment);
+            var commentDB =Comment.ToEntity(comment);
             _context.Comments.Add(commentDB);
             _context.SaveChanges();
         }
 
         public List<CommentDTO> GetCommentsByDeckId(int deckId)
         {
-            return _context.Comments.Where(comment => comment.DeckId == deckId).Select(x => CommentDTO.FromEntity(x)).ToList();
+            return _context.Comments
+                .Include(x=> x.Deck)
+                .ThenInclude(x=> x.DeletedDeck)
+                .Where(comment => comment.DeckId == deckId && comment.Deck.DeletedDeck == null)
+                .Select(x=> Comment.FromEntity(x))
+                .ToList();
         }
 
     }
