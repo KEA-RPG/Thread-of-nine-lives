@@ -23,6 +23,7 @@ namespace Backend.Controllers
                 if (userService.ValidateUserCredentials(credentials.Username, credentials.Password))
                 {
                     var loggedInUser = userService.GetUserByUsername(credentials.Username);
+                    var userId = loggedInUser.Id;
                     var claims = new[]
                     {
                         new Claim(JwtClaimNames.Sub, loggedInUser.Username),
@@ -55,7 +56,7 @@ namespace Backend.Controllers
                     //    Path = "/",
                         
                     //});
-                    return Results.Ok(new { Token = token , RequestToken = "csrf.RequestToken" });
+                    return Results.Ok(new { Token = token , RequestToken = "csrf.RequestToken" , UserId = userId});
                 }
 
                 // If user is not valid

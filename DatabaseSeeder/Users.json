@@ -1,252 +1,257 @@
 [
   {
+    "Username": "admin",
+    "Role": "Admin",
+    "PasswordHash": "$2y$11$3nzmUMvkURCX7/HnGuGxM.g1.KWuHSJR1zZqdFu/EbeND0fVQPmhu"
+  },
+  {
     "Username": "0j6d5jl9",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "UzNHsqJh"
   },
   {
     "Username": "m8u29h8v",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "n72IXl9a"
   },
   {
     "Username": "488epki8",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "IaZ9NcWK"
   },
   {
     "Username": "n2kvg4lj",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "gRjBGzqV"
   },
   {
     "Username": "prt7oqdb",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "kQBRyS8e"
   },
   {
     "Username": "9wra1lfi",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "YqGrNHPh"
   },
   {
     "Username": "hi5yex2a",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "2pimSx8C"
   },
   {
     "Username": "0eb7h7hy",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "fxHASNmr"
   },
   {
     "Username": "ws7yawc9",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "ap6Dy1KO"
   },
   {
     "Username": "n7sh533r",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "hVcGGETc"
   },
   {
     "Username": "labiv61u",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "TyPzzsZy"
   },
   {
     "Username": "hort6043",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "h10NCm7K"
   },
   {
     "Username": "zu675yew",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "NNRXPoeA"
   },
   {
     "Username": "aweefsik",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "iOoIXLx6"
   },
   {
     "Username": "bqhydvsz",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "PyH5WJ6o"
   },
   {
     "Username": "3ljf4hbj",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "9BECQplj"
   },
   {
     "Username": "6053t3xu",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "y4Ss0RUv"
   },
   {
     "Username": "j55vs4vr",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "eirfJ4RP"
   },
   {
     "Username": "srplqaj3",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "6aM6q1EN"
   },
   {
     "Username": "8dxm4xt0",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "BixoXzRu"
   },
   {
     "Username": "6fcoibim",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "6m60p9Zy"
   },
   {
     "Username": "bijykztr",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "l1PLwyY8"
   },
   {
     "Username": "ebf2fo7f",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "CCVOKZmr"
   },
   {
     "Username": "d3m63a8n",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "LWkj0mRf"
   },
   {
     "Username": "wgihcuw4",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "ePeDthmX"
   },
   {
     "Username": "o0qo6crd",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "mbGlSkEX"
   },
   {
     "Username": "pzlcy732",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "wADWloL8"
   },
   {
     "Username": "dchz8ln4",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "QYVjtyiT"
   },
   {
     "Username": "moyxrcbl",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "GGV7c3sr"
   },
   {
     "Username": "bbufjmcg",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "A53S1j0Q"
   },
   {
     "Username": "fz6nbiw2",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "k1OSoDW1"
   },
   {
     "Username": "v36jl7eo",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "XlSqM4i8"
   },
   {
     "Username": "6c7lecqn",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "1TEDaP3A"
   },
   {
     "Username": "ue6b36kb",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "sFNkw9TR"
   },
   {
     "Username": "tvvficzs",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "4LlcO2oF"
   },
   {
     "Username": "2p4axt6d",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "ooq1Ovr8"
   },
   {
     "Username": "9hz7yyyg",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "oZL35NiS"
   },
   {
     "Username": "rjqji4ic",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "FWsnKbb0"
   },
   {
     "Username": "gouwd86s",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "7W1gZkRx"
   },
   {
     "Username": "m97ifh5v",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "6nMGEKwG"
   },
   {
     "Username": "vixutkkt",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "Fqbrxj1S"
   },
   {
     "Username": "27zpbbu7",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "Gjhg6fyx"
   },
   {
     "Username": "5sjzfhag",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "egTlqOnW"
   },
   {
     "Username": "h2jk9702",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "yrEcbZcL"
   },
   {
     "Username": "vxdlrase",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "dKDh3N3m"
   },
   {
     "Username": "34rorvkb",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "uEmarQDY"
   },
   {
     "Username": "mqqigzm8",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "WQbVxXbj"
   },
   {
     "Username": "q6ls0g0t",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "LTmAPVbj"
   },
   {
     "Username": "4vw3czak",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "ZlUpvRRc"
   },
   {
     "Username": "rqr0jifv",
-    "Role": "User",
+    "Role": "Player",
     "PasswordHash": "veE11ESe"
   }
 ]
