@@ -1,55 +1,52 @@
 ﻿using Domain.DTOs;
+using Domain.Entities.Neo4j;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities.Neo4J
 {
-    public class Deck
+    public class Deck : Neo4jBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
-        public List<DeckCard> DeckCards { get; set; }
+        public List<Card> Cards { get; set; }
         public bool IsPublic { get; set; }
-        public User User { get; set; }
-
-        // New field to store comments
-        public List<Comment> Comments { get; set; } = new List<Comment>();
-        public DeletedDeck? DeletedDeck { get; set; }
-
+        public List<User> Users { get; set; } //there should be only one
+        public List<Comment> Comments { get; set; }
         public static Deck ToEntity(DeckDTO deckDto)
         {
-
+            //assuming that we only need the ID of the card for insert, we dont need to map a whole Card entity for the insert.
+            //If used somewhere else this need to be redone
             var deck = new Deck
             {
                 Id = deckDto.Id,
                 UserId = deckDto.UserId,
                 Name = deckDto.Name,
                 IsPublic = deckDto.IsPublic,
-                Comments = deckDto.Comments.Select(commentDto => Comment.ToEntity(commentDto)).ToList()
             };
-            deck.DeckCards = deckDto.Cards.Select(card => new DeckCard
+            deck.Cards = deckDto.Cards.Select(card => new Card
             {
-                CardId = card.Id,
-                Deck = deck
+                Id = card.Id,
             }).ToList();
 
             return deck;
         }
+
         public static DeckDTO FromEntity(Deck deck)
         {
             return new DeckDTO
             {
                 Id = deck.Id,
                 UserId = deck.UserId,
-                UserName = deck.User.Username,
+                UserName = deck.Users?.First().Username,
                 Name = deck.Name,
-                Cards = deck.DeckCards.Select(dc => Card.FromEntity(dc.Card)).ToList(),
+                Cards = deck.Cards?.Select(dc => Card.FromEntity(dc)).ToList(),
                 IsPublic = deck.IsPublic,
-                Comments = deck.Comments.Select(comment => Comment.FromEntity(comment)).ToList()
+                Comments = deck.Comments?.Select(comment => Comment.FromEntity(comment)).ToList()
             };
         }
 

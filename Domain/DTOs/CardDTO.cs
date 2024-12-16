@@ -18,20 +18,5 @@ namespace Domain.DTOs
         public required string ImagePath { get; set; }
 
         public CardDTO() { }
-
-        //Borrowed from EnemyDTO.cs
-        public static CardDTO FromEntity(Card card)
-        {
-            return new CardDTO
-            {
-                Id = card.Id,
-                Name = card.Name,
-                Description = card.Description,
-                Attack = card.Attack,
-                Defence = card.Defence,
-                Cost = card.Cost,
-                ImagePath = card.ImagePath
-            };
-        }
     }
 }
