@@ -100,13 +100,8 @@ const CardUpsert = ({ cardModel }: Props) => {
                         />
                     </Box>
                     <Box>
-                        <Image src="https://loremflickr.com/320/240" border="1px solid black" w="160px" h="160px" />
-                        <p>Name: {card.name}</p>
-                        <p>Description: {card.description}</p>
-                        <p>Attack: {card.attack}</p>
-                        <p>Defence: {card.defence}</p>
-                        <p>Cost: {card.cost}</p>
-                        <p>Image: {card.imagePath}</p>
+                        <p>Image preview:</p>
+                        <Image src={card.imagePath} border="1px solid black" w="160px" h="160px" />
                     </Box>
                 </HStack>
                 <Button colorScheme="orange" onClick={handleUpsert}>
