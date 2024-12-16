@@ -15,7 +15,6 @@ const DeckList = () => {
         navigate("/decks/create");
     }
     const onEdit = (item: Deck) => {
-        console.log(item);
         navigate(`/decks/${item.id}`);
     }
     const onDelete = (item: Deck) => {

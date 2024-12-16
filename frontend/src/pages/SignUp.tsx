@@ -29,10 +29,7 @@ const SignUp = () => {
         description: "User created successfully", 
         status: "success",
       })
-      console.log("User created successfully");
     }
-    console.log(result);
-
   };
 
   return <Card direction={{ base: 'column', sm: 'row' }} overflow="hidden" variant="elevated">

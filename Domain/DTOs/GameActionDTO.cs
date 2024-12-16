@@ -9,15 +9,5 @@ namespace Domain.DTOs
         public string Type { get; set; }
         public int Value { get; set; }
 
-        public static GameActionDTO FromEntity(GameAction gameAction) 
-        {
-            return new GameActionDTO
-            {
-                Id = gameAction.Id,
-                FightId = gameAction.FightId,
-                Type = gameAction.Type,
-                Value = gameAction.Value,
-            };
-        }
     }
 }
