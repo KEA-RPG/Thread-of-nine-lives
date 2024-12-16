@@ -55,7 +55,7 @@ namespace Backend.Controllers
                     //    Path = "/",
                         
                     //});
-                    return Results.Ok(new { Token = token , RequestToken = "csrf.RequestToken" });
+                    return Results.Ok(new { Token = token , RequestToken = "csrf.RequestToken"});
                 }
 
                 // If user is not valid
