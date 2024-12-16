@@ -52,7 +52,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setUsername(decodedToken.sub);
       }
       const requestToken = result.data.requestToken;
-      console.log(result)
       if (requestToken) {
           // Store the token in localStorage
           localStorage.setItem("antiForgeryToken", requestToken);

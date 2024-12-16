@@ -1,8 +1,9 @@
-import { Box, HStack, VStack, Image, Button, useToast } from "@chakra-ui/react";
+import { Box, HStack, VStack, Button, useToast } from "@chakra-ui/react";
 import InputFieldElement from "../components/InputFieldElement";
 import { Card, postCard, putCard } from "../hooks/useCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import GameCard from "./GameCard";
 
 interface Props {
     cardModel?: Card;
@@ -100,13 +101,11 @@ const CardUpsert = ({ cardModel }: Props) => {
                         />
                     </Box>
                     <Box>
-                        <Image src="https://loremflickr.com/320/240" border="1px solid black" w="160px" h="160px" />
-                        <p>Name: {card.name}</p>
-                        <p>Description: {card.description}</p>
-                        <p>Attack: {card.attack}</p>
-                        <p>Defence: {card.defence}</p>
-                        <p>Cost: {card.cost}</p>
-                        <p>Image: {card.imagePath}</p>
+                        <p>Preview:</p>
+                        <br/>
+                        <GameCard card={card} />
+                        <br/>
+
                     </Box>
                 </HStack>
                 <Button colorScheme="orange" onClick={handleUpsert}>

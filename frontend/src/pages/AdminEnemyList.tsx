@@ -15,7 +15,6 @@ const AdminEnemyList = () => {
         navigate("/admin/enemies/create");
     }
     const onEdit = (item: Enemy) => {
-        console.log(item);
         navigate(`/admin/enemies/${item.id}`);
     }
     const onDelete = (item: Enemy) => {
