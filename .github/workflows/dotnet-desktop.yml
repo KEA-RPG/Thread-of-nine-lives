@@ -268,4 +268,4 @@ jobs:
         run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
       
       - name: Run End-to-End tests
-        run: dotnet test ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj
+        run: dotnet test ThreadOfNineLives.E2ETest/ThreadOfNineLives.E2ETest.csproj
