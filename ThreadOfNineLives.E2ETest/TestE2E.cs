@@ -33,8 +33,8 @@ namespace ThreadOfNineLives.E2ETest
         [Fact]
         public void Test1()
         {
-            _driver.Navigate().GoToUrl("http://localhost:5173/decks/public");
-            var submitButton = _driver.FindElement(By.CssSelector("button.chakra-button"));
+            _driver.Navigate().GoToUrl("http://localhost:5173/login");
+            var submitButton = _driver.FindElement(By.CssSelector(".chakra-card .chakra-button"));
             submitButton.Click();
 
         }
