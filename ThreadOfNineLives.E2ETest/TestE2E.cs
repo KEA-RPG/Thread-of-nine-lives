@@ -21,6 +21,7 @@ namespace ThreadOfNineLives.E2ETest
                 options.AddArgument("--headless");
                 options.AddArgument("--no-sandbox");
                 options.AddArgument("--disable-dev-shm-usage");
+                options.BrowserVersion = "131.0.6778.139";
             }
             _driver = new ChromeDriver(options);
             _driver.Navigate().GoToUrl("http://localhost:5173/login");
