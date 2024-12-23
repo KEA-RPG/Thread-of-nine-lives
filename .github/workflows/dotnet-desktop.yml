@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_backend:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     env:
       Solution_Name: Backend.sln
@@ -210,7 +210,7 @@ jobs:
         run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm338q223000613cpr6vcbtuk --token ${{ secrets.HOPPSCOTCHPAT }}
 
   E2E_test: 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: [build_backend, build_seeder, build_frontend]
     services:
       relative_db:
