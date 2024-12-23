@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace ThreadOfNineLives.E2ETest
 {
@@ -9,7 +10,7 @@ namespace ThreadOfNineLives.E2ETest
 
         public TestE2E()
         {
-            _driver = new ChromeDriver();
+            _driver = new FirefoxDriver();
             _driver.Navigate().GoToUrl("http://localhost:5173/login");
             _driver.Manage().Window.Size = new System.Drawing.Size(949, 743);
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(3000);
