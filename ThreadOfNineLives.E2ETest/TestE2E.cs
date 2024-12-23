@@ -14,12 +14,13 @@ namespace ThreadOfNineLives.E2ETest
 
             var tempUserDataDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             options.AddArgument($"--user-data-dir={tempUserDataDir}");
+            options.AddArgument("--no-sandbox");
+            Console.WriteLine("cHECKING BREAKTPOUINT");
 
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Docker")
             {
                 Console.WriteLine("HIT THE BREAKPOINT");
                 options.AddArgument("--headless");
-                options.AddArgument("--no-sandbox");
                 options.AddArgument("--disable-dev-shm-usage");
                 options.BrowserVersion = "131.0.6778.139";
             }
