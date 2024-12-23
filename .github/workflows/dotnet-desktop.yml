@@ -239,7 +239,7 @@ jobs:
           - 5173:5173
         env:
             VITE_BASE_URL: "https://localhost:8080/"
-            
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -266,3 +266,6 @@ jobs:
 
       - name: Run Data Seeder
         run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
+      
+      - name: Run End-to-End tests
+        run: dotnet test ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj
