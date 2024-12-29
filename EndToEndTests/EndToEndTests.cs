@@ -1,6 +1,8 @@
 using System;
+using System.Reflection.Metadata;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace EndToEndTests
 {
@@ -22,9 +24,53 @@ namespace EndToEndTests
         [Fact]
         public void Pass_page_title()
         {
-            var title = _driver.Title;
+            IWebElement element = _driver.FindElement(By.CssSelector("p.chakra-text.css-0"));
 
-            Assert.Equal("Thread of nine lives", title);
+            string text = element.Text;
+
+            Assert.Equal("Thread of Nine Lives", text);
+            _driver.Close();
+        }
+
+        [Fact]
+        public void Pass_sign_up()
+        {
+            IWebElement linkElement = _driver.FindElement(By.CssSelector("a.chakra-link.css-spn4bz"));
+            linkElement.Click();
+
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("testuser");
+
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+
+            IWebElement rePasswordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Repeat Password']"));
+            rePasswordInputElement.Click();
+            rePasswordInputElement.SendKeys("testpassword");
+
+            IWebElement signUpButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign up')]"));
+            signUpButtonElement.Click();
+
+            _driver.Close();
+        }
+
+        [Fact]
+        public void Pass_sign_in()
+        {
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("testuser");
+
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            _driver.Close();
         }
     }
 }
