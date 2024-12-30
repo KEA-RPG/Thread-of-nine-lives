@@ -167,5 +167,45 @@ namespace EndToEndTests
 
             _driver.Close();
         }
+
+        [Fact]
+        public void Create_comment()
+        {
+            // Sign in
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("testuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            // Create comment
+            IWebElement publicDecksButtonElement = _driver.FindElement(By.XPath("//p[text()='Public Decks']"));
+            publicDecksButtonElement.Click();
+            IWebElement viewCommentsButton = _driver.FindElement(By.XPath("//h2[contains(text(), 'Warrior Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
+            viewCommentsButton.Click();
+
+            // Handle modal
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            IWebElement modalContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(".chakra-modal__content")));
+            IWebElement modalBody = modalContent.FindElement(By.CssSelector(".chakra-modal__body"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollTop = arguments[0].scrollHeight;", modalBody);
+            IWebElement commentTextArea = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("textarea[placeholder='Enter your comment']")));
+            commentTextArea.Clear();
+            commentTextArea.SendKeys("This is a test comment");
+            IWebElement submitButton = _driver.FindElement(By.CssSelector("button[type='submit'].chakra-button"));
+            submitButton.Click();
+
+            // Refresh page
+            _driver.Navigate().Refresh();
+            IWebElement viewCommentsButton2 = _driver.FindElement(By.XPath("//h2[contains(text(), 'Warrior Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
+            viewCommentsButton2.Click();
+
+            // Check if comment was created
+            IWebElement commentElement = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//p[text()='This is a test comment']")));
+            Assert.True(commentElement.Displayed, "The comment is not visible on the deck.");
+        }
     }
 }
