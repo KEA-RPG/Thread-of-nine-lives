@@ -101,7 +101,7 @@ namespace EndToEndTests
         }
 
         [Fact]
-        public void Create_edit_delete_deck()
+        public void Create_edit_delete_deck_player()
         {
             // Sign in
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
@@ -169,7 +169,7 @@ namespace EndToEndTests
         }
 
         [Fact]
-        public void Create_comment()
+        public void Create_comment_player()
         {
             // Sign in
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
@@ -206,6 +206,65 @@ namespace EndToEndTests
             // Check if comment was created
             IWebElement commentElement = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//p[text()='This is a test comment']")));
             Assert.True(commentElement.Displayed, "The comment is not visible on the deck.");
+        }
+
+        [Fact]
+        public void Fight_win_player()
+        {
+            // Sign in
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("testuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            // Create fight
+            IWebElement fightButtonElement = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
+            fightButtonElement.Click();
+            IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Sir Meowsalot']/following-sibling::div//button"));
+            sirMeowsalotDiv.Click();
+            IWebElement endTurnButton = _driver.FindElement(By.XPath("//button[text()='Attack']"));
+            endTurnButton.Click();
+            endTurnButton.Click();
+            endTurnButton.Click();
+            endTurnButton.Click();
+            IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Win!']"));
+            Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
+
+            _driver.Close();
+        }
+
+        [Fact]
+        public void Fight_lose_player()
+        {
+            // Sign in
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("testuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            // Create fight
+            IWebElement fightButtonElement = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
+            fightButtonElement.Click();
+            IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Sir Meowsalot']/following-sibling::div//button"));
+            sirMeowsalotDiv.Click();
+            IWebElement endTurnButton = _driver.FindElement(By.XPath("//button[text()='End Turn']"));
+            endTurnButton.Click();
+            endTurnButton.Click();
+            endTurnButton.Click();
+            endTurnButton.Click();
+            endTurnButton.Click();
+            IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Lose!']"));
+            Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
+
+            _driver.Close();
         }
     }
 }
