@@ -101,7 +101,7 @@ namespace EndToEndTests
         }
 
         [Fact]
-        public void Create_edit_delete_deck_player()
+        public void Create_update_delete_deck_player()
         {
             // Sign in
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
@@ -263,6 +263,149 @@ namespace EndToEndTests
             endTurnButton.Click();
             IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Lose!']"));
             Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
+
+            _driver.Close();
+        }
+
+        [Fact]
+        public void Sign_in_admin()
+        {
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("admtestuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Main Menu']"));
+            string text = element.Text;
+
+            Assert.Equal("Main Menu", text);
+            _driver.Close();
+        }
+
+        [Fact]
+        public void Create_update_delete_enemy_admin()
+        {
+            // Sign in
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("admtestuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            // Create enemy
+            IWebElement enemiesButtonElement = _driver.FindElement(By.XPath("//p[text()='Enemies']"));
+            enemiesButtonElement.Click();
+            IWebElement newButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'New')]"));
+            newButtonElement.Click();
+
+            // Input fields
+            IWebElement nameField = _driver.FindElement(By.CssSelector("input[placeholder='Name']"));
+            nameField.Clear();
+            nameField.SendKeys("testenemy");
+            IWebElement healthField = _driver.FindElement(By.CssSelector("input[placeholder='Health']"));
+            healthField.Clear();
+            healthField.SendKeys("10");
+            IWebElement imagePathField = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
+            imagePathField.Clear();
+            imagePathField.SendKeys("testimage");
+            IWebElement createEnemyBtn = _driver.FindElement(By.XPath("//button[text()='Create']"));
+            createEnemyBtn.Click();
+
+            // Edit enemy
+            IWebElement enemyContainerEdit = _driver.FindElement(By.XPath("//div[text()='testenemy']/ancestor::div[contains(@class, 'css-trf0pt')]"));
+            IWebElement editButton = enemyContainerEdit.FindElement(By.XPath(".//button[text()='Edit']"));
+            editButton.Click();
+            IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
+            nameField2.SendKeys("2");
+            IWebElement updateEnemyBtn = _driver.FindElement(By.XPath("//button[text()='Update']"));
+            updateEnemyBtn.Click();
+
+            // Delete enemy
+            IWebElement enemyContainerDelete = _driver.FindElement(By.XPath("//div[text()='testenemy']/ancestor::div[contains(@class, 'css-trf0pt')]"));
+            IWebElement deleteButton = enemyContainerDelete.FindElement(By.XPath(".//button[text()='Delete']"));
+            deleteButton.Click();
+
+            // Handle modal
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            IWebElement modal = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(".chakra-modal__content")));
+            IWebElement modalDeleteButton = modal.FindElement(By.XPath(".//button[contains(text(),'Delete')]"));
+            modalDeleteButton.Click();
+
+            // Wait until the "testenemy" element is no longer visible
+            bool isDeleted = wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//div[contains(text(), 'testenemy')]")));
+            Assert.True(isDeleted, "The enemy 'testenemy' is still visible on the page.");
+
+            _driver.Close();
+        }
+
+        [Fact]
+        public void Create_update_delete_card_admin()
+        {
+            // Sign in
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("admtestuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            // Create card
+            IWebElement cardsButtonElement = _driver.FindElement(By.XPath("//p[text()='Cards']"));
+            cardsButtonElement.Click();
+            IWebElement newButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'New')]"));
+            newButtonElement.Click();
+
+            // Input fields
+            IWebElement nameField = _driver.FindElement(By.CssSelector("input[placeholder='Name']"));
+            nameField.Clear();
+            nameField.SendKeys("testcard");
+            IWebElement descriptionField = _driver.FindElement(By.CssSelector("input[placeholder='Description']"));
+            descriptionField.Clear();
+            descriptionField.SendKeys("testdescription");
+            IWebElement attackField = _driver.FindElement(By.CssSelector("input[placeholder='Attack']"));
+            attackField.Clear();
+            attackField.SendKeys("10");
+            IWebElement costField = _driver.FindElement(By.CssSelector("input[placeholder='Cost']"));
+            costField.Clear();
+            costField.SendKeys("1");
+            IWebElement defenceField = _driver.FindElement(By.CssSelector("input[placeholder='Defence']"));
+            defenceField.Clear();
+            defenceField.SendKeys("5");
+            IWebElement imagePathField = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
+            imagePathField.Clear();
+            imagePathField.SendKeys("testimage");
+            IWebElement createEnemyBtn = _driver.FindElement(By.XPath("//button[text()='Create']"));
+            createEnemyBtn.Click();
+
+            // Edit card
+            IWebElement cardContainerEdit = _driver.FindElement(By.XPath("//div[text()='testcard']/ancestor::div[contains(@class, 'css-trf0pt')]"));
+            IWebElement editButton = cardContainerEdit.FindElement(By.XPath(".//button[text()='Edit']"));
+            editButton.Click();
+            IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
+            nameField2.SendKeys("2");
+            IWebElement updateButton = _driver.FindElement(By.CssSelector(".chakra-button.css-ay0wn6"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", updateButton);
+            updateButton.Click();
+
+            // Delete card
+            IWebElement cardContainerDelete = _driver.FindElement(By.XPath("//div[text()='testcard']/ancestor::div[contains(@class, 'css-trf0pt')]"));
+            IWebElement deleteButton = cardContainerDelete.FindElement(By.XPath(".//button[text()='Delete']"));
+            deleteButton.Click();
+
+            // Handle modal
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            IWebElement modal = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(".chakra-modal__content")));
+            IWebElement modalDeleteButton = modal.FindElement(By.XPath(".//button[contains(text(),'Delete')]"));
+            modalDeleteButton.Click();
 
             _driver.Close();
         }
