@@ -1,10 +1,7 @@
-using System;
-using System.Reflection.Metadata;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace EndToEndTests
 {
@@ -35,10 +32,12 @@ namespace EndToEndTests
             _driver.Close();
         }
 
+        #region Player user tests
+
         [Fact]
         public void Sign_up_player()
         {
-            IWebElement linkElement = _driver.FindElement(By.CssSelector("a.chakra-link.css-spn4bz"));
+            IWebElement linkElement = _driver.FindElement(By.XPath("//a[text()='here']"));
             linkElement.Click();
 
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
@@ -206,6 +205,8 @@ namespace EndToEndTests
             // Check if comment was created
             IWebElement commentElement = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//p[text()='This is a test comment']")));
             Assert.True(commentElement.Displayed, "The comment is not visible on the deck.");
+
+            _driver.Close();
         }
 
         [Fact]
@@ -227,10 +228,11 @@ namespace EndToEndTests
             IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Sir Meowsalot']/following-sibling::div//button"));
             sirMeowsalotDiv.Click();
             IWebElement endTurnButton = _driver.FindElement(By.XPath("//button[text()='Attack']"));
-            endTurnButton.Click();
-            endTurnButton.Click();
-            endTurnButton.Click();
-            endTurnButton.Click();
+            int numberOfClicks = 4;
+            for (int i = 0; i < numberOfClicks; i++)
+            {
+                endTurnButton.Click();
+            }
             IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Win!']"));
             Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
 
@@ -256,16 +258,20 @@ namespace EndToEndTests
             IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Sir Meowsalot']/following-sibling::div//button"));
             sirMeowsalotDiv.Click();
             IWebElement endTurnButton = _driver.FindElement(By.XPath("//button[text()='End Turn']"));
-            endTurnButton.Click();
-            endTurnButton.Click();
-            endTurnButton.Click();
-            endTurnButton.Click();
-            endTurnButton.Click();
+            int numberOfClicks = 5;
+            for (int i = 0; i < numberOfClicks; i++)
+            {
+                endTurnButton.Click();
+            }
             IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Lose!']"));
             Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
 
             _driver.Close();
         }
+
+        #endregion
+
+        #region Admin user tests
 
         [Fact]
         public void Sign_in_admin()
@@ -392,7 +398,7 @@ namespace EndToEndTests
             editButton.Click();
             IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
             nameField2.SendKeys("2");
-            IWebElement updateButton = _driver.FindElement(By.CssSelector(".chakra-button.css-ay0wn6"));
+            IWebElement updateButton = _driver.FindElement(By.XPath("//button[text()='Update']"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", updateButton);
             updateButton.Click();
 
@@ -409,5 +415,7 @@ namespace EndToEndTests
 
             _driver.Close();
         }
+
+        #endregion
     }
 }
