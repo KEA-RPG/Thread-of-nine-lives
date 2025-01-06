@@ -62,10 +62,10 @@ namespace EndToEndTests
             IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
             signInButtonElement.Click();
 
-            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Main Menu']"));
+            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
             string text = element.Text;
 
-            Assert.Equal("Main Menu", text);
+            Assert.Equal("Fight!", text);
             _driver.Close();
         }
 
@@ -88,9 +88,11 @@ namespace EndToEndTests
             IWebElement newButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'New')]"));
             newButtonElement.Click();
             IWebElement playingCard = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
-            playingCard.Click();
-            playingCard.Click();
-            playingCard.Click();
+            int numberOfCardsToAdd = 3;
+            for (int i = 0; i < numberOfCardsToAdd; i++)
+            {
+                playingCard.Click();
+            }
             IWebElement deckCard = _driver.FindElement(By.XPath("//p[text()='Guidance']"));
             deckCard.Click();
             IWebElement numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
@@ -99,8 +101,11 @@ namespace EndToEndTests
             Assert.Equal(2, value);
             IWebElement clearDeckButton = _driver.FindElement(By.XPath("//button[text()='Clear Deck']"));
             clearDeckButton.Click();
-            playingCard.Click();
-            playingCard.Click();
+            numberOfCardsToAdd = 2;
+            for (int i = 0; i < numberOfCardsToAdd; i++)
+            {
+                playingCard.Click();
+            }
             IWebElement deckNameInput = _driver.FindElement(By.CssSelector("input[placeholder='Deck name']"));
             deckNameInput.SendKeys("testdeck");
             IWebElement checkboxControl = _driver.FindElement(By.CssSelector(".chakra-checkbox__control"));

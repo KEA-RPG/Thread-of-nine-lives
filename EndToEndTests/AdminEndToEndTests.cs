@@ -29,7 +29,7 @@ namespace EndToEndTests
 
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
             usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
+            usernameInputElement.SendKeys("admtestuser");
 
             IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
             passwordInputElement.Clear();
@@ -48,6 +48,7 @@ namespace EndToEndTests
         [Fact]
         public void Sign_out()
         {
+            // Sign in
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
             usernameInputElement.Clear();
             usernameInputElement.SendKeys("testuser");
@@ -79,10 +80,10 @@ namespace EndToEndTests
             IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
             signInButtonElement.Click();
 
-            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Main Menu']"));
+            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Enemies']"));
             string text = element.Text;
 
-            Assert.Equal("Main Menu", text);
+            Assert.Equal("Enemies", text);
             _driver.Close();
         }
 
