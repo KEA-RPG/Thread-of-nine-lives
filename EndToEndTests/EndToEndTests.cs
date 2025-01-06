@@ -117,13 +117,13 @@ namespace EndToEndTests
             decksButtonElement.Click();
             IWebElement newButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'New')]"));
             newButtonElement.Click();
-            IWebElement playingCard = _driver.FindElement(By.XPath("//h4[text()='cat']/ancestor::div[@tabindex='0']"));
+            IWebElement playingCard = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
             playingCard.Click();
             playingCard.Click();
             playingCard.Click();
-            IWebElement deckCard = _driver.FindElement(By.XPath("//p[text()='cat']"));
+            IWebElement deckCard = _driver.FindElement(By.XPath("//p[text()='Guidance']"));
             deckCard.Click();
-            IWebElement numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='cat']]//p[contains(text(), '(')]"));
+            IWebElement numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
             string textContent = numberElement.Text;
             int value = int.Parse(textContent.Trim('(', ')'));
             Assert.Equal(2, value);
@@ -141,9 +141,9 @@ namespace EndToEndTests
             // Edit deck
             IWebElement editButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Edit')]"));
             editButtonElement.Click();
-            IWebElement playingCard2 = _driver.FindElement(By.XPath("//h4[text()='cat']/ancestor::div[@tabindex='0']"));
+            IWebElement playingCard2 = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
             playingCard2.Click();
-            IWebElement numberElement2 = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='cat']]//p[contains(text(), '(')]"));
+            IWebElement numberElement2 = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
             string textContent2 = numberElement2.Text;
             int value2 = int.Parse(textContent2.Trim('(', ')'));
             Assert.Equal(3, value2);
@@ -183,7 +183,7 @@ namespace EndToEndTests
             // Create comment
             IWebElement publicDecksButtonElement = _driver.FindElement(By.XPath("//p[text()='Public Decks']"));
             publicDecksButtonElement.Click();
-            IWebElement viewCommentsButton = _driver.FindElement(By.XPath("//h2[contains(text(), 'Warrior Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
+            IWebElement viewCommentsButton = _driver.FindElement(By.XPath("//h2[contains(text(), 'Fire Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
             viewCommentsButton.Click();
 
             // Handle modal
@@ -199,7 +199,7 @@ namespace EndToEndTests
 
             // Refresh page
             _driver.Navigate().Refresh();
-            IWebElement viewCommentsButton2 = _driver.FindElement(By.XPath("//h2[contains(text(), 'Warrior Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
+            IWebElement viewCommentsButton2 = _driver.FindElement(By.XPath("//h2[contains(text(), 'Fire Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
             viewCommentsButton2.Click();
 
             // Check if comment was created
@@ -225,10 +225,10 @@ namespace EndToEndTests
             // Create fight
             IWebElement fightButtonElement = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
             fightButtonElement.Click();
-            IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Sir Meowsalot']/following-sibling::div//button"));
+            IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Troll']/following-sibling::div//button"));
             sirMeowsalotDiv.Click();
             IWebElement endTurnButton = _driver.FindElement(By.XPath("//button[text()='Attack']"));
-            int numberOfClicks = 4;
+            int numberOfClicks = 2;
             for (int i = 0; i < numberOfClicks; i++)
             {
                 endTurnButton.Click();
@@ -255,7 +255,7 @@ namespace EndToEndTests
             // Create fight
             IWebElement fightButtonElement = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
             fightButtonElement.Click();
-            IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Sir Meowsalot']/following-sibling::div//button"));
+            IWebElement sirMeowsalotDiv = _driver.FindElement(By.XPath("//div[text()='Dragon']/following-sibling::div//button"));
             sirMeowsalotDiv.Click();
             IWebElement endTurnButton = _driver.FindElement(By.XPath("//button[text()='End Turn']"));
             int numberOfClicks = 5;
@@ -327,6 +327,7 @@ namespace EndToEndTests
             // Edit enemy
             IWebElement enemyContainerEdit = _driver.FindElement(By.XPath("//div[text()='testenemy']/ancestor::div[contains(@class, 'css-trf0pt')]"));
             IWebElement editButton = enemyContainerEdit.FindElement(By.XPath(".//button[text()='Edit']"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", editButton);
             editButton.Click();
             IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
             nameField2.SendKeys("2");
@@ -395,6 +396,7 @@ namespace EndToEndTests
             // Edit card
             IWebElement cardContainerEdit = _driver.FindElement(By.XPath("//div[text()='testcard']/ancestor::div[contains(@class, 'css-trf0pt')]"));
             IWebElement editButton = cardContainerEdit.FindElement(By.XPath(".//button[text()='Edit']"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", editButton);
             editButton.Click();
             IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
             nameField2.SendKeys("2");
