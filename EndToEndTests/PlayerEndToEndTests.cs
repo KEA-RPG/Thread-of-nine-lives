@@ -1,10 +1,5 @@
-﻿using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 
@@ -18,7 +13,6 @@ namespace EndToEndTests
         {
             _driver = new ChromeDriver();
 
-            // !!Change the URL to match the URL of our deployed application!!
             _driver.Navigate().GoToUrl("http://localhost:5173/");
 
             _driver.Manage().Window.Size = new System.Drawing.Size(949, 743);
@@ -69,6 +63,28 @@ namespace EndToEndTests
             _driver.Close();
         }
 
+        public void Sign_out()
+        {
+            // Sign in
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys("testuser");
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys("testpassword");
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+
+            // Sign out
+            IWebElement signOutButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Logout')]"));
+            signOutButtonElement.Click();
+            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Log in']"));
+            string text = element.Text;
+            Assert.Equal("Log in", text);
+
+            _driver.Close();
+        }
+
         [Fact]
         public void Create_update_delete_deck()
         {
@@ -116,11 +132,11 @@ namespace EndToEndTests
             // Edit deck
             IWebElement editButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Edit')]"));
             editButtonElement.Click();
-            IWebElement playingCard2 = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
-            playingCard2.Click();
-            IWebElement numberElement2 = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
-            string textContent2 = numberElement2.Text;
-            int value2 = int.Parse(textContent2.Trim('(', ')'));
+            playingCard = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
+            playingCard.Click();
+            numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
+            textContent = numberElement.Text;
+            int value2 = int.Parse(textContent.Trim('(', ')'));
             Assert.Equal(3, value2);
             IWebElement saveDeckBtn2 = _driver.FindElement(By.XPath("//button[text()='Save deck']"));
             saveDeckBtn2.Click();

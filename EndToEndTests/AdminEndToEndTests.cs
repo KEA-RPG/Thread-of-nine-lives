@@ -58,13 +58,13 @@ namespace EndToEndTests
             IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
             signInButtonElement.Click();
 
+            // Sign out
             IWebElement signOutButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Logout')]"));
             signOutButtonElement.Click();
-
-            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Thread of Nine Lives']"));
+            IWebElement element = _driver.FindElement(By.XPath("//p[text()='Log in']"));
             string text = element.Text;
+            Assert.Equal("Log in", text);
 
-            Assert.Equal("Thread of Nine Lives", text);
             _driver.Close();
         }
 
@@ -124,8 +124,8 @@ namespace EndToEndTests
             IWebElement editButton = enemyContainerEdit.FindElement(By.XPath(".//button[text()='Edit']"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", editButton);
             editButton.Click();
-            IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
-            nameField2.SendKeys("2");
+            imagePathField = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
+            imagePathField.SendKeys("2");
             IWebElement updateEnemyBtn = _driver.FindElement(By.XPath("//button[text()='Update']"));
             updateEnemyBtn.Click();
 
@@ -193,8 +193,8 @@ namespace EndToEndTests
             IWebElement editButton = cardContainerEdit.FindElement(By.XPath(".//button[text()='Edit']"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", editButton);
             editButton.Click();
-            IWebElement nameField2 = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
-            nameField2.SendKeys("2");
+            imagePathField = _driver.FindElement(By.CssSelector("input[placeholder='ImagePath']"));
+            imagePathField.SendKeys("2");
             IWebElement updateButton = _driver.FindElement(By.XPath("//button[text()='Update']"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", updateButton);
             updateButton.Click();
