@@ -16,6 +16,7 @@ namespace Backend.Repositories.Document
         }
         public FightDTO AddFight(FightDTO fight)
         {
+
             var id = _context.GetAutoIncrementedId("fights");
             fight.Id = id;
 
@@ -32,9 +33,11 @@ namespace Backend.Repositories.Document
         {
             var fight =  _context.Fights().Find(x => x.Id == gameAction.FightId).FirstOrDefault();
             fight.GameActions.Add(gameAction);
-            var update = Builders<FightDTO>.Update.Set(x => x, fight);
+            var update = Builders<FightDTO>.Update.Push(x => x.GameActions, gameAction);
+            var filter = Builders<FightDTO>.Filter.Eq(c => c.Id, gameAction.FightId);
+            _context.Fights().UpdateOne(filter, update);
 
-            _context.Fights().UpdateOne(x => x.Id == gameAction.FightId, update);
+
         }
     }
 }

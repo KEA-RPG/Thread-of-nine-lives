@@ -2,24 +2,25 @@
 using Domain.DTOs;
 using Infrastructure.Persistance.Document;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq;
 
-namespace ThreadOfNineLives.IntegrationTests
+namespace ThreadOfNineLives.IntegrationTests.DocumentDB
 {
-    public class DocumentDBCardTests : IDisposable
+    public class DocumentCardRepositoryTests : IDisposable
     {
         private readonly DocumentContext _context;
         private readonly MongoCardRepository _mongoCardRepository;
         private readonly MongoDeckRepository _mongoDeckRepository;
         private readonly MongoUserRepository _mongoUserRepository;
         private readonly DatabaseSnapshotHelper _snapshotHelper;
-        public DocumentDBCardTests()
+        public DocumentCardRepositoryTests()
         {
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("dbsettings.json")
                 .Build();
-            
+
             var settings = configuration.GetSection("ConnectionStrings:MongoDB");
             var connectionString = settings.GetSection("Connectionstring").Value;
             var databaseName = settings.GetSection("DatabaseName").Value;
@@ -32,27 +33,91 @@ namespace ThreadOfNineLives.IntegrationTests
 
             _snapshotHelper.TakeSnapshot();
         }
+        [Fact]
+        public void AddCard_Assigns_Id_And_Retains_Values()
+        {
+            // Arrange
+            var card = new CardDTO()
+            {
+                Attack = 5,
+                Cost = 3,
+                Defence = 2,
+                Description = "TestDescription",
+                ImagePath = "TestImagePath",
+                Name = "TestCardName",
+            };
+
+            // Act
+            var insertedCard = _mongoCardRepository.AddCard(card);
+
+            // Assert
+            Assert.NotNull(insertedCard);
+            Assert.True(insertedCard.Id > 0);
+            Assert.Equal(5, insertedCard.Attack);
+            Assert.Equal(3, insertedCard.Cost);
+            Assert.Equal(2, insertedCard.Defence);
+            Assert.Equal("TestDescription", insertedCard.Description);
+            Assert.Equal("TestImagePath", insertedCard.ImagePath);
+            Assert.Equal("TestCardName", insertedCard.Name);
+        }
+        [Fact]
+        public void GetCardById_Returns_Empty_When_Invalid_ID()
+        {
+            //Act
+            _context.Cards().DeleteMany(FilterDefinition<CardDTO>.Empty);
+
+            //Assign
+            var card = _mongoCardRepository.GetCardById(10000);
+
+            //Assert
+            Assert.Null(card);
+        }
 
         [Fact]
-        public void UpdateCardShouldUpdateDecks()
+        public void GetCardById_Returns_Item()
+        {
+            //Act
+            CreateTemplateDecksAndCards();
+            var initialCardName = "FirstNameINTEGRATION";
+            var cardId = _context.Cards().Find(x => x.Name == initialCardName).First().Id;
+
+            //Assign
+            var card = _mongoCardRepository.GetCardById(cardId);
+
+            //Assert
+            Assert.NotNull(card);
+        }
+        [Fact]
+        public void UpdateCard_Should_Update_Database_Card()
         {
 
             //Assign
             CreateTemplateDecksAndCards();
             var initialCardName = "FirstNameINTEGRATION";
-            var cardToUpdate = _context.Cards().Find(x => x.Name == initialCardName).First();
-            cardToUpdate.Name = "ThirdNameINTEGRATION";
+            var cardToUpdateId = _context.Cards().Find(x => x.Name == initialCardName).First().Id;
+            var cardToUpdate = _mongoCardRepository.GetCardById(cardToUpdateId);
+            cardToUpdate.Name = "UpdatedName";
+            cardToUpdate.Defence = 123456789;
+            cardToUpdate.Attack = 123456789;
+            cardToUpdate.Cost = 123456789;
+            cardToUpdate.Description = "123456789";
+            cardToUpdate.ImagePath = "123456789";
 
             //Act
             _mongoCardRepository.UpdateCard(cardToUpdate);
-            var deck = _context.Decks().Find(x => x.Name == "deck1INTEGRATION").First();
-            var updatedCard = deck.Cards.First(x => x.Id == cardToUpdate.Id);
+            var updatedCard = _mongoCardRepository.GetCardById(cardToUpdateId);
 
             //Assert
-            Assert.NotEqual(initialCardName, updatedCard.Name);
+            Assert.True(updatedCard.Name == "UpdatedName");
+            Assert.True(updatedCard.Defence == 123456789);
+            Assert.True(updatedCard.Attack == 123456789);
+            Assert.True(updatedCard.Cost == 123456789);
+            Assert.True(updatedCard.Description == "123456789");
+            Assert.True(updatedCard.ImagePath == "123456789");
         }
+
         [Fact]
-        public void Delete_Card_ShouldUpdateDecks()
+        public void Delete_Card_Should_Update_Decks()
         {
             //Assign
             CreateTemplateDecksAndCards();
@@ -64,7 +129,23 @@ namespace ThreadOfNineLives.IntegrationTests
             var deck = _context.Decks().Find(x => x.Name == "deck1INTEGRATION").First();
 
             //Assert
-            Assert.False(deck.Cards.Any(x=> x.Id == cardToDelete.Id));
+            Assert.False(deck.Cards.Any(x => x.Id == cardToDelete.Id));
+        }
+
+
+
+        [Fact]
+        public void GetAllCards_Returns_Items()
+        {
+            //Assign
+            CreateTemplateDecksAndCards();
+
+            //Act
+            var cards = _mongoCardRepository.GetAllCards();
+
+            //Assert
+            Assert.NotEmpty(cards);
+
 
         }
 
