@@ -56,16 +56,48 @@ namespace Backend
                 });
             });
             builder.Services.AddAuthorization();
+
+            // Services
             builder.Services.AddScoped<ICardService, CardService>();
-            builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IDeckRepository, DeckRepository>();
             builder.Services.AddScoped<IDeckService, DeckService>();
-            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
             builder.Services.AddScoped<ICombatService, CombatService>();
             builder.Services.AddScoped<IEnemyService, EnemyService>();
+
+
+            // Repositories (Relational)
+            builder.Services.AddScoped<ICardRepository, CardRepository>();
+            builder.Services.AddScoped<ICombatRepository, CombatRepository>();
+            builder.Services.AddScoped<IDeckRepository, DeckRepository>();
             builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+
+            /*  
+             // Repositories (Mongo)
+builder.Services.AddScoped<ICardRepository, MongoCardRepository>();
+builder.Services.AddScoped<IUserRepository, MongoUserRepository>();
+builder.Services.AddScoped<IDeckRepository, MongoDeckRepository>();
+builder.Services.AddScoped<ICombatRepository, MongoCombatRepository>();
+builder.Services.AddScoped<IEnemyRepository, MongoEnemyRepository>();
+             */
+
+
+
+            /*  
+             // Repositories (Graph)
+             builder.Services.AddScoped<ICardRepository, GraphCardRepository>();
+builder.Services.AddScoped<IUserRepository, GraphUserRepository>();
+builder.Services.AddScoped<IDeckRepository, GraphDeckRepository>();
+builder.Services.AddScoped<ICombatRepository, GraphCombatRepository>();
+builder.Services.AddScoped<IEnemyRepository, GraphEnemyRepository>();
+
+             */
+
+
+
+
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
 
 

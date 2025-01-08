@@ -2,6 +2,7 @@
 using Backend.Models;
 using Domain.DTOs;
 using Backend.Repositories.Interfaces;
+using Backend.Helpers;
 
 namespace Backend.Services
 {
@@ -27,15 +28,24 @@ namespace Backend.Services
 
         public void CreateUser(Credentials credentials)
         {
+            if (!PasswordValidator.IsValidPassword(credentials.Password))
+            {
+                throw new ArgumentException(
+                    "The password does not meet the complexity requirements. " +
+                    "It must be 8-35 characters long and contain at least one uppercase letter, " +
+                    "one digit, and one special character."
+                );
+            }
+
             var user = new UserDTO
             {
                 Username = credentials.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(credentials.Password),
-                Role = "Player" // Automatically set to "Player"; admin roles are assigned in the database.
+                Role = "Player" // Automatically set to "Player"
             };
-
             _userRepository.CreateUser(user);
         }
+
 
         // Implement the method to validate user credentials
         public bool ValidateUserCredentials(string username, string password)
