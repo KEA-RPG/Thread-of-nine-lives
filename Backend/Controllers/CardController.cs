@@ -16,7 +16,7 @@ namespace Backend.Controllers
             {
                 var cards = cardService.GetAllCards();
                 return cards;
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
             //Get card by id
             //Samme årsag som ovenstående
@@ -47,7 +47,7 @@ namespace Backend.Controllers
                         return Results.BadRequest(e.Message);
                     }
                 }
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Create card
             app.MapPost("/cards", (ICardService cardService, CardDTO cardDTO) =>
@@ -56,7 +56,7 @@ namespace Backend.Controllers
 
                 return Results.Created($"/cards/{cardDTO.Id}", createdCardDTO);
 
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
 
             //Update card
             app.MapPut("/cards/{id}", (ICardService cardService,int id, CardDTO cardDTO) => {
@@ -71,7 +71,7 @@ namespace Backend.Controllers
                 var updateCardDTO = cardService.UpdateCard(cardDTO);
 
                 return Results.Ok(updateCardDTO);
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Admin"));
         }
     }
 }

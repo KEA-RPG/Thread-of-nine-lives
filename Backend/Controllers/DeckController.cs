@@ -78,7 +78,7 @@ namespace Backend.Controllers
                     return Results.BadRequest(e.Message);
                 }
 
-            }); //I tilfælde af at der skal kunnes slette offentlige decks
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin")); //I tilfælde af at der skal kunnes slette offentlige decks
 
             //Create deck
             app.MapPost("/decks", (IDeckService deckService, IUserService userService, DeckDTO deck, HttpContext context) =>
@@ -95,7 +95,7 @@ namespace Backend.Controllers
                 var createdDeck = deckService.CreateDeck(deck);
                 return Results.Created($"/decks/{createdDeck.Id}", createdDeck);
 
-            });//I tilfælde der skal laves offentlige free decks
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal laves offentlige free decks
 
             //Update deck
             app.MapPut("/decks/{id}", (IDeckService deckService, IUserService userService, HttpContext context, DeckDTO deck, int id) =>
@@ -121,7 +121,7 @@ namespace Backend.Controllers
                     return Results.Ok(deck);
                 }
                 return Results.Unauthorized();
-            });//I tilfælde der skal opdateres offentlige free decks
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));//I tilfælde der skal opdateres offentlige free decks
 
 
             // Add a comment to a deck
@@ -136,7 +136,7 @@ namespace Backend.Controllers
             commentDto.DeckId = deckId;
                 deckService.AddComment(commentDto);
                 return Results.Created($"/decks/{deckId}/comments/{commentDto.Id}", commentDto);
-            });
+            }).RequireAuthorization(policy => policy.RequireRole("Player", "Admin"));
 
 
 
