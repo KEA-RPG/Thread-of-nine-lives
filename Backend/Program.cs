@@ -74,28 +74,6 @@ namespace Backend
 
 
 
-            /*  
-             // Repositories (Mongo)
-builder.Services.AddScoped<ICardRepository, MongoCardRepository>();
-builder.Services.AddScoped<IUserRepository, MongoUserRepository>();
-builder.Services.AddScoped<IDeckRepository, MongoDeckRepository>();
-builder.Services.AddScoped<ICombatRepository, MongoCombatRepository>();
-builder.Services.AddScoped<IEnemyRepository, MongoEnemyRepository>();
-             */
-
-
-
-            /*  
-             // Repositories (Graph)
-             builder.Services.AddScoped<ICardRepository, GraphCardRepository>();
-builder.Services.AddScoped<IUserRepository, GraphUserRepository>();
-builder.Services.AddScoped<IDeckRepository, GraphDeckRepository>();
-builder.Services.AddScoped<ICombatRepository, GraphCombatRepository>();
-builder.Services.AddScoped<IEnemyRepository, GraphEnemyRepository>();
-
-             */
-
-
 
 
             builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
