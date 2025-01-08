@@ -30,11 +30,10 @@ namespace Backend.Services
         {
             if (!PasswordValidator.IsValidPassword(credentials.Password))
             {
-                throw new ArgumentException(
-                    "The password does not meet the complexity requirements. " +
-                    "It must be 8-35 characters long and contain at least one uppercase letter, " +
-                    "one digit, and one special character."
-                );
+                throw new ArgumentException(@"
+                    The password does not meet the complexity requirements.
+                    It must be 8-35 characters long and contain at least one uppercase letter,
+                    one digit, and one special character.");
             }
 
             var user = new UserDTO

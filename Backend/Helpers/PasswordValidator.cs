@@ -7,26 +7,30 @@ namespace Backend.Helpers
     {
         public static bool IsValidPassword(string password)
         {
-            // 1. Check length between 8 and 35
-            if (string.IsNullOrWhiteSpace(password)
-                || password.Length < 8
-                || password.Length > 35)
-            {
+            // Check for null or whitespace
+            if (string.IsNullOrWhiteSpace(password))
                 return false;
-            }
 
-            // 2. Check for uppercase letters
-            bool hasUpperCase = password.Any(char.IsUpper);
+            // Check length boundaries
+            if (password.Length < 8 || password.Length > 35)
+                return false;
 
-            // 3. Check for digits
-            bool hasDigit = password.Any(char.IsDigit);
+            // Check for uppercase letters
+            if (!password.Any(char.IsUpper))
+                return false;
 
-            // 4. Check for special characters (anything not letter or digit)
-            bool hasSpecialChar = password.Any(ch => !char.IsLetterOrDigit(ch));
+            // Check for digits
+            if (!password.Any(char.IsDigit))
+                return false;
 
-            // Return true only if all conditions are met
-            return hasUpperCase && hasDigit && hasSpecialChar;
+            // Check for special characters
+            if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+                return false;
+
+            // If we got this far, everything is valid
+            return true;
         }
+
 
     }
 }
