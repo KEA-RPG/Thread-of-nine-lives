@@ -23,14 +23,18 @@ namespace Backend.Tests.Services
         public void CreateUser_ShouldHashPassword_WhenUserIsCreated()
         {
             // Arrange
-            var credentials = new Credentials { Username = "testuser", Password = "testpassword" };
+            var credentials = new Credentials
+            {
+                Username = "testuser",
+                Password = "TestPass1!"
+            };
 
             // Act
             _userService.CreateUser(credentials);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.CreateUser(It.Is<UserDTO>(
-                user => user.Password != "testpassword"
+                user => user.Password != "TestPass1!" // Ensure it was hashed
             )), Times.Once);
         }
 
@@ -38,7 +42,11 @@ namespace Backend.Tests.Services
         public void CreateUser_ShouldSetRoleToPlayer_WhenUserIsCreated()
         {
             // Arrange
-            var credentials = new Credentials { Username = "testuser", Password = "testpassword" };
+            var credentials = new Credentials
+            {
+                Username = "testuser",
+                Password = "TestPass1!"
+            };
 
             // Act
             _userService.CreateUser(credentials);
