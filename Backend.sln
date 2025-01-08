@@ -29,9 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.RelationalDB", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadOfNineLives.IntegrationTests", "ThreadOfNineLives.IntegrationTests\ThreadOfNineLives.IntegrationTests.csproj", "{BCAE4207-D1D4-44B8-8B71-0F3A97DA6636}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.GraphDB", "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj", "{A4E83D28-1C9D-4A43-9DBF-C64492F45738}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6A795EDF-FD32-499C-8B42-875BEC180CC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrators.GraphDB", "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj", "{A4E83D28-1C9D-4A43-9DBF-C64492F45738}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
