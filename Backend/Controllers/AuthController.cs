@@ -65,18 +65,24 @@ namespace Backend.Controllers
             // Signup (Create User) Endpoint
             app.MapPost("/auth/signup", (IUserService userService, Credentials credentials) =>
             {
-                // Check if user already exists
+                
                 var existingUser = userService.GetUserByUsername(credentials.Username);
                 if (existingUser != null)
                 {
                     return Results.BadRequest("User already exists");
                 }
 
-                // Create new user
-                userService.CreateUser(credentials);
-
-                return Results.Ok("User created successfully");
+                try
+                {
+                    userService.CreateUser(credentials);
+                    return Results.Ok("User created successfully");
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(ex.Message);
+                }
             });
+
 
 
             app.MapPost("/auth/logout", (IMemoryCache memoryCache, HttpContext context) =>
