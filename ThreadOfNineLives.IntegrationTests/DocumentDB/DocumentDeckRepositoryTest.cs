@@ -193,13 +193,14 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         public void GetPublicDecks_Returns_Valid_Data()
         {
             // Arrange
-            _context.Decks().DeleteMany(FilterDefinition<DeckDTO>.Empty);
+            CreateTemplateDeck();
 
             // Act
-            var retrievedDeck = _mongoDeckRepository.GetDeckById(9999);
+            var retrievedDecks = _mongoDeckRepository.GetPublicDecks();
 
             // Assert
-            Assert.Null(retrievedDeck);
+            Assert.NotNull(retrievedDecks);
+            Assert.True(retrievedDecks.Count() > 0);
         }
 
         [Fact]
