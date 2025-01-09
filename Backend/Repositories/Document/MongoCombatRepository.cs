@@ -36,8 +36,6 @@ namespace Backend.Repositories.Document
             var update = Builders<FightDTO>.Update.Push(x => x.GameActions, gameAction);
             var filter = Builders<FightDTO>.Filter.Eq(c => c.Id, gameAction.FightId);
             _context.Fights().UpdateOne(filter, update);
-
-
         }
     }
 }

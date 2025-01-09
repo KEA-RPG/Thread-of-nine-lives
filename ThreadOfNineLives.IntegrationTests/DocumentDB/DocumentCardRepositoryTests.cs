@@ -63,10 +63,10 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void GetCardById_Returns_Empty_When_Invalid_ID()
         {
-            //Act
+            //Arrange
             _context.Cards().DeleteMany(FilterDefinition<CardDTO>.Empty);
 
-            //Assign
+            //Act
             var card = _mongoCardRepository.GetCardById(10000);
 
             //Assert
@@ -76,12 +76,12 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void GetCardById_Returns_Item()
         {
-            //Act
+            //Arrange
             CreateTemplateDecksAndCards();
             var initialCardName = "FirstNameINTEGRATION";
             var cardId = _context.Cards().Find(x => x.Name == initialCardName).First().Id;
 
-            //Assign
+            //Act
             var card = _mongoCardRepository.GetCardById(cardId);
 
             //Assert
@@ -91,7 +91,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         public void UpdateCard_Should_Update_Database_Card()
         {
 
-            //Assign
+            //Arrange
             CreateTemplateDecksAndCards();
             var initialCardName = "FirstNameINTEGRATION";
             var cardToUpdateId = _context.Cards().Find(x => x.Name == initialCardName).First().Id;
@@ -119,7 +119,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void Delete_Card_Should_Update_Decks()
         {
-            //Assign
+            //Arrange
             CreateTemplateDecksAndCards();
             var initialCardName = "FirstNameINTEGRATION";
             var cardToDelete = _context.Cards().Find(x => x.Name == initialCardName).First();
@@ -133,11 +133,26 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         }
 
 
+        [Fact]
+        public void Delete_Card_Should_Remove_From_Collection()
+        {
+            //Arrange
+            CreateTemplateDecksAndCards();
+            var initialCardName = "FirstNameINTEGRATION";
+            var cardToDelete = _context.Cards().Find(x => x.Name == initialCardName).First();
+
+            //Act
+            _mongoCardRepository.DeleteCard(cardToDelete);
+            var card = _context.Cards().Find(x => x.Name == "FirstNameINTEGRATION").FirstOrDefault();
+
+            //Assert
+            Assert.Null(card);
+        }
 
         [Fact]
         public void GetAllCards_Returns_Items()
         {
-            //Assign
+            //Arrange
             CreateTemplateDecksAndCards();
 
             //Act

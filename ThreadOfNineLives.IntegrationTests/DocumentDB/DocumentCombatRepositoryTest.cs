@@ -3,6 +3,7 @@ using Domain.DTOs;
 using Infrastructure.Persistance.Document;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void AddFight_Assigns_Id_And_Retains_Values()
         {
-            //Act
+            //Arrange
             var testFight = new FightDTO()
             {
                 EnemyId = 123,
@@ -76,7 +77,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void InsertAction_Updates_Fight_With_GameAction()
         {
-            //Act
+            //Arrange
             var createdFight = CreateTemplateFightAndActions();
             var gameAction = new GameActionDTO()
             {
@@ -85,7 +86,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 FightId = createdFight.Id,
             };
 
-            //Assign
+            //Act
             _mongoCombatRepository.InsertAction(gameAction);
             var dbFight = _mongoCombatRepository.GetFightById(createdFight.Id);
 
@@ -99,10 +100,41 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         }
 
         [Fact]
+        public void InsertAction_Updates_Fight_With_GameAction_With_Multiple_GameActions()
+        {
+            //Arrange
+            var createdFight = CreateTemplateFightAndActions();
+            var gameAction = new GameActionDTO()
+            {
+                Type = "ATTACK",
+                Value = 4,
+                FightId = createdFight.Id,
+            };
+            var gameAction2 = new GameActionDTO()
+            {
+                Type = "ATTACK",
+                Value = 45,
+                FightId = createdFight.Id,
+            };
+
+            //Act
+            _mongoCombatRepository.InsertAction(gameAction);
+            _mongoCombatRepository.InsertAction(gameAction2);
+            var dbFight = _mongoCombatRepository.GetFightById(createdFight.Id);
+
+            //Assert
+            Assert.NotEmpty(dbFight.GameActions);
+            Assert.True(dbFight.GameActions.Count == 2);
+        }
+
+        [Fact]
         public void GetFightById_Returns_Null_When_Id_Does_Not_Exist()
         {
+            // Arrange
+            _context.Fights().DeleteMany(FilterDefinition<FightDTO>.Empty);
+
             // Act
-            var retrievedFight = _mongoCombatRepository.GetFightById(9999); 
+            var retrievedFight = _mongoCombatRepository.GetFightById(9999);
 
             // Assert
             Assert.Null(retrievedFight);
