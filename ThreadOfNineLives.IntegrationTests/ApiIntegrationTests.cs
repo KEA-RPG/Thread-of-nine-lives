@@ -37,7 +37,7 @@ namespace ThreadOfNineLives.IntegrationTests
         public async Task Get_Image_ReturnsCorrectDimensionsAndIsJpg()
         {
             // Arrange
-            var endpoint = "/200/316"; // Replace with the API endpoint
+            var endpoint = "/200/316";
 
             // Act
             var response = await _httpClient.GetAsync(endpoint);
