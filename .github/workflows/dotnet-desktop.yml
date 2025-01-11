@@ -314,7 +314,7 @@ jobs:
       #   run : dotnet run --project "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj"
 
       - name: Run Integration Tests
-        run: dotnet test IntegrationTests/IntegrationTests.csproj --configuration Release --logger "trx;LogFileName=integration_tests.trx"
+        run: dotnet test ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj --configuration Release --logger "trx;LogFileName=integration_tests.trx"
   
       # - name: Upload Test Results
       #   if: always()
