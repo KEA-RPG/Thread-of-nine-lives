@@ -6,7 +6,7 @@ EXPOSE 8080
 EXPOSE 8081
 # Install .NET SDK
 RUN apt-get update && \
-    apt-get install -y wget apt-transport-https && \
+    apt-get install -y wget apt-transport-https gnupg && \
     wget https://packages.microsoft.com/keys/microsoft.asc && \
     apt-key add microsoft.asc && \
     wget https://packages.microsoft.com/config/ubuntu/20.04/prod.list -O /etc/apt/sources.list.d/microsoft-prod.list && \
