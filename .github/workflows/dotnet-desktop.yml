@@ -308,7 +308,7 @@ jobs:
         run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
   
       - name: Migrate data to MongoDB
-        run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-docker 
+        run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-document 
 
       # - name: Migrate data to Neo4J
       #   run : dotnet run --project "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj"
