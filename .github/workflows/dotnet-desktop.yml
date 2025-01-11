@@ -7,107 +7,107 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build_backend:
-    runs-on: ubuntu-latest
+  # build_backend:
+  #   runs-on: ubuntu-latest
 
-    env:
-      Solution_Name: Backend.sln
+  #   env:
+  #     Solution_Name: Backend.sln
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+  #   - name: Install .NET Core
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 8.0.x
 
-    - name: Restore Dependencies
-      run:  dotnet restore 
+  #   - name: Restore Dependencies
+  #     run:  dotnet restore 
 
-    - name: Build Solution
-      run: dotnet build --configuration Release
+  #   - name: Build Solution
+  #     run: dotnet build --configuration Release
       
-    - name: Execute unit tests
-      run: dotnet test UnitTests/UnitTests.csproj
+  #   - name: Execute unit tests
+  #     run: dotnet test UnitTests/UnitTests.csproj
 
-    - name: Build Docker Image
-      run: |
-        docker build . \
-          -f dockerfile.api \
-          -t bjand49/tonl-api:latest
+  #   - name: Build Docker Image
+  #     run: |
+  #       docker build . \
+  #         -f dockerfile.api \
+  #         -t bjand49/tonl-api:latest
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: bjand49
-        password: ${{ secrets.DOCKER_PAT }}
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v1
+  #     with:
+  #       username: bjand49
+  #       password: ${{ secrets.DOCKER_PAT }}
 
-    - name: Push Docker Image
-      run: docker push bjand49/tonl-api
-
-
-  build_seeder:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-          clean: true
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-
-    - name: Cache NuGet Packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('DataSeeder/**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-
-    - name: Build Docker Image
-      run: |
-        docker build . \
-          -f dockerfile.seeder \
-          -t bjand49/tonl-seeder:latest
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: bjand49
-        password: ${{ secrets.DOCKER_PAT }}
-
-    - name: Push Docker Image
-      run: docker push bjand49/tonl-seeder
+  #   - name: Push Docker Image
+  #     run: docker push bjand49/tonl-api
 
 
-  build_frontend:
-    runs-on: ubuntu-latest
+  # build_seeder:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+  #     with:
+  #         clean: true
+  #   - name: Install .NET Core
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 8.0.x
 
-    - name: Build the Docker image
-      run: docker build . --file dockerfile.frontend --tag bjand49/tonl-frontend
+  #   - name: Cache NuGet Packages
+  #     uses: actions/cache@v4
+  #     with:
+  #       path: ~/.nuget/packages
+  #       key: ${{ runner.os }}-nuget-${{ hashFiles('DataSeeder/**/*.csproj') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-nuget-
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: bjand49
-        password: ${{ secrets.DOCKER_PAT }}
+  #   - name: Build Docker Image
+  #     run: |
+  #       docker build . \
+  #         -f dockerfile.seeder \
+  #         -t bjand49/tonl-seeder:latest
+
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v1
+  #     with:
+  #       username: bjand49
+  #       password: ${{ secrets.DOCKER_PAT }}
+
+  #   - name: Push Docker Image
+  #     run: docker push bjand49/tonl-seeder
+
+
+  # build_frontend:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+
+  #   - name: Build the Docker image
+  #     run: docker build . --file dockerfile.frontend --tag bjand49/tonl-frontend
+
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v1
+  #     with:
+  #       username: bjand49
+  #       password: ${{ secrets.DOCKER_PAT }}
         
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      with:
-        images: bjand49/tonl-frontend
+  #   - name: Extract metadata (tags, labels) for Docker
+  #     id: meta
+  #     uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+  #     with:
+  #       images: bjand49/tonl-frontend
         
-    - name: Push Docker image
-      run: docker push bjand49/tonl-frontend
+  #   - name: Push Docker image
+  #     run: docker push bjand49/tonl-frontend
 
 
   # build_relational_migrator:
@@ -144,75 +144,111 @@ jobs:
 
   #   - name: Push Docker Image
   #     run: docker push bjand49/tonl-migrator-relational
-
-
-  api_test:
+ 
+  build_document_migrator:
     runs-on: ubuntu-latest
-    needs: [build_backend, build_seeder]
-    services:
-      relative_db:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "yourStrong(!)Password"
-        ports:
-          - 1433:1433
-        options: >-
-          --name relative_db
-          --health-cmd "exit 0"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      backend:
-        image: bjand49/tonl-api
-        ports:
-          - 8080:8080  
-        env:
-          ASPNETCORE_ENVIRONMENT: "Docker"
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Create network
-        run: docker network create tonl-network
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Attach containers to network
-        run: docker network connect tonl-network relative_db
+    - name: Cache NuGet Packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('Migrators/**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
 
-      - name: Install mssql-tools in Docker container
-        run: |
-          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
-          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
+    - name: Build Docker Image
+      run: |
+        docker build . \
+          -f dockerfile.migrator.document \
+          -t bjand49/tonl-migrator-document:latest
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: bjand49
+        password: ${{ secrets.DOCKER_PAT }}
+
+    - name: Push Docker Image
+      run: docker push bjand49/tonl-migrator-document
+
+
+  # api_test:
+  #   runs-on: ubuntu-latest
+  #   needs: [build_backend, build_seeder]
+  #   services:
+  #     relative_db:
+  #       image: mcr.microsoft.com/mssql/server:2022-latest
+  #       env:
+  #         ACCEPT_EULA: "Y"
+  #         SA_PASSWORD: "yourStrong(!)Password"
+  #       ports:
+  #         - 1433:1433
+  #       options: >-
+  #         --name relative_db
+  #         --health-cmd "exit 0"
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+
+  #     backend:
+  #       image: bjand49/tonl-api
+  #       ports:
+  #         - 8080:8080  
+  #       env:
+  #         ASPNETCORE_ENVIRONMENT: "Docker"
+
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+
+  #     - name: Create network
+  #       run: docker network create tonl-network
+
+  #     - name: Attach containers to network
+  #       run: docker network connect tonl-network relative_db
+
+  #     - name: Install mssql-tools in Docker container
+  #       run: |
+  #         docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
+  #         docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
       
-      - name: Create Database
-        run: |
-          docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
+  #     - name: Create Database
+  #       run: |
+  #         docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.x
+  #     - name: Setup .NET Core
+  #       uses: actions/setup-dotnet@v3
+  #       with:
+  #         dotnet-version: 8.0.x
 
-      - name: Run Data Seeder
-        run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
+  #     - name: Run Data Seeder
+  #       run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
         
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+  #     - name: Install Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '20'
 
-      - name: Install postwoman npm
-        run: npm i -g @hoppscotch/cli
+  #     - name: Install postwoman npm
+  #       run: npm i -g @hoppscotch/cli
 
-      - name: Test CardEndpoints
-        run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm338q223000613cpr6vcbtuk --token ${{ secrets.HOPPSCOTCHPAT }}
+  #     - name: Test CardEndpoints
+  #       run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm338q223000613cpr6vcbtuk --token ${{ secrets.HOPPSCOTCHPAT }}
 
 
   Integration_tests:
     runs-on: ubuntu-latest
-    needs: [build_seeder]
+    # needs: [build_seeder,build_document_migrator]
+    needs: [build_document_migrator]
 
     services:
       relative_db:
