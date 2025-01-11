@@ -42,6 +42,7 @@ namespace Backend.Tests
                 .Returns(Task.CompletedTask);
 
             var httpContext = CreateHttpContextWithService(mockAntiforgery.Object);
+            
 
             // Act & Assert
             // We just verify that no exception is thrown
