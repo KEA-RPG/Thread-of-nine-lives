@@ -145,40 +145,40 @@ jobs:
   #   - name: Push Docker Image
   #     run: docker push bjand49/tonl-migrator-relational
  
-  build_document_migrator:
-    runs-on: ubuntu-latest
+  # build_document_migrator:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+  #   - name: Install .NET Core
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 8.0.x
 
-    - name: Cache NuGet Packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('Migrators/**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+  #   - name: Cache NuGet Packages
+  #     uses: actions/cache@v4
+  #     with:
+  #       path: ~/.nuget/packages
+  #       key: ${{ runner.os }}-nuget-${{ hashFiles('Migrators/**/*.csproj') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-nuget-
 
-    - name: Build Docker Image
-      run: |
-        docker build . \
-          -f dockerfile.migrator.document \
-          -t bjand49/tonl-migrator-document:latest
+  #   - name: Build Docker Image
+  #     run: |
+  #       docker build . \
+  #         -f dockerfile.migrator.document \
+  #         -t bjand49/tonl-migrator-document:latest
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: bjand49
-        password: ${{ secrets.DOCKER_PAT }}
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v1
+  #     with:
+  #       username: bjand49
+  #       password: ${{ secrets.DOCKER_PAT }}
 
-    - name: Push Docker Image
-      run: docker push bjand49/tonl-migrator-document
+  #   - name: Push Docker Image
+  #     run: docker push bjand49/tonl-migrator-document
 
 
   # api_test:
@@ -248,7 +248,7 @@ jobs:
   Integration_tests:
     runs-on: ubuntu-latest
     # needs: [build_seeder,build_document_migrator]
-    needs: [build_document_migrator]
+    # needs: [build_document_migrator]
 
     services:
       relative_db:
@@ -280,35 +280,35 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Create network
-        run: docker network create tonl-network
+      # - name: Create network
+      #   run: docker network create tonl-network
 
-      - name: Attach relative_db to network
-        run: docker network connect tonl-network relative_db
+      # - name: Attach relative_db to network
+      #   run: docker network connect tonl-network relative_db
 
-      - name: Attach document_db to network
-        run: docker network connect tonl-network document_db
+      # - name: Attach document_db to network
+      #   run: docker network connect tonl-network document_db
 
 
-      - name: Install mssql-tools in Docker container
-        run: |
-          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
-          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
+      # - name: Install mssql-tools in Docker container
+      #   run: |
+      #     docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
+      #     docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
       
-      - name: Create Database
-        run: |
-          docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
+      # - name: Create Database
+      #   run: |
+      #     docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.x
+      # - name: Setup .NET Core
+      #   uses: actions/setup-dotnet@v3
+      #   with:
+      #     dotnet-version: 8.0.x
         
-      - name: Run Data Seeder
-        run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
+      # - name: Run Data Seeder
+      #   run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
   
-      - name: Migrate data to MongoDB
-        run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-document 
+      # - name: Migrate data to MongoDB
+      #   run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-document 
 
       # - name: Migrate data to Neo4J
       #   run : dotnet run --project "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj"
