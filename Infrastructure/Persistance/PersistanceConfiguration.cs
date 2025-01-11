@@ -18,11 +18,11 @@ namespace Infrastructure.Persistance
             string dbString = dbtype.ToString();
 
             var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if(string.IsNullOrWhiteSpace(environmentName))
+            if (string.IsNullOrWhiteSpace(environmentName))
             {
                 environmentName = "Development";
             }
-
+            Console.WriteLine("Going on " + environmentName);
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(binpath)
                 .AddJsonFile($"dbsettings.{environmentName}.json")
@@ -55,7 +55,7 @@ namespace Infrastructure.Persistance
                 var user = settings.GetSection("User").Value;
                 var password = settings.GetSection("Password").Value;
 
-                return new GraphContext(connectionString,user,password,databaseName);
+                return new GraphContext(connectionString, user, password, databaseName);
             });
 
         }
