@@ -265,13 +265,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-      # graph_db:
-      #   image: neo4j
-      #   ports:
-      #     - "7687:7687"
-      #   env:
-      #     NEO4J_AUTH: none
-
       document_db:
         image: mongo
         ports:
@@ -292,9 +285,6 @@ jobs:
 
       - name: Attach relative_db to network
         run: docker network connect tonl-network relative_db
-
-      # - name: Attach graph_db to network
-      #   run: docker network connect tonl-network graph_db
 
       - name: Attach document_db to network
         run: docker network connect tonl-network document_db
@@ -318,7 +308,7 @@ jobs:
         run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
   
       - name: Migrate data to MongoDB
-        run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-relational 
+        run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-docker 
 
       # - name: Migrate data to Neo4J
       #   run : dotnet run --project "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj"
