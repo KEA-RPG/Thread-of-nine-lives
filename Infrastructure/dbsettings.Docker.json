@@ -9,7 +9,7 @@
   "ConnectionStrings": {
     "DefaultConnection": "Server=relative_db,1433;Database=KeaRpg;User Id=sa;Password=yourStrong(!)Password;TrustServerCertificate=True;Persist Security Info=False;Encrypt=False",
     "MongoDB": {
-      "ConnectionString": "mongodb://root:example@127.0.0.1:27017/",
+      "ConnectionString": "mongodb://root:example@document_db:27017/",
       "DatabaseName": "KeaRpg"
     },
     "Neo4j": ""
