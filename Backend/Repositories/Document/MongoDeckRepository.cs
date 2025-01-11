@@ -1,6 +1,7 @@
 ﻿using Backend.Repositories.Interfaces;
 using Domain.DTOs;
 using Domain.Entities;
+using Domain.Entities.Neo4J;
 using Infrastructure.Persistance.Document;
 using MongoDB.Driver;
 
@@ -18,8 +19,9 @@ namespace Backend.Repositories.Document
         public void AddComment(CommentDTO comment)
         {
             var deck = _context.Decks().Find(x => x.Id == comment.DeckId).FirstOrDefault();
-            deck.Comments.Add(comment);
-            UpdateDeck(deck);
+            var update = Builders<DeckDTO>.Update.Push(x => x.Comments, comment);
+            var filter = Builders<DeckDTO>.Filter.Eq(c => c.Id, comment.DeckId);
+            _context.Decks().UpdateOne(filter, update);
         }
 
         public DeckDTO AddDeck(DeckDTO deck)
@@ -68,7 +70,9 @@ namespace Backend.Repositories.Document
 
             var filter = Builders<DeckDTO>.Filter.Eq(c => c.Id, deck.Id);
             var update = Builders<DeckDTO>.Update
-                .Set(c => c, deck);
+                .Set(c => c.Name, deck.Name)
+                .Set(c => c.Cards, deck.Cards)
+                .Set(c => c.IsPublic, deck.IsPublic);
 
             _context.Decks().UpdateOne(filter, update);
         }

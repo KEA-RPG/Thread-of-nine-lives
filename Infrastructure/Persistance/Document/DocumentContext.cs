@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Entities.Mongo;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.Persistance.Document
@@ -59,24 +60,38 @@ namespace Infrastructure.Persistance.Document
             return _database.ListCollectionNames();
         }
 
-        public int GetAutoIncrementedId(string name)
+        public int GetAutoIncrementedId(string collectionName)
         {
-            var filter = Builders<Counter>.Filter.Eq(x => x.Identifier, name);
-            var update = Builders<Counter>.Update.Inc(x => x.Count, 1);
+            var filter = Builders<Counter>.Filter.Eq(x => x.Identifier, collectionName);
 
-            var options = new FindOneAndUpdateOptions<Counter>
+            var existingCounter = Counters().Find(filter).FirstOrDefault();
+
+            if (existingCounter == null)
             {
-                ReturnDocument = ReturnDocument.After,
-                IsUpsert = true
-            };
+                var collection = _database.GetCollection<BsonDocument>(collectionName);
 
-            var updatedCounter = Counters().FindOneAndUpdate(filter, update, options);
+                var maxIdResult = collection.Aggregate()
+                    .SortByDescending(doc => doc["_id"])
+                    .Limit(1)
+                    .FirstOrDefault();
+
+                int initialCount = maxIdResult != null ? maxIdResult["_id"].AsInt32 + 1 : 1;
+
+                var newCounter = new Counter { Identifier = collectionName, Count = initialCount };
+                Counters().InsertOne(newCounter);
+
+                return initialCount;
+            }
+
+            var update = Builders<Counter>.Update.Inc(x => x.Count, 1);
+            var updatedCounter = Counters().FindOneAndUpdate(filter, update, new FindOneAndUpdateOptions<Counter> { ReturnDocument = ReturnDocument.After });
 
             if (updatedCounter == null)
+            {
                 throw new Exception("Failed to update or retrieve the counter document.");
+            }
 
             return updatedCounter.Count;
         }
-
     }
 }
