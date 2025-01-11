@@ -143,7 +143,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
 
             //Act
             _mongoCardRepository.DeleteCard(cardToDelete);
-            var card = _context.Cards().Find(x => x.Name == "FirstNameINTEGRATION").FirstOrDefault();
+            var card = _context.Cards().Find(x => x.Id == cardToDelete.Id).FirstOrDefault();
 
             //Assert
             Assert.Null(card);
