@@ -1,9 +1,9 @@
-﻿using System.Drawing;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ThreadOfNineLives.IntegrationTests
 {
-
-    public class ApiIntegrationTests
+    public class ApiIntegrationTests : IDisposable
     {
         private readonly HttpClient _httpClient;
 
@@ -30,7 +30,6 @@ namespace ThreadOfNineLives.IntegrationTests
 
             var responseData = await response.Content.ReadAsStringAsync();
             Assert.False(string.IsNullOrEmpty(responseData), "Response content should not be empty");
-
         }
 
         [Fact]
@@ -49,7 +48,7 @@ namespace ThreadOfNineLives.IntegrationTests
 
             using (var stream = await response.Content.ReadAsStreamAsync())
             {
-                var image = Image.FromStream(stream);
+                var image = await Image.LoadAsync<Rgba32>(stream);
                 Assert.Equal(200, image.Width);
                 Assert.Equal(316, image.Height);
             }
