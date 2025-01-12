@@ -1,29 +1,18 @@
 ﻿using Backend.Repositories.Document;
+using Backend.Repositories.Interfaces;
 using Domain.DTOs;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Document;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ThreadOfNineLives.IntegrationTests.DocumentDB
+namespace ThreadOfNineLives.IntegrationTests.Repositories.DocumentDB
 {
-    public class DocumentCombatRepositoryTest : IDisposable
+    public class CombatRepositoryTest
     {
-        private readonly DocumentContext _context;
-        private readonly MongoCombatRepository _mongoCombatRepository;
-        private readonly DatabaseSnapshotHelper _snapshotHelper;
-        public DocumentCombatRepositoryTest()
+        private readonly ICombatRepository _combatRepository;
+        public CombatRepositoryTest()
         {
-            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-            _mongoCombatRepository = new MongoCombatRepository(_context);
-            _snapshotHelper = new DatabaseSnapshotHelper(_context);
-
+            var _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            _combatRepository = new MongoCombatRepository(_context);
         }
 
         [Fact]
@@ -38,7 +27,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            var data = _mongoCombatRepository.AddFight(testFight);
+            var data = _combatRepository.AddFight(testFight);
 
             //Assert
             Assert.NotNull(data);
@@ -56,7 +45,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             var createdFight = CreateTemplateFightAndActions();
 
             // Act
-            var data = _mongoCombatRepository.GetFightById(createdFight.Id);
+            var data = _combatRepository.GetFightById(createdFight.Id);
 
             // Assert
             Assert.NotNull(data);
@@ -79,8 +68,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            _mongoCombatRepository.InsertAction(gameAction);
-            var dbFight = _mongoCombatRepository.GetFightById(createdFight.Id);
+            _combatRepository.InsertAction(gameAction);
+            var dbFight = _combatRepository.GetFightById(createdFight.Id);
 
             //Assert
             Assert.NotEmpty(dbFight.GameActions);
@@ -110,9 +99,9 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            _mongoCombatRepository.InsertAction(gameAction);
-            _mongoCombatRepository.InsertAction(gameAction2);
-            var dbFight = _mongoCombatRepository.GetFightById(createdFight.Id);
+            _combatRepository.InsertAction(gameAction);
+            _combatRepository.InsertAction(gameAction2);
+            var dbFight = _combatRepository.GetFightById(createdFight.Id);
 
             //Assert
             Assert.NotEmpty(dbFight.GameActions);
@@ -122,11 +111,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void GetFightById_Returns_Null_When_Id_Does_Not_Exist()
         {
-            // Arrange
-            _context.Fights().DeleteMany(FilterDefinition<FightDTO>.Empty);
-
-            // Act
-            var retrievedFight = _mongoCombatRepository.GetFightById(9999);
+            // Arrange & Act
+            var retrievedFight = _combatRepository.GetFightById(-1);
 
             // Assert
             Assert.Null(retrievedFight);
@@ -139,12 +125,9 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 UserId = 123,
                 GameActions = new List<GameActionDTO>()
             };
-            return _mongoCombatRepository.AddFight(testFight);
+            return _combatRepository.AddFight(testFight);
 
 
-        }
-        public void Dispose()
-        {
         }
     }
 }
