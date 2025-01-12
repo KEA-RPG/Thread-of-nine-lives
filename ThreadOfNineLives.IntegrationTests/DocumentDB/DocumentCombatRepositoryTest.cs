@@ -1,5 +1,6 @@
 ﻿using Backend.Repositories.Document;
 using Domain.DTOs;
+using Infrastructure.Persistance;
 using Infrastructure.Persistance.Document;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
@@ -19,19 +20,10 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         private readonly DatabaseSnapshotHelper _snapshotHelper;
         public DocumentCombatRepositoryTest()
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("dbsettings.json")
-                .Build();
-
-            var settings = configuration.GetSection("ConnectionStrings:MongoDB");
-            var connectionString = settings.GetSection("Connectionstring").Value;
-            var databaseName = settings.GetSection("DatabaseName").Value;
-
-            _context = new DocumentContext(connectionString, databaseName);
+            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             _mongoCombatRepository = new MongoCombatRepository(_context);
             _snapshotHelper = new DatabaseSnapshotHelper(_context);
 
-            _snapshotHelper.TakeSnapshot();
         }
 
         [Fact]
@@ -153,7 +145,6 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         }
         public void Dispose()
         {
-            _snapshotHelper.RestoreSnapshot();
         }
     }
 }

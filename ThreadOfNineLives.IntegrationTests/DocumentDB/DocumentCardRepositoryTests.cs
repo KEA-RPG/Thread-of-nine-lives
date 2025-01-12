@@ -1,5 +1,6 @@
 ﻿using Backend.Repositories.Document;
 using Domain.DTOs;
+using Infrastructure.Persistance;
 using Infrastructure.Persistance.Document;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
@@ -17,15 +18,9 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         private readonly DatabaseSnapshotHelper _snapshotHelper;
         public DocumentCardRepositoryTests()
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("dbsettings.json")
-                .Build();
+            
+            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 
-            var settings = configuration.GetSection("ConnectionStrings:MongoDB");
-            var connectionString = settings.GetSection("Connectionstring").Value;
-            var databaseName = settings.GetSection("DatabaseName").Value;
-
-            _context = new DocumentContext(connectionString, databaseName);
             _mongoCardRepository = new MongoCardRepository(_context);
             _mongoDeckRepository = new MongoDeckRepository(_context);
             _mongoUserRepository = new MongoUserRepository(_context);
