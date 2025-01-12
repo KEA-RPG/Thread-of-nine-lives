@@ -50,16 +50,26 @@ namespace Backend.Repositories.Graph
         public DeckDTO GetDeckById(int id)
         {
             var result = _context.GetClient().Cypher
-                .Match("(d:Deck) - [] - (c:Card)")
                 .Match("(d:Deck) - [] - (u:User)")
                 .Where((Deck d) => d.Id == id)
-                .Return((d, c, u) => new
+                .OptionalMatch("(d:Deck) - [] - (c:Card)")
+                .OptionalMatch("(d:Deck) - [] - (com:Comment)")
+                .OptionalMatch("(com:Comment) - [] - (comu:User)")
+
+                .Return((d, c, u,com,comu) => new
                 {
                     Deck = d.As<Deck>(),
                     Cards = c.CollectAs<Card>(),
                     User = u.As<User>(),
-                }).ResultsAsync.Result.First();
-            return  new DeckDTO()
+                    Comments = com.CollectAs<Comment>(),
+                    CommentUsers = comu.CollectAs<User>(),
+                }).ResultsAsync.Result.FirstOrDefault();
+
+            if(result == null)
+            {
+                return default(DeckDTO);
+            }
+            var returnResult = new DeckDTO()
             {
                 UserName = result.User.Username,
                 Id = result.Deck.Id,
@@ -67,8 +77,9 @@ namespace Backend.Repositories.Graph
                 Cards = result.Cards.Select(c => Card.FromEntity(c)).ToList(),
                 IsPublic = result.Deck.IsPublic,
                 Name = result.Deck.Name,
+                Comments = result.Comments.Select(c => Comment.FromEntity(c)).ToList(),
             };
-
+            return returnResult;
         }
 
         public void UpdateDeck(DeckDTO deckToUpdate)
@@ -111,7 +122,7 @@ namespace Backend.Repositories.Graph
         public List<DeckDTO> GetPublicDecks()
         {
             return _context
-                .ExecuteQueryWithWhere<Deck>(x => x.IsPublic).Result
+                .ExecuteQueryWithWhere<Deck>(x => x.IsPublic == true).Result
                 .Select(x => Deck.FromEntity(x))
                 .ToList();
         }
@@ -119,21 +130,21 @@ namespace Backend.Repositories.Graph
         public List<DeckDTO> GetUserDecks(string userName)
         {
             var user = _context
-                .ExecuteQueryWithMap<User>()
+                .ExecuteQueryWithWhere<User>(x=> x.Username == userName)
                 .Result
                 .Select(x => x)
                 .FirstOrDefault();
 
             if (user == null)
             {
-                return null;
+                return new List<DeckDTO>();
             }
 
 
             var result = _context.GetClient().Cypher
-                .Match("(d:Deck) - [] - (c:Card)",
-                "(d:Deck) - [] - (u:User)")
+                .Match("(d:Deck) - [] - (u:User)")
                 .Where((User u) => u.Username == userName)
+                .OptionalMatch("(d:Deck) - [] - (c:Card)")
                 .Return((d, c, u) => new
                 {
                     Deck = d.As<Deck>(),
@@ -156,7 +167,9 @@ namespace Backend.Repositories.Graph
             var dbComment = Comment.ToEntity(comment);
             dbComment.Id = _context.GetAutoIncrementedId<Comment>().Result;
             _context.Insert(dbComment).Wait();
-            _context.MapNodes<Comment, Deck>(comment.Id, comment.DeckId, "IS_IN").Wait();
+            _context.MapNodes<Comment, Deck>(dbComment.Id, dbComment.DeckId, "IS_IN").Wait();
+            _context.MapNodes<User, Comment>(dbComment.UserId, dbComment.Id, "WROTE").Wait();
+
         }
 
         public List<CommentDTO> GetCommentsByDeckId(int deckId)
