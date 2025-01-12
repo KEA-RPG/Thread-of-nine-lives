@@ -42,7 +42,10 @@ namespace Backend.Repositories.Document
         public void UpdateEnemy(EnemyDTO enemy)
         {
             var filter = Builders<EnemyDTO>.Filter.Eq(c => c.Id, enemy.Id);
-            var update = Builders<EnemyDTO>.Update.Set(c => c, enemy);
+            var update = Builders<EnemyDTO>.Update
+                .Set(c => c.Health, enemy.Health)
+                .Set(c => c.Name, enemy.Name)
+                .Set(c => c.ImagePath, enemy.ImagePath);
 
             _context.Enemies().UpdateOne(filter, update);
         }
