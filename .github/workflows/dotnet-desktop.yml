@@ -290,22 +290,22 @@ jobs:
       #   run: docker network connect tonl-network document_db
 
 
-      # - name: Install mssql-tools in Docker container
-      #   run: |
-      #     docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
-      #     docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
+      - name: Install mssql-tools in Docker container
+        run: |
+          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y gnupg curl"
+          docker exec --user=root relative_db bash -c "apt-get update && apt-get install -y mssql-tools unixodbc-dev"
       
-      # - name: Create Database
-      #   run: |
-      #     docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
+      - name: Create Database
+        run: |
+          docker exec relative_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -Q 'CREATE DATABASE KeaRpg;'
 
-      # - name: Setup .NET Core
-      #   uses: actions/setup-dotnet@v3
-      #   with:
-      #     dotnet-version: 8.0.x
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
         
-      # - name: Run Data Seeder
-      #   run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
+      - name: Run Data Seeder
+        run: docker run --name database-seeder --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-seeder 
   
       # - name: Migrate data to MongoDB
       #   run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-document 
