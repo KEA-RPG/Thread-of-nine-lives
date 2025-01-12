@@ -16,7 +16,7 @@ namespace ThreadOfNineLives.IntegrationTests.Repositories.Relational
         }
 
         [Fact]
-        public void AddEnemy_Assigns_Id_And_Retains_Values()
+        public void AddUser_Assigns_Id_And_Retains_Values()
         {
             //Arrange
             var testUser = new UserDTO()

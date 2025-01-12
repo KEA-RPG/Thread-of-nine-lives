@@ -247,7 +247,7 @@ namespace ThreadOfNineLives.IntegrationTests.Repositories.DocumentDB
             _deckRepository.UpdateDeck(deck);
             var data = _deckRepository.GetDeckById(deck.Id);
 
-            //Arrange
+            //Assert
             Assert.True(data.Name == deck.Name);
         }
 
