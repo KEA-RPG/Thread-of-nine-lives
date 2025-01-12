@@ -106,7 +106,6 @@ namespace Backend.Tests.Services
             Assert.False(result);
         }
 
-        // New Test Methods for GetUserByUsername after UserDTO was implemented
         [Fact]
         public void GetUserByUsername_ShouldReturnUserDTO_WhenUserExists()
         {
