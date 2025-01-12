@@ -1,23 +1,15 @@
 # Base runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER root
+USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-# Install .NET SDK
-RUN apt-get update && \
-    apt-get install -y wget apt-transport-https gnupg && \
-    wget https://packages.microsoft.com/keys/microsoft.asc && \
-    apt-key add microsoft.asc && \
-    wget https://packages.microsoft.com/config/ubuntu/20.04/prod.list -O /etc/apt/sources.list.d/microsoft-prod.list && \
-    apt-get update && \
-    apt-get install -y dotnet-sdk-8.0
+
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Backend/Backend.csproj", "Backend/"]
-COPY ["ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj", "ThreadOfNineLives.IntegrationTests/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 RUN dotnet restore "Backend/Backend.csproj"
