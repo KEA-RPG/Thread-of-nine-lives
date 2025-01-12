@@ -24,7 +24,6 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             _mongoCombatRepository = new MongoCombatRepository(_context);
             _snapshotHelper = new DatabaseSnapshotHelper(_context);
 
-            _snapshotHelper.TakeSnapshot();
         }
 
         [Fact]
@@ -146,7 +145,6 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         }
         public void Dispose()
         {
-            _snapshotHelper.RestoreSnapshot();
         }
     }
 }
