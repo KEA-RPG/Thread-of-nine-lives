@@ -15,7 +15,6 @@
     "Neo4j": {
       "ConnectionString": "neo4j://127.0.0.1:7687",
       "User": "neo4j",
-      "User" "Id=sa;Password=yourStrong(!)Password",
       "Password": "neo4j",
       "DatabaseName": "neo4j"
     }
