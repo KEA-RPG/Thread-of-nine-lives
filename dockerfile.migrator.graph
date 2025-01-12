@@ -1,0 +1,34 @@
+# Base runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+# Copy solution and project files for dependency restoration
+COPY ["Backend.sln", "./"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Migrators/Migrators.GraphDB/Migrators.GraphDB.csproj", "Migrators/Migrators.GraphDB/"]
+
+# Restore dependencies
+RUN dotnet restore "Migrators/Migrators.GraphDB/Migrators.GraphDB.csproj"
+
+# Copy the rest of the source code
+COPY . .
+
+# Build the migrator project
+RUN dotnet build "Migrators/Migrators.GraphDB/Migrators.GraphDB.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Publish stage
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Migrators/Migrators.GraphDB/Migrators.GraphDB.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# Final runtime image
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+ENTRYPOINT ["dotnet", "Migrators.GraphDB.dll"]
