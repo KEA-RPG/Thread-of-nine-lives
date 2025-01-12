@@ -31,10 +31,6 @@ namespace Backend.Tests
             );
         }
 
-        // ---------------------------------------------------------
-        // GetInitialState(...)
-        // ---------------------------------------------------------
-
         [Fact]
         public void GetInitialState_NullStateGameInit_ThrowsArgumentNullException()
         {
@@ -55,9 +51,8 @@ namespace Backend.Tests
                 UserName = "TestUser"
             };
 
-            // Enemy doesn't exist
             _enemyRepositoryMock
-                .Setup(repo => repo.GetEnemyById(123))
+                .Setup(repo => repo.GetEnemyById(stateGameInit.EnemyId))
                 .Returns((EnemyDTO)null);
 
             // Act & Assert
@@ -85,9 +80,8 @@ namespace Backend.Tests
                     ImagePath = "test.png"
                 });
 
-            // UserDTO is null => not found
             _userRepositoryMock
-                .Setup(repo => repo.GetUserByUsername("MissingUser"))
+                .Setup(repo => repo.GetUserByUsername(stateGameInit.UserName))
                 .Returns((UserDTO)null);
 
             // Act & Assert
@@ -114,16 +108,15 @@ namespace Backend.Tests
                     ImagePath = "test.png"
                 });
 
-            // Return a valid UserDTO
             var userDto = new UserDTO
             {
                 Id = 123,
-                Username = "TestUser",
+                Username = stateGameInit.UserName,
                 Password = "someHash",
                 Role = "Player"
             };
             _userRepositoryMock
-                .Setup(repo => repo.GetUserByUsername("TestUser"))
+                .Setup(repo => repo.GetUserByUsername(stateGameInit.UserName))
                 .Returns(userDto);
 
             // AddFight mock
@@ -165,36 +158,33 @@ namespace Backend.Tests
                     ImagePath = "test.png"
                 });
 
-            // Return a valid UserDTO
             _userRepositoryMock
-                .Setup(repo => repo.GetUserByUsername("TestUser"))
+                .Setup(repo => repo.GetUserByUsername(stateGameInit.UserName))
                 .Returns(new UserDTO
                 {
                     Id = 7,
-                    Username = "TestUser",
+                    Username = stateGameInit.UserName,
                     Password = "someHash",
                     Role = "Player"
                 });
 
-            // AddFight mock
+            FightDTO fightDto = null; 
             _combatRepositoryMock
                 .Setup(repo => repo.AddFight(It.IsAny<FightDTO>()))
                 .Returns((FightDTO fight) =>
                 {
                     fight.Id = 777;
+                    fightDto = fight; 
                     return fight;
                 });
 
             // Act
             var result = _combatService.GetInitialState(stateGameInit);
 
-            // Assert (single check)
+            // Assert
             Assert.Equal(777, result.FightId);
+            Assert.NotNull(fightDto); 
         }
-
-        // ---------------------------------------------------------
-        // GetProcessedState(...)
-        // ---------------------------------------------------------
 
         [Fact]
         public void GetProcessedState_ActionIsNull_ThrowsArgumentNullException()
@@ -255,17 +245,14 @@ namespace Backend.Tests
             int fightID = 45;
             var action = new GameActionDTO { Type = "END_TURN", Value = 0 };
 
-            // The fight before adding the action:
             var fightBefore = new FightDTO { Id = fightID };
 
-            // The fight after adding the action (if InsertAction modifies it or if we fetch it again):
             var fightAfter = new FightDTO
             {
                 Id = fightID,
                 GameActions = new List<GameActionDTO> { action }
             };
 
-            // Set up the sequence: first call returns fightBefore, second call returns fightAfter
             _combatRepositoryMock
                 .SetupSequence(repo => repo.GetFightById(fightID))
                 .Returns(fightBefore)
@@ -274,13 +261,10 @@ namespace Backend.Tests
             // Act
             var state = _combatService.GetProcessedState(fightID, action);
 
-            // Assert (single check)
+            // Assert 
             Assert.Equal(fightID, state.FightId);
         }
 
-        // ---------------------------------------------------------
-        // GetStateByFightId(...)
-        // ---------------------------------------------------------
 
         [Fact]
         public void GetStateByFightId_FightNotFound_ThrowsKeyNotFoundException()
@@ -312,7 +296,7 @@ namespace Backend.Tests
             // Act
             var state = _combatService.GetStateByFightId(fightId);
 
-            // Assert (single check)
+            // Assert 
             Assert.Equal(fightId, state.FightId);
         }
     }

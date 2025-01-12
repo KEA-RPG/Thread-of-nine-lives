@@ -43,9 +43,8 @@ namespace Backend.Tests
 
             var httpContext = CreateHttpContextWithService(mockAntiforgery.Object);
             
-
+            
             // Act & Assert
-            // We just verify that no exception is thrown
             var exception = await Record.ExceptionAsync(
                 () => AntiForgeryHelper.ValidateAntiForgeryToken(httpContext)
             );
@@ -65,15 +64,11 @@ namespace Backend.Tests
             var httpContext = CreateHttpContextWithService(mockAntiforgery.Object);
 
             // Act & Assert
-            // We expect the same type of exception to be thrown again
             await Assert.ThrowsAsync<AntiforgeryValidationException>(
                 () => AntiForgeryHelper.ValidateAntiForgeryToken(httpContext)
             );
         }
 
-        // ---------------------------------------------------------
-        // Helper Method to Create a HttpContext with a Mock Service
-        // ---------------------------------------------------------
         private static HttpContext CreateHttpContextWithService(IAntiforgery antiforgery)
         {
             var services = new ServiceCollection();

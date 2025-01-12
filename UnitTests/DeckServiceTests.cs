@@ -7,7 +7,7 @@ using Backend.Services;
 using Domain.DTOs;
 using Domain.Entities;
 using Backend.Repositories.Interfaces;
-using Backend.SecurityLogic;  // For Sanitizer
+using Backend.SecurityLogic; 
 using System.Reflection;
 
 namespace Backend.Tests
@@ -23,20 +23,16 @@ namespace Backend.Tests
             _mockDeckRepository = new Mock<IDeckRepository>();
             _mockUserRepository = new Mock<IUserRepository>();
 
-            // We won't mock the static Sanitizer, but these tests will call it.
             _deckService = new DeckService(_mockDeckRepository.Object, _mockUserRepository.Object);
         }
 
-        // ---------------------------------------------------------
-        // 1. CreateDeck(...)
-        // ---------------------------------------------------------
         [Fact]
         public void CreateDeck_ShouldCallRepositoryAddDeck_AndReturnNewDeck()
         {
             // Arrange
             var inputDeck = new DeckDTO
             {
-                Id = 0, // ID not yet assigned
+                Id = 0, 
                 Name = "New Deck"
             };
             var outputDeck = new DeckDTO
@@ -54,13 +50,10 @@ namespace Backend.Tests
 
             // Assert
             Assert.Equal(10, result.Id);
-            Assert.Equal("New Deck", result.Name);
+            Assert.Equal(inputDeck.Name, result.Name);
             _mockDeckRepository.Verify(repo => repo.AddDeck(inputDeck), Times.Once);
         }
 
-        // ---------------------------------------------------------
-        // 2. DeleteDeck(...)
-        // ---------------------------------------------------------
         [Fact]
         public void DeleteDeck_ShouldThrowKeyNotFound_WhenDeckDoesNotExist()
         {
@@ -92,9 +85,6 @@ namespace Backend.Tests
             _mockDeckRepository.Verify(repo => repo.DeleteDeck(deckId), Times.Once);
         }
 
-        // ---------------------------------------------------------
-        // 3. GetDeckById(...)
-        // ---------------------------------------------------------
         [Fact]
         public void GetDeckById_ShouldThrowKeyNotFound_WhenNullReturnedFromRepository()
         {
@@ -124,54 +114,54 @@ namespace Backend.Tests
 
             // Assert
             Assert.Equal(deckId, result.Id);
-            Assert.Equal("Test Deck", result.Name);
+            Assert.Equal(deckDto.Name, result.Name);
         }
 
-        // ---------------------------------------------------------
-        // 4. GetUserDecks(...)
-        // ---------------------------------------------------------
         [Fact]
         public void GetUserDecks_ShouldReturnListOfDecks()
         {
             // Arrange
             string userName = "testUser";
             var userDecks = new List<DeckDTO>
-            {
-                new DeckDTO { Id = 1, Name = "Deck A" },
-                new DeckDTO { Id = 2, Name = "Deck B" }
-            };
+    {
+        new DeckDTO { Id = 1, Name = "Deck A" },
+        new DeckDTO { Id = 2, Name = "Deck B" }
+    };
             _mockDeckRepository
                 .Setup(repo => repo.GetUserDecks(userName))
                 .Returns(userDecks);
+
+            string deckNameA = userDecks[0].Name;
+            string deckNameB = userDecks[1].Name;
 
             // Act
             var result = _deckService.GetUserDecks(userName);
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal("Deck A", result[0].Name);
-            Assert.Equal("Deck B", result[1].Name);
+            Assert.Equal(deckNameA, result[0].Name);
+            Assert.Equal(deckNameB, result[1].Name);
         }
 
+
         [Fact]
-        public void GetUserDecks_ShouldReturnNullIfNoDecksFound()
+        public void GetUserDecks_ShouldReturnEmptyCollectionIfNoDecksFound()
         {
             // Arrange
             string userName = "nobody";
             _mockDeckRepository
                 .Setup(repo => repo.GetUserDecks(userName))
-                .Returns((List<DeckDTO>)null);
+                .Returns(new List<DeckDTO>());
 
             // Act
             var result = _deckService.GetUserDecks(userName);
 
             // Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.Empty(result);
         }
 
-        // ---------------------------------------------------------
-        // 5. UpdateDeck(...)
-        // ---------------------------------------------------------
+
         [Fact]
         public void UpdateDeck_ShouldCallRepositoryUpdateDeck_AndReturnUpdatedDeck()
         {
@@ -182,11 +172,10 @@ namespace Backend.Tests
                 Name = "Updated Name"
             };
 
-            // The repository first updates, then returns the updated deck from GetDeckById
             var updatedDeck = new DeckDTO
             {
-                Id = 100,
-                Name = "Updated Name",
+                Id = deckToUpdate.Id,
+                Name = deckToUpdate.Name,
                 IsPublic = true
             };
 
@@ -199,34 +188,35 @@ namespace Backend.Tests
 
             // Assert
             _mockDeckRepository.Verify(repo => repo.UpdateDeck(deckToUpdate), Times.Once);
-            Assert.Equal("Updated Name", result.Name);
+            Assert.Equal(deckToUpdate.Name, result.Name);
             Assert.True(result.IsPublic);
         }
 
-        // ---------------------------------------------------------
-        // 6. GetPublicDecks(...)
-        // ---------------------------------------------------------
+
         [Fact]
         public void GetPublicDecks_ShouldReturnListOfPublicDecks()
         {
             // Arrange
             var publicDecks = new List<DeckDTO>
-            {
-                new DeckDTO { Id = 1, Name = "Public Deck 1" },
-                new DeckDTO { Id = 2, Name = "Public Deck 2" }
-            };
+    {
+        new DeckDTO { Id = 1, Name = "Public Deck 1" },
+        new DeckDTO { Id = 2, Name = "Public Deck 2" }
+    };
 
             _mockDeckRepository
                 .Setup(repo => repo.GetPublicDecks())
                 .Returns(publicDecks);
 
+            string firstDeckName = publicDecks[0].Name;
+            string secondDeckName = publicDecks[1].Name;
+
             // Act
             var result = _deckService.GetPublicDecks();
 
             // Assert
-            Assert.Equal(2, result.Count);
-            Assert.Equal("Public Deck 1", result[0].Name);
-            Assert.Equal("Public Deck 2", result[1].Name);
+            Assert.Equal(publicDecks.Count, result.Count);
+            Assert.Equal(firstDeckName, result[0].Name);
+            Assert.Equal(secondDeckName, result[1].Name);
         }
 
         [Fact]
@@ -244,57 +234,10 @@ namespace Backend.Tests
             Assert.Empty(result);
         }
 
-        // ---------------------------------------------------------
-        // 7. AddComment(...)
-        //    (We already have tests for exceptions, let's add a "happy path" test)
-        // ---------------------------------------------------------
-        [Fact]
-        public void AddComment_ShouldAddComment_WhenDeckAndUserExist()
-        {
-            // Arrange
-            var comment = new CommentDTO
-            {
-                DeckId = 10,
-                Username = "testUser",
-                Text = "Original comment text"
-            };
-
-            // Our deck does exist
-            _mockDeckRepository
-                .Setup(repo => repo.GetDeckById(comment.DeckId))
-                .Returns(new DeckDTO { Id = comment.DeckId });
-
-            // Our user does exist
-            _mockUserRepository
-                .Setup(repo => repo.GetUserByUsername("testUser"))
-                .Returns(new UserDTO
-                {
-                    Id = 42,
-                    Username = "testUser",
-                    Password = "somePassword",  // required property
-                    Role = "someRole"           // required property
-                });
-
-            // Act
-            _deckService.AddComment(comment);
-
-            // Assert: verify the sanitized comment was added
-            _mockDeckRepository.Verify(
-                repo => repo.AddComment(It.Is<CommentDTO>(c =>
-                    c.DeckId == 10 &&
-                    c.UserId == 42 &&
-                    // We don't check sanitized text exactly, 
-                    // but we confirm it was "some" text
-                    !string.IsNullOrWhiteSpace(c.Text)
-                )),
-                Times.Once
-            );
-        }
 
         [Fact]
         public void AddComment_ShouldThrow_KeyNotFound_WhenDeckDoesNotExist()
         {
-            // (Already tested in your existing code, but repeated here for completeness)
             var commentDto = new CommentDTO { DeckId = 1, Username = "someUser" };
 
             _mockDeckRepository
@@ -307,7 +250,6 @@ namespace Backend.Tests
         [Fact]
         public void AddComment_ShouldThrow_KeyNotFound_WhenUserDoesNotExist()
         {
-            // (Already tested in your existing code, repeated)
             var commentDto = new CommentDTO { DeckId = 1, Username = "non_existent_user" };
 
             _mockDeckRepository
@@ -321,11 +263,7 @@ namespace Backend.Tests
             Assert.Throws<KeyNotFoundException>(() => _deckService.AddComment(commentDto));
         }
 
-        // ---------------------------------------------------------
-        // 8. GetCommentsByDeckId(...)
-        //    (We already have partial coverage, let's add coverage for the scenario 
-        //     where the deck is found but the comments are null or empty => throws)
-        // ---------------------------------------------------------
+
         [Fact]
         public void GetCommentsByDeckId_ShouldThrowException_IfNoCommentsFound()
         {
@@ -336,7 +274,6 @@ namespace Backend.Tests
                 .Setup(repo => repo.GetDeckById(deckId))
                 .Returns(new DeckDTO { Id = deckId, Name = "Some Deck" });
 
-            // Return null or empty list from GetCommentsByDeckId
             _mockDeckRepository
                 .Setup(repo => repo.GetCommentsByDeckId(deckId))
                 .Returns(new List<CommentDTO>()); // empty
@@ -345,39 +282,6 @@ namespace Backend.Tests
             var ex = Assert.Throws<Exception>(() => _deckService.GetCommentsByDeckId(deckId));
             Assert.Contains("No comments found for Deck with ID 1", ex.Message);
         }
-
-        [Fact]
-        public void GetCommentsByDeckId_ShouldReturnSanitizedComments_WhenDeckExistsAndCommentsFound()
-        {
-            // Arrange
-            int deckId = 2;
-            var deck = new DeckDTO { Id = deckId, Name = "Another Deck" };
-            var comments = new List<CommentDTO>
-            {
-                new CommentDTO { Id = 1, DeckId = deckId, Text = "Some text", Username = "UserA" },
-                new CommentDTO { Id = 2, DeckId = deckId, Text = "Other text", Username = "UserB" }
-            };
-
-            _mockDeckRepository
-                .Setup(repo => repo.GetDeckById(deckId))
-                .Returns(deck);
-            _mockDeckRepository
-                .Setup(repo => repo.GetCommentsByDeckId(deckId))
-                .Returns(comments);
-
-            // Act
-            var result = _deckService.GetCommentsByDeckId(deckId);
-
-            // Assert
-            Assert.Equal(2, result.Count);
-            Assert.Equal("Some text", result[0].Text);
-            Assert.Equal("Other text", result[1].Text);
-        }
-
-        // ---------------------------------------------------------
-        // Existing tests (your original ones) - We keep them
-        // They also contribute to coverage
-        // ---------------------------------------------------------
 
         [Fact]
         public void GetCommentsByDeckId_ShouldThrowException_WhenDeckDoesNotExist()

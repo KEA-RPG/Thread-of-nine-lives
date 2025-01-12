@@ -17,10 +17,6 @@ namespace Backend.Tests
             _factory = new StateFactory();
         }
 
-        // ---------------------------------------------------------
-        // 1. Basic Initialization & Defaults
-        // ---------------------------------------------------------
-
         [Fact]
         public void CreateState_EnemyIsNull_SetsDefaultEnemyHealthTo50()
         {
@@ -110,9 +106,6 @@ namespace Backend.Tests
             Assert.Null(exception);
         }
 
-        // ---------------------------------------------------------
-        // 2. ATTACK Action Scenarios
-        // ---------------------------------------------------------
 
         [Fact]
         public void CreateState_AttackAction_ReducesEnemyHealthByValue()
@@ -167,10 +160,6 @@ namespace Backend.Tests
             // Assert
             Assert.Equal(0, result.EnemyHealth);
         }
-
-        // ---------------------------------------------------------
-        // 3. END_TURN Action Scenarios
-        // ---------------------------------------------------------
 
         [Fact]
         public void CreateState_EndTurnAction_ReducesPlayerHealthByFive()
@@ -233,17 +222,9 @@ namespace Backend.Tests
             Assert.Equal(0, result.PlayerHealth);
         }
 
-        // ---------------------------------------------------------
-        // 4. Multiple Actions (Integrated Scenario)
-        // ---------------------------------------------------------
-
         [Fact]
         public void CreateState_ProcessMultipleActionsInOrder()
         {
-            // This is inherently a multi-assert scenario: 
-            // We're verifying a sequence of actions (Attack + EndTurn + Attack + EndTurn).
-            // It's acceptable here because it's more like an integration test.
-
             // Arrange
             var fight = new FightDTO
             {
