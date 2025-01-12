@@ -313,8 +313,5 @@ jobs:
       - name: Migrate data to MongoDB
         run: docker run --name mongo-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-document 
 
-      - name: Migrate data to Neo4J
-        run : dotnet run --project "Migrators\Migrators.GraphDB\Migrators.GraphDB.csproj"
-
       - name: Run Integration Tests
         run: dotnet test ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj --configuration Release --logger "trx;LogFileName=integration_tests.trx"
