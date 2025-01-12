@@ -280,11 +280,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # - name: Create network
-      #   run: docker network create tonl-network
+      - name: Create network
+        run: docker network create tonl-network
 
-      # - name: Attach relative_db to network
-      #   run: docker network connect tonl-network relative_db
+      - name: Attach relative_db to network
+        run: docker network connect tonl-network relative_db
 
       # - name: Attach document_db to network
       #   run: docker network connect tonl-network document_db
