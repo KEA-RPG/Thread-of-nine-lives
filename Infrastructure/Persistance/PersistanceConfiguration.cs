@@ -7,6 +7,7 @@ using System.Reflection;
 using Infrastructure.Persistance.Document;
 using Microsoft.Extensions.Options;
 using Infrastructure.Persistance.Graph;
+using System.Configuration;
 
 
 namespace Infrastructure.Persistance
@@ -16,18 +17,7 @@ namespace Infrastructure.Persistance
         public static void ConfigureServices(IServiceCollection services, dbtype dbtype, string environmentName)
         {
             string dbString = dbtype.ToString();
-
-            var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if(string.IsNullOrWhiteSpace(environmentName))
-            {
-                environmentName = "Development";
-            }
-
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(binpath)
-                .AddJsonFile($"dbsettings.{environmentName}.json")
-                .Build();
-
+            var configuration = GetConfiguration(environmentName);
             var connectionString = configuration.GetConnectionString(dbString);
 
             services.AddDbContext<RelationalContext>(options =>
@@ -38,12 +28,7 @@ namespace Infrastructure.Persistance
 
             services.AddSingleton(options =>
             {
-                var settings = configuration.GetSection("ConnectionStrings:MongoDB");
-
-                var connectionString = settings.GetSection("Connectionstring").Value;
-                var databaseName = settings.GetSection("DatabaseName").Value;
-
-                return new DocumentContext(connectionString, databaseName);
+                return GetDocumentContext(environmentName);
             });
 
             services.AddSingleton(options =>
@@ -55,7 +40,7 @@ namespace Infrastructure.Persistance
                 var user = settings.GetSection("User").Value;
                 var password = settings.GetSection("Password").Value;
 
-                return new GraphContext(connectionString,user,password,databaseName);
+                return new GraphContext(connectionString, user, password, databaseName);
             });
 
         }
@@ -77,6 +62,33 @@ namespace Infrastructure.Persistance
 
             }
             return "";
+        }
+        public static DocumentContext GetDocumentContext(string environmentName)
+        {
+            var configuration = GetConfiguration(environmentName);
+            var settings = configuration.GetSection("ConnectionStrings:MongoDB");
+
+            var connectionString = settings.GetSection("Connectionstring").Value;
+            var databaseName = settings.GetSection("DatabaseName").Value;
+
+            return new DocumentContext(connectionString, databaseName);
+
+        }
+        public static IConfigurationRoot GetConfiguration(string environmentName)
+        {
+            var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (string.IsNullOrWhiteSpace(environmentName))
+            {
+                environmentName = "Development";
+            }
+            Console.WriteLine("Going on " + environmentName);
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(binpath)
+                .AddJsonFile($"dbsettings.{environmentName}.json")
+                .Build();
+            return configuration;
+
+
         }
     }
 

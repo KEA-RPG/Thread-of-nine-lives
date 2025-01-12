@@ -10,6 +10,7 @@ namespace Infrastructure.Persistance.Document
     {
         private readonly IMongoDatabase _database;
         private readonly MongoClient _client;
+        private static readonly object _lock = new object();
 
         public DocumentContext(string connectionstring, string dbname)
         {
@@ -62,36 +63,39 @@ namespace Infrastructure.Persistance.Document
 
         public int GetAutoIncrementedId(string collectionName)
         {
-            var filter = Builders<Counter>.Filter.Eq(x => x.Identifier, collectionName);
-
-            var existingCounter = Counters().Find(filter).FirstOrDefault();
-
-            if (existingCounter == null)
+            lock (_lock)
             {
-                var collection = _database.GetCollection<BsonDocument>(collectionName);
+                var filter = Builders<Counter>.Filter.Eq(x => x.Identifier, collectionName);
 
-                var maxIdResult = collection.Aggregate()
-                    .SortByDescending(doc => doc["_id"])
-                    .Limit(1)
-                    .FirstOrDefault();
+                var existingCounter = Counters().Find(filter).FirstOrDefault();
 
-                int initialCount = maxIdResult != null ? maxIdResult["_id"].AsInt32 + 1 : 1;
+                if (existingCounter == null)
+                {
+                    var collection = _database.GetCollection<BsonDocument>(collectionName);
 
-                var newCounter = new Counter { Identifier = collectionName, Count = initialCount };
-                Counters().InsertOne(newCounter);
+                    var maxIdResult = collection.Aggregate()
+                        .SortByDescending(doc => doc["_id"])
+                        .Limit(1)
+                        .FirstOrDefault();
 
-                return initialCount;
+                    int initialCount = maxIdResult != null ? maxIdResult["_id"].AsInt32 + 1 : 1;
+
+                    var newCounter = new Counter { Identifier = collectionName, Count = initialCount };
+                    Counters().InsertOne(newCounter);
+
+                    return initialCount;
+                }
+
+                var update = Builders<Counter>.Update.Inc(x => x.Count, 1);
+                var updatedCounter = Counters().FindOneAndUpdate(filter, update, new FindOneAndUpdateOptions<Counter> { ReturnDocument = ReturnDocument.After });
+
+                if (updatedCounter == null)
+                {
+                    throw new Exception("Failed to update or retrieve the counter document.");
+                }
+
+                return updatedCounter.Count;
             }
-
-            var update = Builders<Counter>.Update.Inc(x => x.Count, 1);
-            var updatedCounter = Counters().FindOneAndUpdate(filter, update, new FindOneAndUpdateOptions<Counter> { ReturnDocument = ReturnDocument.After });
-
-            if (updatedCounter == null)
-            {
-                throw new Exception("Failed to update or retrieve the counter document.");
-            }
-
-            return updatedCounter.Count;
         }
     }
 }
