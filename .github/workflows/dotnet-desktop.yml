@@ -32,9 +32,6 @@ jobs:
     - name: Build Solution
       run: dotnet build --configuration Release
       
-    - name: Execute unit tests
-      run: dotnet test UnitTests/UnitTests.csproj --configuration Release --logger "trx;LogFileName=test-results/unit_tests.trx"
-
     - name: Build Docker Image
       run: |
         docker build . \
@@ -49,12 +46,6 @@ jobs:
 
     - name: Push Docker Image
       run: docker push bjand49/tonl-api
-
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
-      with:
-        files: '**/TestResults/**/*.trx'
 
 
   build_seeder:
@@ -291,7 +282,7 @@ jobs:
         run: hopp test -e cm32vkcrw00dhh7mfs5l34099 cm338q223000613cpr6vcbtuk --token ${{ secrets.HOPPSCOTCHPAT }}
 
 
-  Integration_tests:
+  Integration_and_unit_tests:
     runs-on: ubuntu-latest
 
     needs: [build_relational_migrator,build_document_migrator,build_seeder,build_graph_migrator]
@@ -372,8 +363,11 @@ jobs:
 
       - name: Migrate data to Neo4J
         run: docker run --name graph-migrator --network tonl-network -e ASPNETCORE_ENVIRONMENT=Docker bjand49/tonl-migrator-graph 
-
-      - name: Run Integration Tests
+      
+      - name: Execute unit tests
+        run: dotnet test UnitTests/UnitTests.csproj --configuration Release --logger "trx;LogFileName=test-results/unit_tests.trx"
+  
+      - name: Execute integration Tests
         run: dotnet test ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj --configuration Release --logger "trx;LogFileName=test-results/integration_tests.trx"
 
       - name: Publish Test Results
