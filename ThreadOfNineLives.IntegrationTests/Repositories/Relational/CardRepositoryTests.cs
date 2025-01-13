@@ -89,12 +89,12 @@ namespace ThreadOfNineLives.IntegrationTests.Repositories.Relational
             var updatedCard = _cardRepository.GetCardById(cardToUpdateId);
 
             //Assert
-            Assert.True(updatedCard.Name == "UpdatedName");
-            Assert.True(updatedCard.Defence == 123456789);
-            Assert.True(updatedCard.Attack == 123456789);
-            Assert.True(updatedCard.Cost == 123456789);
-            Assert.True(updatedCard.Description == "123456789");
-            Assert.True(updatedCard.ImagePath == "123456789");
+            Assert.Equal(updatedCard.Name, "UpdatedName");
+            Assert.Equal(updatedCard.Defence, 123456789);
+            Assert.Equal(updatedCard.Attack, 123456789);
+            Assert.Equal(updatedCard.Cost, 123456789);
+            Assert.Equal(updatedCard.Description, "123456789");
+            Assert.Equal(updatedCard.ImagePath, "123456789");
         }
 
         [Fact]
