@@ -269,6 +269,7 @@ namespace EndToEndTests
         {
             DeleteTestUser();
 
+            _driver?.Close();
             _driver?.Quit();
         }
     }

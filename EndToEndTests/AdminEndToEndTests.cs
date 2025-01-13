@@ -223,7 +223,7 @@ namespace EndToEndTests
         public void Dispose()
         {
             DeleteTestUser();
-
+            _driver?.Close();
             _driver?.Quit();
         }
     }
