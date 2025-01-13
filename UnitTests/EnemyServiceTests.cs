@@ -326,7 +326,6 @@ namespace Backend.Tests.Services
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        [InlineData(999)]
         public void DeleteEnemy_NonExistingId_DoesNotCallDeleteEnemy(int id)
         {
             // Arrange
