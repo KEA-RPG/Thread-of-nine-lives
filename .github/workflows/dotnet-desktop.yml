@@ -55,7 +55,7 @@ jobs:
       if: always()
       with:
         files: |
-          test-results/*.trx
+            **/TestResults/**/*.trx  
 
 
   build_seeder:
@@ -382,5 +382,4 @@ jobs:
         if: always()
         with:
           files: |
-            test-results/*.trx
-  
+            **/TestResults/**/*.trx  
