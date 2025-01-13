@@ -10,26 +10,6 @@ namespace UnitTests
 {
     public class PasswordValidatorTests
     {
-        /// <summary>
-        /// Helper method to generate a password of a given length that
-        /// *does* satisfy uppercase, digit, and special char (for boundary tests).
-        /// This is only used for boundary tests.
-        /// </summary>
-        private string GeneratePasswordOfLength(int length)
-        {
-            // If length is 0 or negative, just return empty (invalid by length).
-            if (length <= 0)
-                return string.Empty;
-
-            // Start with "A1#", covering uppercase, digit, special character.
-            // Pad with 'a' to reach the total length if needed.
-            var basePart = "A1#";
-            if (length <= 3)
-                return basePart.Substring(0, length);
-
-            return basePart + new string('a', length - 3);
-        }
-
         #region Boundary Tests (8–35)
 
         // ----------------------------
@@ -40,7 +20,7 @@ namespace UnitTests
         public void IsValidPassword_ReturnsTrue_WhenLengthIsExactly8()
         {
             // Arrange
-            var password = GeneratePasswordOfLength(8);
+            var password = "A1#aaaaa"; //length is 8
 
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
@@ -53,7 +33,7 @@ namespace UnitTests
         public void IsValidPassword_ReturnsTrue_WhenLengthIsExactly9()
         {
             // Arrange
-            var password = GeneratePasswordOfLength(9);
+            var password = "A1#aaaaaa"; //length is 9
 
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
@@ -66,7 +46,7 @@ namespace UnitTests
         public void IsValidPassword_ReturnsTrue_WhenLengthIsExactly34()
         {
             // Arrange
-            var password = GeneratePasswordOfLength(34);
+            var password = "A1#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; //length is 34
 
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
@@ -79,7 +59,7 @@ namespace UnitTests
         public void IsValidPassword_ReturnsTrue_WhenLengthIsExactly35()
         {
             // Arrange
-            var password = GeneratePasswordOfLength(35);
+            var password = "A1#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; //length is 35
 
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
@@ -96,8 +76,7 @@ namespace UnitTests
         public void IsValidPassword_ReturnsFalse_WhenLengthIs7()
         {
             // Arrange
-            var password = GeneratePasswordOfLength(7);
-
+            var password = "A1#aaaa"; //length is 7
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
 
@@ -109,7 +88,7 @@ namespace UnitTests
         public void IsValidPassword_ReturnsFalse_WhenLengthIs36()
         {
             // Arrange
-            var password = GeneratePasswordOfLength(36);
+            var password = "A1#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; //length is 36
 
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
