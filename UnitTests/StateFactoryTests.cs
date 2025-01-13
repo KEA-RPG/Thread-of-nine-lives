@@ -107,9 +107,14 @@ namespace Backend.Tests
         }
 
 
-        [Fact]
-        public void CreateState_AttackAction_ReducesEnemyHealthByValue()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5)]
+        [InlineData(10)]
+        [InlineData(15)]
+        public void CreateState_AttackAction_ReducesEnemyHealthByValue(int value)
         {
+            var health = 20;
             // Arrange
             var fight = new FightDTO
             {
@@ -118,20 +123,21 @@ namespace Backend.Tests
                 {
                     Id = 7,
                     Name = "Goblin",
-                    Health = 20,
+                    Health = health,
                     ImagePath = "goblin.png"
                 },
                 GameActions = new List<GameActionDTO>
                 {
-                    new GameActionDTO { Type = "ATTACK", Value = 5 }
+                    new GameActionDTO { Type = "ATTACK", Value = value }
                 }
             };
 
             // Act
             State result = _factory.CreateState(fight);
+            var resultingHealth = health - value;
 
             // Assert
-            Assert.Equal(15, result.EnemyHealth); // 20 -> 15
+            Assert.Equal(resultingHealth, result.EnemyHealth); 
         }
 
         [Fact]

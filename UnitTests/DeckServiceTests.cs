@@ -54,17 +54,19 @@ namespace Backend.Tests
             _mockDeckRepository.Verify(repo => repo.AddDeck(inputDeck), Times.Once);
         }
 
-        [Fact]
-        public void DeleteDeck_ShouldThrowKeyNotFound_WhenDeckDoesNotExist()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(999)]
+        public void DeleteDeck_ShouldThrowKeyNotFound_WhenDeckDoesNotExist(int id)
         {
             // Arrange
-            int deckId = 999;
             _mockDeckRepository
-                .Setup(repo => repo.GetDeckById(deckId))
+                .Setup(repo => repo.GetDeckById(id))
                 .Returns((DeckDTO)null);
 
             // Act & Assert
-            Assert.Throws<KeyNotFoundException>(() => _deckService.DeleteDeck(deckId));
+            Assert.Throws<KeyNotFoundException>(() => _deckService.DeleteDeck(id));
         }
 
         [Fact]
@@ -131,16 +133,13 @@ namespace Backend.Tests
                 .Setup(repo => repo.GetUserDecks(userName))
                 .Returns(userDecks);
 
-            string deckNameA = userDecks[0].Name;
-            string deckNameB = userDecks[1].Name;
-
             // Act
             var result = _deckService.GetUserDecks(userName);
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal(deckNameA, result[0].Name);
-            Assert.Equal(deckNameB, result[1].Name);
+            Assert.Equal(result[0].Name, "Deck A");
+            Assert.Equal(result[1].Name, "Deck B");
         }
 
 
@@ -199,24 +198,23 @@ namespace Backend.Tests
             // Arrange
             var publicDecks = new List<DeckDTO>
     {
-        new DeckDTO { Id = 1, Name = "Public Deck 1" },
-        new DeckDTO { Id = 2, Name = "Public Deck 2" }
+        new DeckDTO { Id = 1, Name = "Public Deck 1", IsPublic = true },
+        new DeckDTO { Id = 2, Name = "Public Deck 2", IsPublic = true }
     };
 
             _mockDeckRepository
                 .Setup(repo => repo.GetPublicDecks())
                 .Returns(publicDecks);
 
-            string firstDeckName = publicDecks[0].Name;
-            string secondDeckName = publicDecks[1].Name;
-
             // Act
             var result = _deckService.GetPublicDecks();
 
             // Assert
             Assert.Equal(publicDecks.Count, result.Count);
-            Assert.Equal(firstDeckName, result[0].Name);
-            Assert.Equal(secondDeckName, result[1].Name);
+            Assert.Equal(result[0].Name, "Public Deck 1");
+            Assert.Equal(result[1].Name, "Public Deck 2");
+            Assert.True(result[0].IsPublic);
+            Assert.True(result[1].IsPublic);
         }
 
         [Fact]
@@ -238,20 +236,25 @@ namespace Backend.Tests
         [Fact]
         public void AddComment_ShouldThrow_KeyNotFound_WhenDeckDoesNotExist()
         {
+            //Arange
             var commentDto = new CommentDTO { DeckId = 1, Username = "someUser" };
 
+            //Act
             _mockDeckRepository
                 .Setup(repo => repo.GetDeckById(commentDto.DeckId))
                 .Returns((DeckDTO)null);
 
+            //Assert
             Assert.Throws<KeyNotFoundException>(() => _deckService.AddComment(commentDto));
         }
 
         [Fact]
         public void AddComment_ShouldThrow_KeyNotFound_WhenUserDoesNotExist()
-        {
+
+        {//Arange
             var commentDto = new CommentDTO { DeckId = 1, Username = "non_existent_user" };
 
+         //Act
             _mockDeckRepository
                 .Setup(repo => repo.GetDeckById(commentDto.DeckId))
                 .Returns(new DeckDTO { Id = commentDto.DeckId });
@@ -260,6 +263,7 @@ namespace Backend.Tests
                 .Setup(repo => repo.GetUserByUsername("non_existent_user"))
                 .Returns((UserDTO)null);
 
+         //Assert
             Assert.Throws<KeyNotFoundException>(() => _deckService.AddComment(commentDto));
         }
 

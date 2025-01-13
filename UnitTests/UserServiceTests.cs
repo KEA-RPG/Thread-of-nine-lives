@@ -80,10 +80,11 @@ namespace Backend.Tests.Services
         {
             // Arrange
             var username = "nonexistentuser";
+            var password = "password";
             _mockUserRepository.Setup(repo => repo.GetUserByUsername(username)).Returns((UserDTO)null);
 
             // Act
-            var result = _userService.ValidateUserCredentials(username, "password");
+            var result = _userService.ValidateUserCredentials(username, password);
 
             // Assert
             Assert.False(result);

@@ -91,15 +91,45 @@ namespace Backend.Tests.Services
             Assert.Equal(card.Name, result.Name);
         }
 
-        [Fact]
-        public void GetCardById_ShouldThrowKeyNotFoundException_WhenCardNotFound()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(999)]
+        public void GetCardById_ShouldThrowKeyNotFoundException_WhenCardNotFound(int id)
         {
             // Arrange
-            int id = 1;
             _cardRepositoryMock.Setup(r => r.GetCardById(id)).Returns((CardDTO)null);
 
             // Act & Assert
             Assert.Throws<KeyNotFoundException>(() => _cardService.GetCardById(id));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void GetAllCards_ReturnsCorrectNumberOfCards(int numberOfEnemies)
+        {
+            // Arrange
+            var cards = Enumerable.Range(1, numberOfEnemies)
+                .Select(id => new CardDTO
+                {
+                    Id = id,
+                    Name = $"Card{id}",
+                    ImagePath = $"Card{id}",
+                    Description = $"This is descriptions of Card{id}",
+                    Defence = id,
+                    Cost = id,
+                    Attack = id,
+                })
+                .ToList();
+            _cardRepositoryMock.Setup(repo => repo.GetAllCards()).Returns(cards);
+
+            // Act
+            var result = _cardService.GetAllCards();
+
+            // Assert
+            Assert.Equal(numberOfEnemies, result.Count);
         }
 
         [Fact]
@@ -139,5 +169,36 @@ namespace Backend.Tests.Services
             // Act & Assert
             Assert.Throws<KeyNotFoundException>(() => _cardService.UpdateCard(cardDTO));
         }
+
+        [Fact]
+        public void DeleteCard_Should_Delete_A_Card()
+        {
+            //Arrange
+            var mockCardRepository = new Mock<ICardRepository>();
+            var card = new CardDTO
+            {
+                Id = 1,
+                Name = "Card 1",
+                Description = "Description 1",
+                ImagePath = "Image 1",
+                Cost = 1,
+                Attack = 1,
+                Defence = 1
+
+            };
+            mockCardRepository.Setup(repo => repo.AddCard(card));
+            mockCardRepository.Setup(repo => repo.GetCardById(1)).Returns(card);
+
+            var cardService = new CardService(mockCardRepository.Object);
+
+            //Act
+            cardService.DeleteCard(1);
+
+            //Assert
+            mockCardRepository.Verify(repo => repo.DeleteCard(card), Times.Once);
+        }
+
+
+
     }
 }
