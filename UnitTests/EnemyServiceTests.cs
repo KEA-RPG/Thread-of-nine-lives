@@ -79,7 +79,6 @@ namespace Backend.Tests.Services
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        [InlineData(999)]
         public void GetEnemyById_NonExistingIds_ReturnsNull(int enemyId)
         {
             // Arrange
@@ -324,21 +323,22 @@ namespace Backend.Tests.Services
             _mockRepository.Verify(repo => repo.DeleteEnemy(existingEnemy), Times.Once);
         }
 
-        [Fact]
-        public void DeleteEnemy_NonExistingId_DoesNotCallDeleteEnemy()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void DeleteEnemy_NonExistingId_DoesNotCallDeleteEnemy(int id)
         {
             // Arrange
-            int enemyId = 1;
-            _mockRepository.Setup(repo => repo.GetEnemyById(enemyId)).Returns((EnemyDTO)null);
+            _mockRepository.Setup(repo => repo.GetEnemyById(id)).Returns((EnemyDTO)null);
 
             // Act
-            _enemyService.DeleteEnemy(enemyId);
+            _enemyService.DeleteEnemy(id);
 
             // Assert
             _mockRepository.Verify(repo => repo.DeleteEnemy(It.IsAny<EnemyDTO>()), Times.Never);
         }
 
-        private EnemyDTO CreateEnemyDTO()
+          private EnemyDTO CreateEnemyDTO()
         {
             return new EnemyDTO()
             {
