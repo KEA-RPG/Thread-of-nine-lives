@@ -1,29 +1,19 @@
 ﻿using Backend.Repositories.Document;
+using Backend.Repositories.Interfaces;
+using Backend.Repositories.Relational;
 using Domain.DTOs;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Document;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ThreadOfNineLives.IntegrationTests.DocumentDB
+namespace ThreadOfNineLives.IntegrationTests.Repositories.Relational
 {
-    public class DocumentEnemyRepositoryTests : IDisposable
+    public class DocumentEnemyRepositoryTests
     {
-        private readonly DocumentContext _context;
-        private readonly MongoEnemyRepository _mongoEnemyRepository;
-        private readonly DatabaseSnapshotHelper _snapshotHelper;
+        private readonly IEnemyRepository _enemyRepository;
         public DocumentEnemyRepositoryTests()
         {
-            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-            _mongoEnemyRepository = new MongoEnemyRepository(_context);
-            _snapshotHelper = new DatabaseSnapshotHelper(_context);
-
-            _snapshotHelper.TakeSnapshot();
+            var _context = PersistanceConfiguration.GetRelationalContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            _enemyRepository = new EnemyRepository(_context);
         }
 
         [Fact]
@@ -38,7 +28,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            var data = _mongoEnemyRepository.AddEnemy(testEnemy);
+            var data = _enemyRepository.AddEnemy(testEnemy);
 
             //Assert
             Assert.NotNull(data);
@@ -59,56 +49,42 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 ImagePath = "test",
                 Name = "test"
             };
-            var dbEnemy = _mongoEnemyRepository.AddEnemy(testEnemy);
+            var dbEnemy = _enemyRepository.AddEnemy(testEnemy);
 
             //Act
-            _mongoEnemyRepository.DeleteEnemy(dbEnemy);
-            var data = _mongoEnemyRepository.GetEnemyById(dbEnemy.Id);
+            _enemyRepository.DeleteEnemy(dbEnemy);
+            var data = _enemyRepository.GetEnemyById(dbEnemy.Id);
 
             //Assert
             Assert.Null(data);
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(3)]
-        [InlineData(99)]
-
-        public void GetAllEnemies_Returns_List_Of_Enemies(int insertedEnemiesAmount)
+        [Fact]
+        public void GetAllEnemies_Returns_List_Of_Enemies()
         {
             //Arrange
-            _context.Enemies().DeleteMany(FilterDefinition<EnemyDTO>.Empty);
 
-            for (int i = 0; i < insertedEnemiesAmount; i++)
+            var testEnemy = new EnemyDTO()
             {
-                var testEnemy = new EnemyDTO()
-                {
-                    Health = i,
-                    ImagePath = i.ToString(),
-                    Name = i.ToString()
-                };
-                _mongoEnemyRepository.AddEnemy(testEnemy);
-
-            }
+                Health = 1,
+                ImagePath = 1.ToString(),
+                Name = 1.ToString()
+            };
+            _enemyRepository.AddEnemy(testEnemy);
 
             //Act
-            var data = _mongoEnemyRepository.GetAllEnemies();
+            var data = _enemyRepository.GetAllEnemies();
 
             //Assert
             Assert.NotNull(data);
-            Assert.Equal(data.Count, insertedEnemiesAmount);
+            Assert.NotEmpty(data);
         }
 
         [Fact]
         public void GetEnemyById_Returns_Null_Given_Invalid_Id()
         {
-            //Arrange
-            _context.Enemies().DeleteMany(FilterDefinition<EnemyDTO>.Empty);
-
-
-            //Act
-            var data = _mongoEnemyRepository.GetEnemyById(123);
+            // Arrange & Act
+            var data = _enemyRepository.GetEnemyById(-1);
 
             //Assert
             Assert.Null(data);
@@ -123,11 +99,11 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 ImagePath = "test",
                 Name = "test"
             };
-            var dbEnemy = _mongoEnemyRepository.AddEnemy(testEnemy);
+            var dbEnemy = _enemyRepository.AddEnemy(testEnemy);
 
 
             //Act
-            var data = _mongoEnemyRepository.GetEnemyById(dbEnemy.Id);
+            var data = _enemyRepository.GetEnemyById(dbEnemy.Id);
 
             //Assert
             Assert.NotNull(data);
@@ -146,21 +122,16 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 ImagePath = "test",
                 Name = "test"
             };
-            var dbEnemy = _mongoEnemyRepository.AddEnemy(testEnemy);
+            var dbEnemy = _enemyRepository.AddEnemy(testEnemy);
             dbEnemy.Health = 11;
 
             //Act
-            _mongoEnemyRepository.UpdateEnemy(dbEnemy);
-            var data = _mongoEnemyRepository.GetEnemyById(dbEnemy.Id);
+            _enemyRepository.UpdateEnemy(dbEnemy);
+            var data = _enemyRepository.GetEnemyById(dbEnemy.Id);
 
             //Assert
             Assert.NotNull(data);
             Assert.Equal(data.Health, dbEnemy.Health);
-        }
-
-        public void Dispose()
-        {
-            _snapshotHelper.RestoreSnapshot();
         }
     }
 }

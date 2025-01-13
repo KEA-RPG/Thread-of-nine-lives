@@ -111,13 +111,13 @@ using (var scope = host.Services.CreateScope())
     Console.WriteLine("User --> Fight done");
     Console.WriteLine("GameAction --> Fight done");
     Console.WriteLine("Creating counters...");
-    await graphContext.InitCounter<GraphCard>(cards.Max(x=>x.Id));
-    await graphContext.InitCounter<GraphComment>(comments.Max(x => x.Id));
-    await graphContext.InitCounter<GraphDeck>(decks.Max(x => x.Id));
-    await graphContext.InitCounter<GraphEnemy>(enemies.Max(x => x.Id));
-    await graphContext.InitCounter<GraphFight>(fights.Max(x => x.Id));
-    await graphContext.InitCounter<GraphGameAction>(gameActions.Max(x => x.Id));
-    await graphContext.InitCounter<GraphUser>(users.Max(x => x.Id));
+    await graphContext.InitCounter<GraphCard>(cards != null && cards.Any() ? cards.Max(x => x.Id) : 1);
+    await graphContext.InitCounter<GraphComment>(comments != null && comments.Any() ? comments.Max(x => x.Id) : 1);
+    await graphContext.InitCounter<GraphDeck>(decks != null && decks.Any() ? decks.Max(x => x.Id) : 1);
+    await graphContext.InitCounter<GraphEnemy>(enemies != null && enemies.Any() ? enemies.Max(x => x.Id) : 1);
+    await graphContext.InitCounter<GraphFight>(fights != null && fights.Any() ? fights.Max(x => x.Id) : 1);
+    await graphContext.InitCounter<GraphGameAction>(gameActions != null && gameActions.Any() ? gameActions.Max(x => x.Id) : 1);
+    await graphContext.InitCounter<GraphUser>(users != null && users.Any() ? users.Max(x => x.Id) : 1);
 
     Console.WriteLine("Mapping done");
 

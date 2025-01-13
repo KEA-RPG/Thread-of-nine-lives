@@ -1,39 +1,29 @@
 ﻿using Backend.Repositories.Document;
+using Backend.Repositories.Interfaces;
 using Domain.DTOs;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Document;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ThreadOfNineLives.IntegrationTests.DocumentDB
+namespace ThreadOfNineLives.IntegrationTests.Repositories.DocumentDB
 {
-    public class DocumentUserRepositoryTests :IDisposable
+    public class UserRepositoryTests
     {
-        private readonly DocumentContext _context;
-        private readonly MongoUserRepository _mongoUserRepository;
-        private readonly DatabaseSnapshotHelper _snapshotHelper;
-        public DocumentUserRepositoryTests()
+        private readonly IUserRepository _mongoUserRepository;
+        public UserRepositoryTests()
         {
-            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            var _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             _mongoUserRepository = new MongoUserRepository(_context);
-            _snapshotHelper = new DatabaseSnapshotHelper(_context);
-
-            _snapshotHelper.TakeSnapshot();
         }
 
         [Fact]
-        public void AddEnemy_Assigns_Id_And_Retains_Values()
+        public void AddUser_Assigns_Id_And_Retains_Values()
         {
             //Arrange
             var testUser = new UserDTO()
             {
-               Password ="test",
-               Role = "tester",
-               Username = "test123"
+                Password = "test",
+                Role = "tester",
+                Username = "test123"
             };
 
             //Act
@@ -72,11 +62,6 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             Assert.Equal(data.Password, testUser.Password);
             Assert.Equal(data.Role, testUser.Role);
             Assert.Equal(data.Username, testUser.Username);
-        }
-
-        public void Dispose()
-        {
-            _snapshotHelper.RestoreSnapshot();
         }
     }
 }

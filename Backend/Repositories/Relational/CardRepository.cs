@@ -38,6 +38,10 @@ namespace Backend.Repositories.Relational
         public CardDTO GetCardById(int id)
         {
             var dbCard = _context.Cards.Find(id);
+            if(dbCard == null)
+            {
+                return default(CardDTO);
+            }    
             return Card.FromEntity(dbCard);
         }
 

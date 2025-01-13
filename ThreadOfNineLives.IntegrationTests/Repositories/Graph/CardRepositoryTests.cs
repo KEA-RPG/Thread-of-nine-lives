@@ -1,32 +1,26 @@
 ﻿using Backend.Repositories.Document;
+using Backend.Repositories.Graph;
+using Backend.Repositories.Interfaces;
 using Domain.DTOs;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Document;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Linq;
 
-namespace ThreadOfNineLives.IntegrationTests.DocumentDB
+namespace ThreadOfNineLives.IntegrationTests.Repositories.Graph
 {
-    public class DocumentCardRepositoryTests : IDisposable
+    public class CardRepositoryTests
     {
-        private readonly DocumentContext _context;
-        private readonly MongoCardRepository _mongoCardRepository;
-        private readonly MongoDeckRepository _mongoDeckRepository;
-        private readonly MongoUserRepository _mongoUserRepository;
-        private readonly DatabaseSnapshotHelper _snapshotHelper;
-        public DocumentCardRepositoryTests()
+        private readonly ICardRepository _cardRepository;
+        private readonly IDeckRepository _deckRepository;
+        private readonly IUserRepository _userRepository;
+        public CardRepositoryTests()
         {
-            
-            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 
-            _mongoCardRepository = new MongoCardRepository(_context);
-            _mongoDeckRepository = new MongoDeckRepository(_context);
-            _mongoUserRepository = new MongoUserRepository(_context);
-            _snapshotHelper = new DatabaseSnapshotHelper(_context);
+            var _context = PersistanceConfiguration.GetGraphContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 
-            _snapshotHelper.TakeSnapshot();
+            _cardRepository = new GraphCardRepository(_context);
+            _deckRepository = new GraphDeckRepository(_context);
+            _userRepository = new GraphUserRepository(_context);
+
         }
         [Fact]
         public void AddCard_Assigns_Id_And_Retains_Values()
@@ -43,7 +37,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             // Act
-            var insertedCard = _mongoCardRepository.AddCard(card);
+            var insertedCard = _cardRepository.AddCard(card);
 
             // Assert
             Assert.NotNull(insertedCard);
@@ -58,11 +52,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void GetCardById_Returns_Empty_When_Invalid_ID()
         {
-            //Arrange
-            _context.Cards().DeleteMany(FilterDefinition<CardDTO>.Empty);
-
-            //Act
-            var card = _mongoCardRepository.GetCardById(10000);
+            //Arrange & Act
+            var card = _cardRepository.GetCardById(-1);
 
             //Assert
             Assert.Null(card);
@@ -72,12 +63,10 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         public void GetCardById_Returns_Item()
         {
             //Arrange
-            CreateTemplateDecksAndCards();
-            var initialCardName = "FirstNameINTEGRATION";
-            var cardId = _context.Cards().Find(x => x.Name == initialCardName).First().Id;
-
+            var deck = CreateTemplateDecksAndCards();
+            var cardId = deck.Cards.First().Id;
             //Act
-            var card = _mongoCardRepository.GetCardById(cardId);
+            var card = _cardRepository.GetCardById(cardId);
 
             //Assert
             Assert.NotNull(card);
@@ -85,12 +74,10 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void UpdateCard_Should_Update_Database_Card()
         {
-
             //Arrange
-            CreateTemplateDecksAndCards();
-            var initialCardName = "FirstNameINTEGRATION";
-            var cardToUpdateId = _context.Cards().Find(x => x.Name == initialCardName).First().Id;
-            var cardToUpdate = _mongoCardRepository.GetCardById(cardToUpdateId);
+            var deck = CreateTemplateDecksAndCards();
+            var cardToUpdateId = deck.Cards.First().Id;
+            var cardToUpdate = _cardRepository.GetCardById(cardToUpdateId);
             cardToUpdate.Name = "UpdatedName";
             cardToUpdate.Defence = 123456789;
             cardToUpdate.Attack = 123456789;
@@ -99,8 +86,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             cardToUpdate.ImagePath = "123456789";
 
             //Act
-            _mongoCardRepository.UpdateCard(cardToUpdate);
-            var updatedCard = _mongoCardRepository.GetCardById(cardToUpdateId);
+            _cardRepository.UpdateCard(cardToUpdate);
+            var updatedCard = _cardRepository.GetCardById(cardToUpdateId);
 
             //Assert
             Assert.True(updatedCard.Name == "UpdatedName");
@@ -115,16 +102,15 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         public void Delete_Card_Should_Update_Decks()
         {
             //Arrange
-            CreateTemplateDecksAndCards();
-            var initialCardName = "FirstNameINTEGRATION";
-            var cardToDelete = _context.Cards().Find(x => x.Name == initialCardName).First();
+            var deck = CreateTemplateDecksAndCards();
+            var cardToDelete = deck.Cards.First();
 
             //Act
-            _mongoCardRepository.DeleteCard(cardToDelete);
-            var deck = _context.Decks().Find(x => x.Name == "deck1INTEGRATION").First();
+            _cardRepository.DeleteCard(cardToDelete);
+            var updatedDeck = _deckRepository.GetDeckById(deck.Id);
 
             //Assert
-            Assert.False(deck.Cards.Any(x => x.Id == cardToDelete.Id));
+            Assert.DoesNotContain(updatedDeck.Cards, x => x.Id == cardToDelete.Id);
         }
 
 
@@ -132,13 +118,12 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         public void Delete_Card_Should_Remove_From_Collection()
         {
             //Arrange
-            CreateTemplateDecksAndCards();
-            var initialCardName = "FirstNameINTEGRATION";
-            var cardToDelete = _context.Cards().Find(x => x.Name == initialCardName).First();
+            var deck = CreateTemplateDecksAndCards();
+            var cardToDelete = deck.Cards.First();
 
             //Act
-            _mongoCardRepository.DeleteCard(cardToDelete);
-            var card = _context.Cards().Find(x => x.Id == cardToDelete.Id).FirstOrDefault();
+            _cardRepository.DeleteCard(cardToDelete);
+            var card = _cardRepository.GetCardById(cardToDelete.Id);
 
             //Assert
             Assert.Null(card);
@@ -151,7 +136,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             CreateTemplateDecksAndCards();
 
             //Act
-            var cards = _mongoCardRepository.GetAllCards();
+            var cards = _cardRepository.GetAllCards();
 
             //Assert
             Assert.NotEmpty(cards);
@@ -159,11 +144,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
 
         }
 
-        public void Dispose()
-        {
-            _snapshotHelper.RestoreSnapshot();
-        }
-        private void CreateTemplateDecksAndCards()
+        private DeckDTO CreateTemplateDecksAndCards()
         {
             var card1 = new CardDTO()
             {
@@ -184,8 +165,9 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 ImagePath = "SecondtestINTEGRATION",
                 Name = "SecondtestINTEGRATION",
             };
-            _mongoCardRepository.AddCard(card1);
-            _mongoCardRepository.AddCard(card2);
+            var cardList = new List<CardDTO>();
+            cardList.Add(_cardRepository.AddCard(card1));
+            cardList.Add(_cardRepository.AddCard(card2));
 
             var user = new UserDTO()
             {
@@ -193,20 +175,18 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
                 Role = "Player",
                 Username = "username1INTEGRATION",
             };
-            _mongoUserRepository.CreateUser(user);
-            var dbuser = _context.Users().Find(x => x.Username.Contains("INTEGRATION")).First();
-            var dbCards = _context.Cards().Find(x => x.Name.Contains("INTEGRATION")).ToList(); ;
+            _userRepository.CreateUser(user);
+            var dbuser = _userRepository.GetUserByUsername(user.Username);
             var deck = new DeckDTO()
             {
                 Name = "deck1INTEGRATION",
                 IsPublic = true,
                 UserId = dbuser.Id,
                 UserName = dbuser.Username,
-                Cards = dbCards.ToList(),
+                Cards = cardList.ToList(),
             };
 
-            _mongoDeckRepository.AddDeck(deck);
+            return _deckRepository.AddDeck(deck);
         }
-
     }
 }

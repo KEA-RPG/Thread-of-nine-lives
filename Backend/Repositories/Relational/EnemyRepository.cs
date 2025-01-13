@@ -24,7 +24,7 @@ namespace Backend.Repositories.Relational
 
         public void DeleteEnemy(EnemyDTO enemy)
         {
-            var dbEnemy = _context.Enemies.First(x=> x.Id == enemy.Id);
+            var dbEnemy = _context.Enemies.First(x => x.Id == enemy.Id);
             _context.Enemies.Remove(dbEnemy);
             _context.SaveChanges();
         }
@@ -37,6 +37,10 @@ namespace Backend.Repositories.Relational
         public EnemyDTO GetEnemyById(int id)
         {
             var dbEnemy = _context.Enemies.Find(id);
+            if (dbEnemy == null)
+            {
+                return default(EnemyDTO);
+            }
             return Enemy.FromEntity(dbEnemy);
         }
 
