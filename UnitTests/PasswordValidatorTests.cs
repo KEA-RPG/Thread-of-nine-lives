@@ -189,11 +189,25 @@ namespace UnitTests
         // missing digit, missing special char, empty string, or invalid length.
 
         [Fact]
-        public void IsValidPassword_ReturnsFalse_For_1234567891011()
+        public void IsValidPassword_ReturnsFalse_For_gf1234567891011()
         {
             // Arrange
-            // 1234567891011 => has digits, but no uppercase, no special char
-            string password = "1234567891011";
+            // gf1234567891011* => has digits, but no uppercase
+            string password = "gf1234567891011*";
+
+            // Act
+            bool result = PasswordValidator.IsValidPassword(password);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void IsValidPassword_ReturnsFalse_For_Hjelmhjelm()
+        {
+            // Arrange
+            // Hjelmhjelm* => has uppercase, but no numbers
+            string password = "Hjelmhjelm*";
 
             // Act
             bool result = PasswordValidator.IsValidPassword(password);
