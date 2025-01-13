@@ -8,6 +8,9 @@ using Infrastructure.Persistance.Document;
 using Microsoft.Extensions.Options;
 using Infrastructure.Persistance.Graph;
 using System.Configuration;
+using MongoDB.Driver.Core.Configuration;
+using MongoDB.Driver;
+using System.Data.Entity;
 
 
 namespace Infrastructure.Persistance
@@ -33,14 +36,7 @@ namespace Infrastructure.Persistance
 
             services.AddSingleton(options =>
             {
-                var settings = configuration.GetSection("ConnectionStrings:Neo4j");
-
-                var connectionString = settings.GetSection("Connectionstring").Value;
-                var databaseName = settings.GetSection("DatabaseName").Value;
-                var user = settings.GetSection("User").Value;
-                var password = settings.GetSection("Password").Value;
-
-                return new GraphContext(connectionString, user, password, databaseName);
+                return GetGraphContext(environmentName);
             });
 
         }
@@ -74,6 +70,35 @@ namespace Infrastructure.Persistance
             return new DocumentContext(connectionString, databaseName);
 
         }
+        public static RelationalContext GetRelationalContext(string environmentName)
+        {
+            var configuration = GetConfiguration(environmentName);
+
+            var connectionString = configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+
+            var options = new DbContextOptionsBuilder<RelationalContext>()
+                .UseSqlServer(connectionString).Options;
+
+            return new RelationalContext(options);
+
+
+        }
+        public static GraphContext GetGraphContext(string environmentName)
+        {
+            var configuration = GetConfiguration(environmentName);
+
+            var settings = configuration.GetSection("ConnectionStrings:Neo4j");
+
+            var connectionString = settings.GetSection("Connectionstring").Value;
+            var databaseName = settings.GetSection("DatabaseName").Value;
+            var user = settings.GetSection("User").Value;
+            var password = settings.GetSection("Password").Value;
+
+            return new GraphContext(connectionString, user, password, databaseName);
+
+
+        }
+
         public static IConfigurationRoot GetConfiguration(string environmentName)
         {
             var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

@@ -12,7 +12,11 @@
       "ConnectionString": "mongodb://root:example@document_db:27017/",
       "DatabaseName": "KeaRpg"
     },
-    "Neo4j": ""
-
+    "Neo4j": {
+      "ConnectionString": "neo4j://graph_db:7687",
+      "User": "neo4j",
+      "Password": "neo4j",
+      "DatabaseName": "neo4j"
+    }
   }
 } 

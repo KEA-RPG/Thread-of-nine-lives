@@ -55,7 +55,7 @@ namespace Backend.Repositories.Relational
             
             if (dbDeck == null)
             {
-                return null;
+                return default(DeckDTO);
             }
             var deck = Deck.FromEntity(dbDeck);
 
@@ -102,7 +102,7 @@ namespace Backend.Repositories.Relational
 
             if (user == null)
             {
-                return null;
+                return new List<DeckDTO>();
             }
 
             return _context.Decks

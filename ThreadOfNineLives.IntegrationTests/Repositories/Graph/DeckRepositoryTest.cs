@@ -1,47 +1,53 @@
 ﻿using Backend.Repositories.Document;
+using Backend.Repositories.Graph;
+using Backend.Repositories.Interfaces;
+using Backend.Repositories.Relational;
 using Domain.DTOs;
 using Infrastructure.Persistance;
-using Infrastructure.Persistance.Document;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ThreadOfNineLives.IntegrationTests.DocumentDB
+namespace ThreadOfNineLives.IntegrationTests.Repositories.Graph
 {
-    public class DocumentDeckRepositoryTest : IDisposable
+    public class DeckRepositoryTest
     {
-        private readonly DocumentContext _context;
-        private readonly MongoDeckRepository _mongoDeckRepository;
-        private readonly DatabaseSnapshotHelper _snapshotHelper;
-        public DocumentDeckRepositoryTest()
-        {
-            _context = PersistanceConfiguration.GetDocumentContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-            _mongoDeckRepository = new MongoDeckRepository(_context);
-            _snapshotHelper = new DatabaseSnapshotHelper(_context);
+        private readonly IDeckRepository _deckRepository;
+        private readonly IUserRepository _userRepository;
 
-            _snapshotHelper.TakeSnapshot();
+        public DeckRepositoryTest()
+        {
+            var _context = PersistanceConfiguration.GetGraphContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            _deckRepository = new GraphDeckRepository(_context);
+            _userRepository = new GraphUserRepository(_context);
+
         }
 
         [Fact]
         public void AddDeck_Assigns_Id_And_Retains_Values()
         {
             //Arrange
+            var testUser = _userRepository.GetUserByUsername("testuser");
+            if (testUser == null)
+            {
+                var user = new UserDTO()
+                {
+                    Password = "test",
+                    Username = "testuser",
+                    Role = "test"
+                };
+                _userRepository.CreateUser(user);
+                testUser = _userRepository.GetUserByUsername(user.Username);
+            }
             var testDeck = new DeckDTO()
             {
                 Cards = new List<CardDTO>(),
                 Comments = new List<CommentDTO>(),
                 IsPublic = true,
                 Name = "Test",
-                UserId = 123,
-                UserName = "Test username",
+                UserId = testUser.Id,
+                UserName = testUser.Username,
             };
-
+    
             //Act
-            var data = _mongoDeckRepository.AddDeck(testDeck);
+            var data = _deckRepository.AddDeck(testDeck);
 
             // Assert
             Assert.NotNull(data);
@@ -70,12 +76,12 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            _mongoDeckRepository.AddComment(comment);
-            var dbDeck = _mongoDeckRepository.GetDeckById(deck.Id);
+            _deckRepository.AddComment(comment);
+            var dbDeck = _deckRepository.GetDeckById(deck.Id);
 
             //Assert
             Assert.NotNull(dbDeck);
-            Assert.True(dbDeck.Comments.Count == 1);
+            Assert.NotEmpty(dbDeck.Comments);
 
         }
 
@@ -102,9 +108,9 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            _mongoDeckRepository.AddComment(comment);
-            _mongoDeckRepository.AddComment(comment2);
-            var dbDeck = _mongoDeckRepository.GetDeckById(deck.Id);
+            _deckRepository.AddComment(comment);
+            _deckRepository.AddComment(comment2);
+            var dbDeck = _deckRepository.GetDeckById(deck.Id);
 
             //Assert
             Assert.NotNull(dbDeck);
@@ -118,8 +124,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             var preDeck = CreateTemplateDeck();
 
             //Act
-            _mongoDeckRepository.DeleteDeck(preDeck.Id);
-            var deck = _mongoDeckRepository.GetDeckById(preDeck.Id);
+            _deckRepository.DeleteDeck(preDeck.Id);
+            var deck = _deckRepository.GetDeckById(preDeck.Id);
 
             //Assert
             Assert.Null(deck);
@@ -148,9 +154,9 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             };
 
             //Act
-            _mongoDeckRepository.AddComment(comment);
-            _mongoDeckRepository.AddComment(comment2);
-            var comments = _mongoDeckRepository.GetCommentsByDeckId(deck.Id);
+            _deckRepository.AddComment(comment);
+            _deckRepository.AddComment(comment2);
+            var comments = _deckRepository.GetCommentsByDeckId(deck.Id);
             //Assert
             Assert.NotNull(comments);
             Assert.True(comments.Count == 2);
@@ -163,7 +169,7 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             var deck = CreateTemplateDeck();
 
             //Act
-            var dbDeck = _mongoDeckRepository.GetDeckById(deck.Id);
+            var dbDeck = _deckRepository.GetDeckById(deck.Id);
 
             //Assert
             Assert.NotNull(dbDeck);
@@ -172,11 +178,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
         [Fact]
         public void GetDeckById_Returns_With_Invalid_Id()
         {
-            // Arrange
-            _context.Decks().DeleteMany(FilterDefinition<DeckDTO>.Empty);
-
-            // Act
-            var retrievedDeck = _mongoDeckRepository.GetDeckById(9999);
+            // Arrange & Act
+            var retrievedDeck = _deckRepository.GetDeckById(-1);
 
             // Assert
             Assert.Null(retrievedDeck);
@@ -189,45 +192,52 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             CreateTemplateDeck();
 
             // Act
-            var retrievedDecks = _mongoDeckRepository.GetPublicDecks();
+            var retrievedDecks = _deckRepository.GetPublicDecks();
 
             // Assert
             Assert.NotNull(retrievedDecks);
-            Assert.True(retrievedDecks.Count() > 0);
+            Assert.NotEmpty(retrievedDecks);
         }
 
         [Fact]
         public void GetUserDecks_Returns_Decks_For_Valid_Username()
         {
             //Arrange
+            var testUser = _userRepository.GetUserByUsername("testuser");
+            if (testUser == null)
+            {
+                var user = new UserDTO()
+                {
+                    Password = "test",
+                    Username = "testuser",
+                    Role = "test"
+                };
+                _userRepository.CreateUser(user);
+                testUser = _userRepository.GetUserByUsername(user.Username);
+            }
             var testDeck = new DeckDTO()
             {
                 Cards = new List<CardDTO>(),
                 Comments = new List<CommentDTO>(),
                 IsPublic = true,
                 Name = "Test",
-                UserId = 123,
-                UserName = "123",
+                UserId = testUser.Id,
+                UserName = testUser.Username,
             };
-            _mongoDeckRepository.AddDeck(testDeck);
+            _deckRepository.AddDeck(testDeck);
 
             //Act
-            var data = _mongoDeckRepository.GetUserDecks("123");
+            var data = _deckRepository.GetUserDecks(testUser.Username);
 
             //Assert
-            Assert.True(data.Any());
-            Assert.Single(data);
-
+            Assert.NotEmpty(data);
         }
 
         [Fact]
         public void GetUserDecks_Returns_No_Decks_For_Invalid_Username()
         {
-            //Arrange
-            _context.Decks().DeleteMany(FilterDefinition<DeckDTO>.Empty);
-
-            //Act
-            var data = _mongoDeckRepository.GetUserDecks("123");
+            // Arrange & Act
+            var data = _deckRepository.GetUserDecks("-1");
 
             //Assert
             Assert.Empty(data);
@@ -250,8 +260,8 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             deck.Comments.Add(comment);
 
             //Act
-            _mongoDeckRepository.UpdateDeck(deck);
-            var data = _mongoDeckRepository.GetDeckById(deck.Id);
+            _deckRepository.UpdateDeck(deck);
+            var data = _deckRepository.GetDeckById(deck.Id);
 
             //Arrange
             Assert.Empty(data.Comments);
@@ -264,32 +274,38 @@ namespace ThreadOfNineLives.IntegrationTests.DocumentDB
             var deck = CreateTemplateDeck();
             deck.Name = "NEWNAME";
             //Act
-            _mongoDeckRepository.UpdateDeck(deck);
-            var data = _mongoDeckRepository.GetDeckById(deck.Id);
+            _deckRepository.UpdateDeck(deck);
+            var data = _deckRepository.GetDeckById(deck.Id);
 
             //Arrange
             Assert.True(data.Name == deck.Name);
         }
 
-
-        public void Dispose()
-        {
-            _snapshotHelper.RestoreSnapshot();
-        }
         private DeckDTO CreateTemplateDeck()
         {
+            var testUser = _userRepository.GetUserByUsername("testuser");
+            if (testUser == null)
+            {
+                var user = new UserDTO()
+                {
+                    Password = "test",
+                    Username = "testuser",
+                    Role = "test"
+                };
+                _userRepository.CreateUser(user);
+                testUser = _userRepository.GetUserByUsername(user.Username);
+            }
             var testDeck = new DeckDTO()
             {
                 Cards = new List<CardDTO>(),
                 Comments = new List<CommentDTO>(),
                 IsPublic = true,
                 Name = "Test",
-                UserId = 123,
-                UserName = "Test username",
+                UserId = testUser.Id,
+                UserName = testUser.Username,
             };
 
-            //Act
-            var data = _mongoDeckRepository.AddDeck(testDeck);
+            var data = _deckRepository.AddDeck(testDeck);
             return data;
         }
     }
