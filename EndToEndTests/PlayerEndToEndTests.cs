@@ -87,15 +87,15 @@ namespace EndToEndTests
             decksButtonElement.Click();
             IWebElement newButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'New')]"));
             newButtonElement.Click();
-            IWebElement playingCard = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
+            IWebElement playingCard = _driver.FindElement(By.XPath("(//div[@tabindex='0'])[1]"));
             int numberOfCardsToAdd = 3;
             for (int i = 0; i < numberOfCardsToAdd; i++)
             {
                 playingCard.Click();
             }
-            IWebElement deckCard = _driver.FindElement(By.XPath("//p[text()='Guidance']"));
+            IWebElement deckCard = _driver.FindElement(By.XPath("(//div[@class='css-1ct4vp3']//div[contains(@class,'chakra-stack')])[1]"));
             deckCard.Click();
-            IWebElement numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
+            IWebElement numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack')]//p[contains(text(), '(')]"));
             string textContent = numberElement.Text;
             int value = int.Parse(textContent.Trim('(', ')'));
             Assert.Equal(2, value);
@@ -116,14 +116,14 @@ namespace EndToEndTests
             // Edit deck
             IWebElement editButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Edit')]"));
             editButtonElement.Click();
-            playingCard = _driver.FindElement(By.XPath("//h4[text()='Guidance']/ancestor::div[@tabindex='0']"));
+            playingCard = _driver.FindElement(By.XPath("(//div[@tabindex='0'])[1]"));
             playingCard.Click();
-            numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack') and descendant::p[text()='Guidance']]//p[contains(text(), '(')]"));
+            numberElement = _driver.FindElement(By.XPath("//div[contains(@class, 'chakra-stack')]//p[contains(text(), '(')]"));
             textContent = numberElement.Text;
-            int value2 = int.Parse(textContent.Trim('(', ')'));
-            Assert.Equal(3, value2);
-            IWebElement saveDeckBtn2 = _driver.FindElement(By.XPath("//button[text()='Save deck']"));
-            saveDeckBtn2.Click();
+            value = int.Parse(textContent.Trim('(', ')'));
+            Assert.Equal(3, value);
+            saveDeckBtn = _driver.FindElement(By.XPath("//button[text()='Save deck']"));
+            saveDeckBtn.Click();
 
             // Delete deck
             IWebElement deleteButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Delete')]"));
