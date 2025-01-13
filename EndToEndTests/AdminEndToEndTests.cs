@@ -193,7 +193,7 @@ namespace EndToEndTests
             var userDB = _context.Users.First(u => u.Username == _uniqueUsername);
             if (userDB == null)
             {
-                return;
+                throw new Exception("User not found in the database.");
             }
             userDB.Role = "Admin";
             _context.SaveChanges();
