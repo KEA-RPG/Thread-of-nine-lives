@@ -32,8 +32,44 @@ namespace ThreadOfNineLives.IntegrationTests
             Assert.False(string.IsNullOrEmpty(responseData), "Response content should not be empty");
         }
 
+        [Theory]
+        [InlineData(200,316)]
+        [InlineData(1280,720)]
+        [InlineData(800,1264)]
+        public async Task Get_Image_ReturnsCorrectDimensions(int width, int height)
+        {
+            // Arrange
+            var endpoint = "/"+ width + "/"+ height;
+
+            // Act
+            var response = await _httpClient.GetAsync(endpoint);
+
+            // Assert
+ 
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            {
+                var image = await Image.LoadAsync<Rgba32>(stream);
+                Assert.Equal(width, image.Width);
+                Assert.Equal(height, image.Height);
+            }
+        }
+
         [Fact]
-        public async Task Get_Image_ReturnsCorrectDimensionsAndIsJpg()
+        public async Task Get_Image_Is_Jpg()
+        {
+            // Arrange
+            var endpoint = "/200/316";
+
+            // Act
+            var response = await _httpClient.GetAsync(endpoint);
+
+            // Assert
+            Assert.True(response.Content.Headers.ContentType.MediaType == "image/jpeg", "Expected image/jpeg content type");
+
+        }
+
+        [Fact]
+        public async Task Get_Image_Returns_Success_Status_Code()
         {
             // Arrange
             var endpoint = "/200/316";
@@ -43,15 +79,20 @@ namespace ThreadOfNineLives.IntegrationTests
 
             // Assert
             Assert.True(response.IsSuccessStatusCode, $"Expected success but got {response.StatusCode}");
+        }
 
-            Assert.True(response.Content.Headers.ContentType.MediaType == "image/jpeg", "Expected image/jpeg content type");
+        // Test for 404
+        [Fact]
+        public async Task Given_Incorrect_EndPoint_Returns_Error()
+        {
+            // Arrange
+            var endpoint = "srgsgsgvsgvsvsg";
 
-            using (var stream = await response.Content.ReadAsStreamAsync())
-            {
-                var image = await Image.LoadAsync<Rgba32>(stream);
-                Assert.Equal(200, image.Width);
-                Assert.Equal(316, image.Height);
-            }
+            // Act
+            var response = await _httpClient.GetAsync(endpoint);
+
+            // Assert
+            Assert.False(response.IsSuccessStatusCode, $"Expected 404 but got {response.StatusCode}");
         }
 
         // Cleanup

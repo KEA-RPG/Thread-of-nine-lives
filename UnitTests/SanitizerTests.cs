@@ -50,8 +50,6 @@ namespace UnitTests
             Assert.Contains("This is a comment.", sanitizedComment.Text);
         }
 
-
-
         [Fact]
         public void PostComment_ValidComment_ShouldSanitizeAndAddComment()
         {
