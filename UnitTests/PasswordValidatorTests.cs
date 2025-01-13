@@ -10,7 +10,7 @@ namespace UnitTests
 {
     public class PasswordValidatorTests
     {
-        #region Boundary Tests (8–35)
+        #region Boundary Tests (8–35) 
 
         // ----------------------------
         // Positive Boundary Tests
