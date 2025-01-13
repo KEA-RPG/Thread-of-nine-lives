@@ -17,11 +17,8 @@ namespace EndToEndTests
         public PlayerEndToEndTests()
         {
             _driver = new ChromeDriver();
-
             _driver.Navigate().GoToUrl("http://localhost:5173/");
-
             _driver.Manage().Window.Size = new System.Drawing.Size(949, 743);
-
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(3000);
 
             _context = PersistanceConfiguration.GetRelationalContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMENT"));
@@ -138,7 +135,8 @@ namespace EndToEndTests
             IWebElement modalDeleteButton = modal.FindElement(By.XPath(".//button[contains(text(),'Delete')]"));
             modalDeleteButton.Click();
 
-            // Wait until the "testdeck" element is no longer visible
+            // Scroll down and wait until the "testdeck" element is no longer visible
+            ((IJavaScriptExecutor)_driver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight);");
             bool isDeleted = wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//div[contains(text(), 'testdeck')]")));
             Assert.True(isDeleted, "The deck 'testdeck' is still visible on the page.");
         }

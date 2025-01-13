@@ -17,12 +17,8 @@ namespace EndToEndTests
         public AdminEndToEndTests()
         {
             _driver = new ChromeDriver();
-
-            // !!Change the URL to match the URL of our deployed application!!
             _driver.Navigate().GoToUrl("http://localhost:5173/");
-
             _driver.Manage().Window.Size = new System.Drawing.Size(949, 743);
-
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(3000);
 
             _context = PersistanceConfiguration.GetRelationalContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMENT"));
