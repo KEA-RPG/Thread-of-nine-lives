@@ -149,8 +149,8 @@ namespace EndToEndTests
             // Create comment
             IWebElement publicDecksButtonElement = _driver.FindElement(By.XPath("//p[text()='Public Decks']"));
             publicDecksButtonElement.Click();
-            IWebElement viewCommentsButton = _driver.FindElement(By.XPath("//h2[contains(text(), 'Fire Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
-            viewCommentsButton.Click();
+            IWebElement firstViewCommentsButton = _driver.FindElement(By.XPath("(//button[contains(text(), 'View Comments')])[1]"));
+            firstViewCommentsButton.Click();
 
             // Handle modal
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
