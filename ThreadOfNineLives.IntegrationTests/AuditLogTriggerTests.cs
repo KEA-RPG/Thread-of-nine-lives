@@ -22,12 +22,7 @@ namespace ThreadOfNineLives.IntegrationTests
 
         public AuditLogTriggerTests()
         {
-            _connectionString = PersistanceConfiguration.GetConnectionString(dbtype.Relational);
-
-            var optionsBuilder = new DbContextOptionsBuilder<RelationalContext>();
-            optionsBuilder.UseSqlServer(_connectionString,
-                b => b.MigrationsAssembly("Infrastructure"));
-            _db = new RelationalContext(optionsBuilder.Options);
+            _db = PersistanceConfiguration.GetRelationalContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
         }
 
         #region Setup Helper Methods

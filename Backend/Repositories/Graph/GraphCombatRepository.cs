@@ -27,7 +27,12 @@ namespace Backend.Repositories.Graph
                     Fight = f.As<Fight>(),
                     GameActions = g.CollectAs<GameAction>(),
                     Enemy = e.As<Enemy>(),
-                }).ResultsAsync.Result.First();
+                }).ResultsAsync.Result.FirstOrDefault();
+            
+            if(result == null)
+            {
+                return default(FightDTO);
+            }
             var data = new FightDTO()
             {
                 Enemy = Enemy.FromEntity(result.Enemy),

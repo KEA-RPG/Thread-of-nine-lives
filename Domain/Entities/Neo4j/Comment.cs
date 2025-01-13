@@ -22,7 +22,6 @@ namespace Domain.Entities.Neo4J
                 UserId = comment.UserId,
                 Text = comment.Text,
                 CreatedAt = comment.CreatedAt,
-                Username = comment.User.Username
             };
         }
 

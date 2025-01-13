@@ -21,7 +21,10 @@ namespace Backend.Repositories.Relational
                 .Include(x => x.Enemy)
                 .Include(x => x.GameActions)
                 .FirstOrDefault(x => x.Id == id);
-
+            if(dbFight == null)
+            {
+                return default(FightDTO);
+            }
             var fight = Fight.FromEntity(dbFight);
 
             return fight;
