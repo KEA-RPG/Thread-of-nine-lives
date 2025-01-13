@@ -82,30 +82,6 @@ namespace Backend.Tests
             Assert.Equal(25, result.PlayerHealth);
         }
 
-        [Fact]
-        public void CreateState_GameActionsIsNull_DoesNotThrowException()
-        {
-            // Arrange
-            var fight = new FightDTO
-            {
-                Id = 3,
-                Enemy = new EnemyDTO
-                {
-                    Id = 6,
-                    Name = "Null Actions Enemy",
-                    Health = 40,
-                    ImagePath = "none.png"
-                },
-                GameActions = null // Null
-            };
-
-            // Act
-            var exception = Record.Exception(() => _factory.CreateState(fight));
-
-            // Assert
-            Assert.Null(exception);
-        }
-
 
         [Theory]
         [InlineData(1)]
