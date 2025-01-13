@@ -46,6 +46,15 @@ jobs:
     - name: Push Docker Image
       run: docker push bjand49/tonl-api
 
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: |
+          test-results/**/*.xml
+          test-results/**/*.trx
+          test-results/**/*.json
+
 
   build_seeder:
     runs-on: ubuntu-latest
@@ -365,3 +374,13 @@ jobs:
 
       - name: Run Integration Tests
         run: dotnet test ThreadOfNineLives.IntegrationTests/ThreadOfNineLives.IntegrationTests.csproj --configuration Release --logger "trx;LogFileName=integration_tests.trx"
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            test-results/**/*.xml
+            test-results/**/*.trx
+            test-results/**/*.json
+  
