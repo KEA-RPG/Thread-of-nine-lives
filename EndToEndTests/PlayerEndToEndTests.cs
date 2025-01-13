@@ -165,8 +165,8 @@ namespace EndToEndTests
 
             // Refresh page
             _driver.Navigate().Refresh();
-            IWebElement viewCommentsButton2 = _driver.FindElement(By.XPath("//h2[contains(text(), 'Fire Deck')]/ancestor::div[contains(@class, 'chakra-card')]//button[contains(text(), 'View Comments')]"));
-            viewCommentsButton2.Click();
+            firstViewCommentsButton = _driver.FindElement(By.XPath("(//button[contains(text(), 'View Comments')])[1]"));
+            firstViewCommentsButton.Click();
 
             // Check if comment was created
             IWebElement commentElement = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//p[text()='This is a test comment']")));
