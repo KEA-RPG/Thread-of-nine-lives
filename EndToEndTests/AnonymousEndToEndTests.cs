@@ -7,7 +7,7 @@ namespace EndToEndTests
 {
     public class AnonymousEndToEndTests
     {
-        private readonly IWebDriver _driver;
+        private readonly ChromeDriver _driver;
 
         public AnonymousEndToEndTests()
         {

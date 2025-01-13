@@ -2,12 +2,17 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using Infrastructure.Persistance;
+using Infrastructure.Persistance.Relational;
 
 namespace EndToEndTests
 {
-    public class PlayerEndToEndTests
+    public class PlayerEndToEndTests : IDisposable
     {
-        private readonly IWebDriver _driver;
+        private readonly ChromeDriver _driver;
+        private readonly RelationalContext _context;
+        private string? _uniqueUsername;
+        private string? _password;
 
         public PlayerEndToEndTests()
         {
@@ -18,62 +23,54 @@ namespace EndToEndTests
             _driver.Manage().Window.Size = new System.Drawing.Size(949, 743);
 
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(3000);
+
+            _context = PersistanceConfiguration.GetRelationalContext(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMENT"));
         }
 
         [Fact]
         public void Sign_up()
         {
+            // Generate a unique username
+            _uniqueUsername = "testuser_" + DateTime.Now.Ticks;
+            _password = "Testpassword1*";
+
             IWebElement linkElement = _driver.FindElement(By.XPath("//a[text()='here']"));
             linkElement.Click();
 
+            // Fill out the sign up form
             IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
             usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-
+            usernameInputElement.SendKeys(_uniqueUsername);
             IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
             passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-
+            passwordInputElement.SendKeys(_password);
             IWebElement rePasswordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Repeat Password']"));
             rePasswordInputElement.Click();
-            rePasswordInputElement.SendKeys("testpassword");
+            rePasswordInputElement.SendKeys(_password);
 
             IWebElement signUpButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign up')]"));
             signUpButtonElement.Click();
 
-            _driver.Close();
+            // Assert that the success message is displayed
+            IWebElement successMessage = _driver.FindElement(By.XPath("//div[@role='status']//div[contains(@class, 'chakra-alert') and contains(text(),'User created successfully')]"));
+            Assert.True(successMessage.Displayed, "User creation success message is not displayed");
         }
 
         [Fact]
         public void Sign_in()
         {
-            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
-            usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
-            passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
-            signInButtonElement.Click();
+            CreateAndSigninTestUser();
 
             IWebElement element = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
             string text = element.Text;
 
             Assert.Equal("Fight!", text);
-            _driver.Close();
         }
 
+        [Fact]
         public void Sign_out()
         {
-            // Sign in
-            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
-            usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
-            passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
-            signInButtonElement.Click();
+            CreateAndSigninTestUser();
 
             // Sign out
             IWebElement signOutButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Logout')]"));
@@ -81,22 +78,12 @@ namespace EndToEndTests
             IWebElement element = _driver.FindElement(By.XPath("//p[text()='Log in']"));
             string text = element.Text;
             Assert.Equal("Log in", text);
-
-            _driver.Close();
         }
 
         [Fact]
         public void Create_update_delete_deck()
         {
-            // Sign in
-            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
-            usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
-            passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
-            signInButtonElement.Click();
+            CreateAndSigninTestUser();
 
             // Create deck
             IWebElement decksButtonElement = _driver.FindElement(By.XPath("//p[text()='Decks']"));
@@ -154,22 +141,12 @@ namespace EndToEndTests
             // Wait until the "testdeck" element is no longer visible
             bool isDeleted = wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//div[contains(text(), 'testdeck')]")));
             Assert.True(isDeleted, "The deck 'testdeck' is still visible on the page.");
-
-            _driver.Close();
         }
 
         [Fact]
         public void Create_comment()
         {
-            // Sign in
-            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
-            usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
-            passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
-            signInButtonElement.Click();
+            CreateAndSigninTestUser();
 
             // Create comment
             IWebElement publicDecksButtonElement = _driver.FindElement(By.XPath("//p[text()='Public Decks']"));
@@ -196,22 +173,12 @@ namespace EndToEndTests
             // Check if comment was created
             IWebElement commentElement = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//p[text()='This is a test comment']")));
             Assert.True(commentElement.Displayed, "The comment is not visible on the deck.");
-
-            _driver.Close();
         }
 
         [Fact]
         public void Fight_win()
         {
-            // Sign in
-            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
-            usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
-            passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
-            signInButtonElement.Click();
+            CreateAndSigninTestUser();
 
             // Create fight
             IWebElement fightButtonElement = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
@@ -226,22 +193,12 @@ namespace EndToEndTests
             }
             IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Win!']"));
             Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
-
-            _driver.Close();
         }
 
         [Fact]
         public void Fight_lose()
         {
-            // Sign in
-            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
-            usernameInputElement.Clear();
-            usernameInputElement.SendKeys("testuser");
-            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
-            passwordInputElement.Clear();
-            passwordInputElement.SendKeys("testpassword");
-            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
-            signInButtonElement.Click();
+            CreateAndSigninTestUser();
 
             // Create fight
             IWebElement fightButtonElement = _driver.FindElement(By.XPath("//p[text()='Fight!']"));
@@ -256,8 +213,65 @@ namespace EndToEndTests
             }
             IWebElement winMessage = _driver.FindElement(By.XPath("//p[text()='You Lose!']"));
             Assert.True(winMessage.Displayed, "The 'You Win!' message is not visible on the page.");
+        }
 
-            _driver.Close();
+        private void CreateAndSigninTestUser()
+        {
+            // Generate a unique username
+            _uniqueUsername = "testuser_" + DateTime.Now.Ticks;
+            _password = "Testpassword1*";
+
+            IWebElement linkElement = _driver.FindElement(By.XPath("//a[text()='here']"));
+            linkElement.Click();
+
+            // Fill out the sign up form
+            IWebElement usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys(_uniqueUsername);
+            IWebElement passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys(_password);
+            IWebElement rePasswordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Repeat Password']"));
+            rePasswordInputElement.Click();
+            rePasswordInputElement.SendKeys(_password);
+
+            IWebElement signUpButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign up')]"));
+            signUpButtonElement.Click();
+
+            // Assert that the success message is displayed
+            IWebElement successMessage = _driver.FindElement(By.XPath("//div[@role='status']//div[contains(@class, 'chakra-alert') and contains(text(),'User created successfully')]"));
+            Assert.True(successMessage.Displayed, "User creation success message is not displayed");
+
+            linkElement = _driver.FindElement(By.XPath("//a[text()='here']"));
+            linkElement.Click();
+
+            // Sign in
+            usernameInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Username']"));
+            usernameInputElement.Clear();
+            usernameInputElement.SendKeys(_uniqueUsername);
+            passwordInputElement = _driver.FindElement(By.CssSelector("input[placeholder='Password']"));
+            passwordInputElement.Clear();
+            passwordInputElement.SendKeys(_password);
+            IWebElement signInButtonElement = _driver.FindElement(By.XPath("//button[contains(text(),'Sign in')]"));
+            signInButtonElement.Click();
+        }
+
+        private void DeleteTestUser()
+        {
+            var userDB = _context.Users.First(u => u.Username == _uniqueUsername);
+            if (userDB == null)
+            {
+                return;
+            }
+            userDB.Username = $"thisUserIsDeleted_{Guid.NewGuid():N}";
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            DeleteTestUser();
+
+            _driver?.Quit();
         }
     }
 }

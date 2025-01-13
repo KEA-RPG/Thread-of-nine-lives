@@ -20,6 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Backend\Backend.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
