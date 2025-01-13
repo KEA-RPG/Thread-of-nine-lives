@@ -1,6 +1,5 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ThreadOfNineLives.IntegrationTests
 {

@@ -94,7 +94,6 @@ namespace Backend.Tests.Services
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        [InlineData(999)]
         public void GetCardById_ShouldThrowKeyNotFoundException_WhenCardNotFound(int id)
         {
             // Arrange

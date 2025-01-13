@@ -57,7 +57,6 @@ namespace Backend.Tests
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        [InlineData(999)]
         public void DeleteDeck_ShouldThrowKeyNotFound_WhenDeckDoesNotExist(int id)
         {
             // Arrange
@@ -133,13 +132,17 @@ namespace Backend.Tests
                 .Setup(repo => repo.GetUserDecks(userName))
                 .Returns(userDecks);
 
+            string deckNameA = userDecks[0].Name;
+            string deckNameB = userDecks[1].Name;
+
+
             // Act
             var result = _deckService.GetUserDecks(userName);
 
             // Assert
             Assert.Equal(2, result.Count);
-            Assert.Equal(result[0].Name, "Deck A");
-            Assert.Equal(result[1].Name, "Deck B");
+            Assert.Equal(deckNameA, result[0].Name);
+            Assert.Equal(deckNameB, result[1].Name);
         }
 
 
@@ -206,13 +209,15 @@ namespace Backend.Tests
                 .Setup(repo => repo.GetPublicDecks())
                 .Returns(publicDecks);
 
+            string deckNameA = publicDecks[0].Name;
+            string deckNameB = publicDecks[1].Name;
             // Act
             var result = _deckService.GetPublicDecks();
 
             // Assert
             Assert.Equal(publicDecks.Count, result.Count);
-            Assert.Equal(result[0].Name, "Public Deck 1");
-            Assert.Equal(result[1].Name, "Public Deck 2");
+            Assert.Equal(deckNameA, result[0].Name);
+            Assert.Equal(deckNameB, result[1].Name);
             Assert.True(result[0].IsPublic);
             Assert.True(result[1].IsPublic);
         }

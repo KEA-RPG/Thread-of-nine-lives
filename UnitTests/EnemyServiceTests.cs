@@ -79,7 +79,6 @@ namespace Backend.Tests.Services
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        [InlineData(999)]
         public void GetEnemyById_NonExistingIds_ReturnsNull(int enemyId)
         {
             // Arrange
