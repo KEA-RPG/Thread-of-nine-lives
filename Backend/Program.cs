@@ -32,6 +32,7 @@ namespace Backend
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
+                // Add security definition for JWT Bearer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -57,21 +58,21 @@ namespace Backend
             });
             builder.Services.AddAuthorization();
 
-
+            // Services
             builder.Services.AddScoped<ICardService, CardService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IDeckService, DeckService>();
             builder.Services.AddScoped<ICombatService, CombatService>();
             builder.Services.AddScoped<IEnemyService, EnemyService>();
 
-
+            // Repositories (Relational)
             builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<ICombatRepository, CombatRepository>();
             builder.Services.AddScoped<IDeckRepository, DeckRepository>();
             builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-
+            // Bruger vi til in-memory caching for blacklisting tokens
             builder.Services.AddMemoryCache();
 
  
@@ -94,7 +95,7 @@ namespace Backend
                 dbtype.DefaultConnection,
                 hostingEnvironment
             );
-            /*
+            
             builder.Services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = "X-CSRF-COOKIE";
@@ -104,7 +105,7 @@ namespace Backend
                 // options.Cookie.SameSite = SameSiteMode.Lax; 
                 options.FormFieldName = "__RequestVerificationToken";
             });
-            */
+            
             var app = builder.Build();
 
 
@@ -122,7 +123,6 @@ namespace Backend
                 // Check if it's POST/PUT/DELETE
                 var isStateChanging = (HttpMethods.IsPost(method)
                                        || HttpMethods.IsPut(method)
-                                       || HttpMethods.IsGet(method)
                                        || HttpMethods.IsDelete(method));
 
                 // Exclude /auth/login & /auth/signup

@@ -19,7 +19,7 @@ namespace Backend.Controllers
             // Login Endpoint
             app.MapPost("/auth/login", (IUserService userService, HttpContext context, IAntiforgery antiforgery, Credentials credentials) =>
             {
-
+                // Check if user exists and password is correct
                 if (userService.ValidateUserCredentials(credentials.Username, credentials.Password))
                 {
                     var loggedInUser = userService.GetUserByUsername(credentials.Username);
@@ -58,7 +58,7 @@ namespace Backend.Controllers
                         Token = token
                     });
                 }
-
+                // If user is not valid
                 return Results.BadRequest("Invalid username or password.");
             });
 
@@ -114,6 +114,7 @@ namespace Backend.Controllers
 
                 if (jti != null && expiration != null)
                 {
+                    // Check if the token is already in the cache
                     if (memoryCache.TryGetValue(jti, out _))
                     {
                         return Results.BadRequest("Token is already logged out.");
