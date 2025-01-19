@@ -33,7 +33,7 @@ const Header = ({ text }: Props) => {
       <a href={userRole ? "/menu" : "/"} >
         <HStack spacing={2} w="200px">
           <MoonIcon />
-          <Text>Thread of Nine Lives</Text>
+          <Text>Thread of Nine Lives KALI TEST</Text>
         </HStack>
       </a>
       <Spacer />
