@@ -81,7 +81,7 @@ namespace Backend
                 options.AddPolicy("FrontendClient", policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:5173", "https://hoppscotch.io")
+                        .WithOrigins("http://localhost:5173", "https://hoppscotch.io", "https://localhost:5173", "http://localhost:80")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
