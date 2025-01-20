@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { useEffect, useState } from 'react';
-
 export interface Response<T> {
   data: T | undefined;
   error: AxiosError | null;
@@ -10,63 +9,60 @@ class ApiClient {
   public apiClient: AxiosInstance | undefined;
   
   private getClient(): AxiosInstance {
-    let baseUrl = "https://localhost:7195/";
+    let baseurl = "https://localhost:7195/";
     const envBaseUrl = import.meta.env.VITE_BASE_URL;
 
-    if (envBaseUrl) {
-      baseUrl = envBaseUrl;
+    if(envBaseUrl)
+    {
+      baseurl = envBaseUrl;
     }
+
 
     if (!this.apiClient) {
       this.apiClient = axios.create({
-        baseURL: baseUrl,
+        baseURL: baseurl,
         timeout: 10000,
-
-
-
-        withCredentials: true,
-
         headers: {
-          'Content-Type': 'application/json',
+          ContentType: 'application/json',
         }
+        
       });
     }
     return this.apiClient;
   }
 
-
   private getHeaders() {
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
+        "Content-Type": "application/json",
     };
-
     const token = this.getToken();
     const antiForgeryToken = localStorage.getItem("antiForgeryToken");
 
-    // Attach Bearer JWT if present
     if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+        headers["Authorization"] = `Bearer ${token}`;
     }
 
-
     if (antiForgeryToken) {
-      headers["X-CSRF-TOKEN"] = antiForgeryToken;
+        headers["X-CSRF-TOKEN"] = antiForgeryToken; // Include CSRF token
+        headers["RequestVerificationToken"] = antiForgeryToken; // Include CSRF token
     }
 
     return headers;
-  }
+}
 
+  
 
   get<T>(url: string): Response<T> {
     const [data, setData] = useState<T>();
     const [error, setError] = useState(null);
 
     useEffect(() => {
-      this.getClient()
-        .get<T>(url, { headers: this.getHeaders() })
-        .then((response) => setData(response.data))
-        .catch((err) => setError(err));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      this.getClient().get<T>(`${url}`, {
+        headers: this.getHeaders()
+      }).then((response) => setData(response.data))
+        .catch((response) => {
+          setError(response)
+        })
     }, []);
 
     return { data, error };
@@ -74,40 +70,39 @@ class ApiClient {
 
   async post<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
     try {
-      const response = await this.getClient().post<TReturn>(url, body, {
-        headers: this.getHeaders(),
-      });
-      return { data: response.data, error: null };
+        const response = await this.getClient().post<TReturn>(`${url}`, body, {
+            headers: this.getHeaders(),
+        });
+        return { data: response.data, error: null };
     } catch (error: any) {
-      console.error("Error making POST request:", error);
-      return { data: undefined, error };
+        console.error("Error making POST request:", error);
+        return { data: undefined, error: error };
     }
-  }
+}
 
-  // PUT
+
+  // put method
   async put<TBody, TReturn>(url: string, body: TBody): Promise<Response<TReturn>> {
     try {
-      const response = await this.getClient().put<TReturn>(url, body, {
+      const response = await this.getClient().put<TReturn>(`${url}`, body, {
         headers: this.getHeaders()
       });
       return { data: response.data, error: null };
     } catch (error: any) {
-      return { data: undefined, error: error };
+      return { data: undefined, error: error.message };
     }
   }
 
-  // DELETE
   async delete<T>(url: string): Promise<Response<T>> {
     try {
-      const response = await this.getClient().delete<T>(url, {
+      const response = await this.getClient().delete(`${url}`, {
         headers: this.getHeaders()
       });
       return { data: response.data, error: null };
     } catch (error: any) {
-      return { data: undefined, error: error };
+      return { data: undefined, error: error.message };
     }
   }
-
 
   setToken(token: string) {
     localStorage.setItem('token', token);
