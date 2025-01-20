@@ -17,14 +17,12 @@ namespace Backend.Controllers
         public static void MapAuthEndpoints(this WebApplication app)
         {
             // Login Endpoint
-            app.MapPost("/auth/login", (IUserService userService, HttpContext context, IAntiforgery antiforgery, Credentials credentials) =>
+            app.MapPost("/auth/login", (IUserService userService, HttpContext context, /*IAntiforgery antiforgery, */Credentials credentials) =>
             {
                 // Check if user exists and password is correct
                 if (userService.ValidateUserCredentials(credentials.Username, credentials.Password))
                 {
                     var loggedInUser = userService.GetUserByUsername(credentials.Username);
-
-                    // Prepare JWT claims
                     var claims = new[]
                     {
                         new Claim(JwtClaimNames.Sub, loggedInUser.Username),
@@ -33,14 +31,13 @@ namespace Backend.Controllers
                         new Claim(JwtClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 
-                    // Create JWT token
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("UngnjU6otFg8IumrmGgl-MbWUUc9wMk0HR37M-VYs6s="));
                     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(claims),
-                        Expires = DateTime.UtcNow.AddHours(1),
+                        Expires = DateTime.Now.AddHours(1),
                         Issuer = "threadgame",
                         Audience = "threadgame",
                         SigningCredentials = creds
@@ -48,18 +45,21 @@ namespace Backend.Controllers
 
                     var jwtHandler = new JsonWebTokenHandler();
                     var token = jwtHandler.CreateToken(tokenDescriptor);
+                    //var csrf = antiforgery.GetAndStoreTokens(context);
+                    //context.Response.Cookies.Append("X-CSRF-TOKEN", csrf.RequestToken, new CookieOptions
+                    //{
+                    //    HttpOnly = true,  // Prevent JavaScript access
+                    //    Secure = true,    // Only send over HTTPS
+                    //    SameSite = SameSiteMode.Unspecified,  // Protect from CSRF
+                    //    Expires = DateTime.UtcNow.AddHours(1), // Set expiration time
+                    //    Path = "/",
 
-                    // Generate & store CSRF tokens (this automatically sets a HttpOnly antiforgery cookie)
-                    antiforgery.GetAndStoreTokens(context);
-
-                    // Return only the JWT in JSON
-                    return Results.Ok(new
-                    {
-                        Token = token
-                    });
+                    //});
+                    return Results.Ok(new { Token = token, RequestToken = "csrf.RequestToken" });
                 }
+
                 // If user is not valid
-                return Results.BadRequest("Invalid username or password.");
+                return Results.BadRequest();
             });
 
             // Signup (Create User) Endpoint
@@ -69,13 +69,13 @@ namespace Backend.Controllers
                 var existingUser = userService.GetUserByUsername(credentials.Username);
                 if (existingUser != null)
                 {
-                    return Results.BadRequest("User already exists.");
+                    return Results.BadRequest("User already exists");
                 }
 
                 try
                 {
                     userService.CreateUser(credentials);
-                    return Results.Ok("User created successfully.");
+                    return Results.Ok("User created successfully");
                 }
                 catch (ArgumentException ex)
                 {
@@ -83,11 +83,10 @@ namespace Backend.Controllers
                 }
             });
 
-            // Logout Endpoint
+
+
             app.MapPost("/auth/logout", (IMemoryCache memoryCache, HttpContext context) =>
             {
-
-
                 var authorizationHeader = context.Request.Headers["Authorization"].ToString();
 
                 if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
@@ -120,7 +119,7 @@ namespace Backend.Controllers
                         return Results.BadRequest("Token is already logged out.");
                     }
 
-                    // Blacklist the JTI until it expires
+                    // Cache the jti with the expiration time matching the token's expiration
                     memoryCache.Set(jti, true, new MemoryCacheEntryOptions
                     {
                         AbsoluteExpiration = expiration
@@ -131,6 +130,7 @@ namespace Backend.Controllers
 
                 return Results.BadRequest("Token is invalid or has no jti.");
             });
+
         }
     }
 }

@@ -7,7 +7,6 @@ using Backend.Services;
 using Infrastructure.Persistance;
 using Infrastructure.Persistance.Graph;
 using Infrastructure.Persistance.Relational;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -24,16 +23,15 @@ namespace Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
             builder.Services.AddJwtAuthentication(builder.Configuration);
             builder.Services.AddHealthChecks();
 
-
+            // Add services to the container
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                // Add security definition for JWT Bearer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                // Add security definition for JWT Bearer
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -41,6 +39,7 @@ namespace Backend
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
                 });
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -65,6 +64,7 @@ namespace Backend
             builder.Services.AddScoped<ICombatService, CombatService>();
             builder.Services.AddScoped<IEnemyService, EnemyService>();
 
+
             // Repositories (Relational)
             builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<ICombatRepository, CombatRepository>();
@@ -72,93 +72,60 @@ namespace Backend
             builder.Services.AddScoped<IEnemyRepository, EnemyRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-            // Bruger vi til in-memory caching for blacklisting tokens
-            builder.Services.AddMemoryCache();
 
- 
+
+
+
+            builder.Services.AddMemoryCache(); // Bruger vi til in-memory caching for blacklisting tokens
+
+
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("FrontendClient", policy =>
+                options.AddPolicy("AllowAll", builder =>
                 {
-                    policy
-                        .WithOrigins("http://localhost:5173", "https://hoppscotch.io", "https://localhost:5173", "http://localhost:80")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
+
+                    builder.AllowAnyOrigin()  // Specify the allowed origin (frontend)
+                           .AllowAnyHeader()                      // Allow all headers (e.g., Authorization, Content-Type, etc.)
+                           .AllowAnyMethod()
+                           .SetIsOriginAllowedToAllowWildcardSubdomains();                      // Allow all HTTP methods (e.g., GET, POST, PUT, DELETE)
+                                                                                                //.AllowCredentials();                   // Allow cookies and Authorization headers to be sent with the request
+
                 });
             });
 
-   
             var hostingEnvironment = builder.Environment.EnvironmentName;
-            PersistanceConfiguration.ConfigureServices(
-                builder.Services,
-                dbtype.DefaultConnection,
-                hostingEnvironment
-            );
-            
-            builder.Services.AddAntiforgery(options =>
-            {
-                options.Cookie.Name = "X-CSRF-COOKIE";
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                // SameSite depends on your cross-site usage
-                // options.Cookie.SameSite = SameSiteMode.Lax; 
-                options.FormFieldName = "__RequestVerificationToken";
-            });
-            
+            PersistanceConfiguration.ConfigureServices(builder.Services, dbtype.DefaultConnection, hostingEnvironment);
+
+            //builder.Services.AddAntiforgery(options =>
+            //{
+            //    // Customize the settings if needed (e.g., SameSite policy, cookie options)
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Ensures cookie is sent over HTTPS
+            //    options.Cookie.HttpOnly = true;  // Prevents JavaScript access to the cookie
+            //    options.Cookie.SameSite = SameSiteMode.Unspecified;  // Protects against CSRF attacks
+            //    options.Cookie.Expiration = TimeSpan.FromMinutes(60);
+            //    options.Cookie.Path = "/";
+            //});
+
+
             var app = builder.Build();
 
 
-            app.UseCors("FrontendClient");
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-            
-            /*
-            app.Use(async (context, next) =>
-            {
-                var path = context.Request.Path.Value ?? string.Empty;
-                var method = context.Request.Method;
-
-                // Check if it's POST/PUT/DELETE
-                var isStateChanging = (HttpMethods.IsPost(method)
-                                       || HttpMethods.IsPut(method)
-                                       || HttpMethods.IsDelete(method));
-
-                // Exclude /auth/login & /auth/signup
-                var isExcluded = path.StartsWith("/auth/login", StringComparison.OrdinalIgnoreCase)
-                                 || path.StartsWith("/auth/signup", StringComparison.OrdinalIgnoreCase);
-
-                if (isStateChanging && !isExcluded)
-                {
-                    var antiforgery = context.RequestServices.GetRequiredService<IAntiforgery>();
-                    try
-                    {
-                        await antiforgery.ValidateRequestAsync(context);
-                    }
-                    catch (AntiforgeryValidationException)
-                    {
-                        context.Response.StatusCode = 400;
-                        await context.Response.WriteAsync("CSRF validation failed.");
-                        return; // stop
-                    }
-                }
-
-                // Otherwise continue
-                await next();
-            });
-            */
-
-
+            // Map controllers
             app.MapCardEndpoint();
             app.MapAuthEndpoints();
             app.MapEnemyEndpoint();
             app.MapDeckEndpoint();
-            app.MapCombatEndpoints();
             app.MapHealthChecks("/health");
+
+            app.MapCombatEndpoints();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapGet("/", () => "Hello World!");
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors("AllowAll");
             app.Run();
         }
     }
